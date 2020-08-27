@@ -1,8 +1,8 @@
 # ASP.NET Core学习
-*** 
+
 
 # 托管设置
-***
+
 设置项目文件的`AspNetCoreHostingModel`属性
 ```
 <PropertyGroup>
@@ -15,7 +15,7 @@
 + OutOfProcess：使用自带Kestrel服务器托管（自宿主）
 
 # ASP.NET Core中的配置源
-***
+
 + `appsettings.json`，`appsettings.{xxxxx}.json` 不同环境下对应不同的托管环境
 + User secrets (用户机密)
 + Environment variables (环境变量)
@@ -24,7 +24,7 @@
   Tips：它们的关系是依次加载，逐层覆盖
   
 # ASP.NET Core中间件
-***
+
 + 可同时被访问和请求
 + 可以处理请求后，然后将请求传递给下一个中间件
 + 可以处理请求后，并使管道短路
@@ -122,7 +122,7 @@ fileServerOpinions.DefaultFilesOptions.DefaultFileNames.Add("test.html");
 app.UseFileServer(fileServerOpinions);
 ```
 # 开发者异常页面
-***
+
 ###### 示例代码
 ```
 if (env.IsDevelopment())
@@ -141,7 +141,7 @@ app.Run(async (context) =>
  `UseDeveloperExceptionPage`中间件的位置尽量放置在前面，因为如果管道中的后面的中间件组件引发异常，它可以处理异常并显示Developer Exception页面。
  
 # 开发环境变量
-***
+
 + Development：开发环境
 + Staging：演示（模式，临时）环境
 + Production：正式（生产）环境
@@ -165,7 +165,7 @@ if（env.IsDevelopment()）
 ```
 
 # 引入MVC
-***
+
 1. 将MVC服务依赖注入到容器中
 
 ```
@@ -192,7 +192,7 @@ public void ConfigureServices(IServiceCollection services)
   Tips:MVC路由规则：/控制器名称/方法名称，（不区分大小写）
   
 #  初步了解模型和依赖注入
-***
+
 ##### 定义模型
 
 ```
