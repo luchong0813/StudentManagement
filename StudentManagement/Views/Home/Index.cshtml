@@ -1,0 +1,33 @@
+﻿@model IEnumerable<StudentManagement.Models.Student>
+
+@{ 
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "首页";
+}
+
+    <table>
+        <thead>
+            <tr>
+                <td>ID</td>
+                <td>姓名</td>
+                <td>邮箱</td>
+                <td>班级</td>
+            </tr>
+        </thead>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.Id</td>
+                <td>@student.Name</td>
+                <td>@student.Email</td>
+                <td>@student.ClassName</td>
+            </tr>
+        }
+
+    </table>
+
+@section Scripts{ 
+<script>
+    document.write("Hello!");
+</script>
+}

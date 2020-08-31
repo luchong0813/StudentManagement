@@ -21,6 +21,10 @@ namespace StudentManagement.Models
             };
         }
 
+        public IEnumerable<Student> GetAllStudents()
+        {
+            return _students;
+        }
 
         public Student GetStudent(int id)
         {

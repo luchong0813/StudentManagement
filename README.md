@@ -1,8 +1,8 @@
-# ASP.NET Core学习
+# 视频教程
+[从零开始学ASP.NET Core与Entity Framework Core ]("https://www.bilibili.com/video/BV1wb411W7aB?p=1")
 
 
 # 托管设置
-
 设置项目文件的`AspNetCoreHostingModel`属性
 ```
 <PropertyGroup>
@@ -15,7 +15,6 @@
 + OutOfProcess：使用自带Kestrel服务器托管（自宿主）
 
 # ASP.NET Core中的配置源
-
 + `appsettings.json`，`appsettings.{xxxxx}.json` 不同环境下对应不同的托管环境
 + User secrets (用户机密)
 + Environment variables (环境变量)
@@ -24,7 +23,6 @@
   Tips：它们的关系是依次加载，逐层覆盖
   
 # ASP.NET Core中间件
-
 + 可同时被访问和请求
 + 可以处理请求后，然后将请求传递给下一个中间件
 + 可以处理请求后，并使管道短路
@@ -112,7 +110,7 @@ app.UseStaticFiles();
   ```
   app.UseDirectoryBrowser();
   ```
-###### FileServer 中间件
+  ###### FileServer 中间件
 集成`UseDefaultFiles`, `UseStaticFiles`, `UseDirectoryBrowser`三个中间件的功能。同样不推荐在生产环境中使用。
 ```
 var fileServerOpinions = new FileServerOptions();
@@ -122,7 +120,6 @@ fileServerOpinions.DefaultFilesOptions.DefaultFileNames.Add("test.html");
 app.UseFileServer(fileServerOpinions);
 ```
 # 开发者异常页面
-
 ###### 示例代码
 ```
 if (env.IsDevelopment())
@@ -141,7 +138,6 @@ app.Run(async (context) =>
  `UseDeveloperExceptionPage`中间件的位置尽量放置在前面，因为如果管道中的后面的中间件组件引发异常，它可以处理异常并显示Developer Exception页面。
  
 # 开发环境变量
-
 + Development：开发环境
 + Staging：演示（模式，临时）环境
 + Production：正式（生产）环境
@@ -165,7 +161,6 @@ if（env.IsDevelopment()）
 ```
 
 # 引入MVC
-
 1. 将MVC服务依赖注入到容器中
 
 ```
@@ -192,7 +187,6 @@ public void ConfigureServices(IServiceCollection services)
   Tips:MVC路由规则：/控制器名称/方法名称，（不区分大小写）
   
 #  初步了解模型和依赖注入
-
 ##### 定义模型
 
 ```
@@ -286,5 +280,189 @@ public void ConfigureServices(IServiceCollection services)
     services.AddMvc()
         // 注册XML序列化器
         .AddXmlSerializerFormatters();
+}
+```
+#视图入门
+###将数据从控制器传输到视图的方法
+前两种都是弱类型
++ ViewData
++ ViewBag
++ 强类型视图
+
+###### ViewData
++ 弱类型字典对象
++ 使用string类型的键值，存储和查询
++ 运行时动态解析
++ 没有智能感知，编译时也没有类型检查
+
+使用方法：
+```
+ViewData["Title"] = "学生视图";
+ViewData["Model"] = model;
+```
+cshtml代码：
+```
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <h1>@ViewData["Title"]</h1>
+    @{
+        var student = ViewData["model"] as StudyManagement.Models.Student;
+    }
+    <div>姓名：@student.Name</div>
+    <div>班级：@student.ClassName</div>
+</body>
+</html>
+```
+###### ViewBag
+```
+// 直接给动态属性赋值
+ViewBag.PageTitle = "ViewBag标题";
+ViewBag.Student = model;
+```
+cshtml使用：
+```
+<h1>@ViewBag.PageTitle</h1>
+<div>姓名：@ViewBag.Student.Name</div>
+<div>班级：@ViewBag.Student.ClassName</div>
+```
+###### 强类型视图
+在控制器中传给View()模型
+```
+public IActionResult GetView()
+{
+    var model = _studentRepository.GetById(1);
+    return View(model);
+}
+```
+在cshtml中指定模型类型
+```
+@model StudyManagement.Models.Student
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <h1>强类型模型</h1>
+    <ul>
+        <li>@Model.Id</li>
+        <li>@Model.Name</li>
+        <li>@Model.ClassName</li>
+        <li>@Model.Email</li>
+    </ul>
+
+</body>
+</html>
+```
+### ViewModel 视图模型
+类似于DTO（数据传输对象）
+###### 定义ViewModel
+```
+public class StudentDetailsViewModel
+{
+    public Student Student { get; set; }
+    public string PageTitle { get; set; }
+}
+```
+###### 改造控制器
+```
+public IActionResult Details()
+{
+    var model = _studentRepository.GetById(1);
+    var viewModel = new StudentDetailsViewModel
+    {
+        Student = model,
+        PageTitle = "viewmodel里的页面标题"
+    };
+    return View(viewModel);
+}
+```
+###### 在View中使用
+```
+<!-- 这里注册的模型改成了ViewModel了 -->
+@model StudyManagement.ViewModels.StudentDetailsViewModel
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <h1>强类型模型</h1>
+    <h2>@Model.PageTitle</h2>
+    <ul>
+        <li>@Model.Student.Id</li>
+        <li>@Model.Student.Name</li>
+        <li>@Model.Student.ClassName</li>
+        <li>@Model.Student.Email</li>
+    </ul>
+</body>
+</html>
+```
+### View中使用循环
+```
+@model IEnumerable<StudyManagement.Models.Student>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+    <title></title>
+</head>
+<body>
+    <table border="1">
+        <tr>
+            <td>Id</td>
+            <td>姓名</td>
+            <td>班级</td>
+            <td>邮箱</td>
+        </tr>
+        @foreach (var student in Model)
+        {
+            <tr>
+                <td>@student.Id</td>
+                <td>@student.Name</td>
+                <td>@student.ClassName</td>
+                <td>@student.Email</td>
+            </tr>
+        }
+    </table>
+</body>
+</html>
+```
+#  布局视图 LayoutView
+### 创建布局视图
+```
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>@ViewBag.Title</title>
+</head>
+<body>
+    <div>
+        @RenderBody()
+    </div>
+
+    @RenderSection("Scripts", required: false)
+</body>
+</html>
+```
+### 渲染视图
+```
+@model IEnumerable<StudyManagement.Models.Student>
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = "首页 学生列表";
+}
+<div></div>
+```
+### 视图节点 Section
++ 在布局视图里渲染节点
+`@RenderSection("Scripts", required: false)`
++ 在普通视图里定义节点
+```
+@section Scripts{ 
+    <script>
+        document.write("hello");
+    </script>
 }
 ```

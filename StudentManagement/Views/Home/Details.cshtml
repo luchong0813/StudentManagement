@@ -1,0 +1,9 @@
+﻿@model StudentManagement.ViewModels.HomeDetailsViewModel
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+    ViewBag.Title = Model.PageTiltle;
+}
+<h3>学生姓名：@Model.Student.Name</h3>
+<h3>学生邮箱：@Model.Student.Email</h3>
+<h3>学生班级：@Model.Student.ClassName</h3>
