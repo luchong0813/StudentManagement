@@ -1,33 +1,25 @@
-﻿@model IEnumerable<StudentManagement.Models.Student>
+﻿@model IEnumerable<Student>
 
-@{ 
-    Layout = "~/Views/Shared/_Layout.cshtml";
+@{
     ViewBag.Title = "首页";
 }
 
-    <table>
-        <thead>
-            <tr>
-                <td>ID</td>
-                <td>姓名</td>
-                <td>邮箱</td>
-                <td>班级</td>
-            </tr>
-        </thead>
-        @foreach (var student in Model)
-        {
-            <tr>
-                <td>@student.Id</td>
-                <td>@student.Name</td>
-                <td>@student.Email</td>
-                <td>@student.ClassName</td>
-            </tr>
-        }
+<div class="card-deck">
+    @foreach (var student in Model)
+    {
+        <div class="card m-3">
+            <div class="card-header">
+                <h3>@student.Name</h3>
+            </div>
+            <img class="card-img-top" src="~/images/46243214.jpg" width="50"/>
+            <div class="card-footer text-center">
+                <a href="#" class="btn btn-primary">查看</a>
+                <a href="#" class="btn btn-primary">编辑</a>
+                <a href="#" class="btn btn-danger">删除</a>
+            </div>
+        </div>
+    }
+</div>
 
-    </table>
-
-@section Scripts{ 
-<script>
-    document.write("Hello!");
-</script>
+@section Scripts{
 }

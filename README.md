@@ -466,3 +466,58 @@ public IActionResult Details()
     </script>
 }
 ```
+# 视图开始 ViewStart
+我的理解就是`_ViewStart.cshtml`文件所在目录下的每个视图文件开始渲染先执行这个文件的内容。一般直接放在`Views`目录下，全局生效，可以放在各个子文件夹下，这样可以覆盖全局的`_ViewStart.cshtml`。
+```
+@{
+    Layout = "_Layout";
+}
+```
+# 视图导入 ViewImports
+用来导入命名空间、注册模型等等n多种操作。
+生效机制和ViewStart差不多。
+# 路由
++ 常规路由
+
+```
+//添加路由中间件
+app.UseRouting();
+app.UseEndpoints(endpoints =>
+{
+        endpoints.MapControllerRoute(
+             name: "default",
+             pattern: "{Controller=Home}/{action=Index}/{id?}");
+ });
+```
++ 属性路由
+
+
+比传统路由更加灵活，可以搭配传统路由使用。
+
+即在控制器方法上添加路由注解，一个方法可以同时映射多个路由。
+```
+[Route("Home/Index")]
+public IActionResult Index()
+{
+    return View(_studentRepository.GetAll());
+}
+```
+路由中也可以指定参数
+```
+[Route("test/{id?}")]
+public IActionResult Details(int id = 1)
+{
+    var model = _studentRepository.GetById(id);
+    var viewModel = new StudentDetailsViewModel
+    {
+        Student = model,
+        PageTitle = "viewmodel里的页面标题"
+    };
+    return View(viewModel);
+}
+```
+可以直接在控制器类上加注解，[controller]/[action]。
+# LibMan包管理工具
++ 使用方法：右键项目--添加--客户端库
++ libman.json 文件：libman.json 是库管理器清单文件。
+请注意，在清单文件中，我们有一个刚刚安装的 Bootstrap 客户端库的列表。我们也可以直接编辑清单文件来安装客户端软件包，而不是使用 LibMan 提供的图形界面。
