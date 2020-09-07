@@ -521,3 +521,38 @@ public IActionResult Details(int id = 1)
 + 使用方法：右键项目--添加--客户端库
 + libman.json 文件：libman.json 是库管理器清单文件。
 请注意，在清单文件中，我们有一个刚刚安装的 Bootstrap 客户端库的列表。我们也可以直接编辑清单文件来安装客户端软件包，而不是使用 LibMan 提供的图形界面。
+# TagHelper
+优点：根据参数自动生成，不需要手写超链接，类似Django模板里面的url命令。
+
+在`ViewImport`中添加`TagHelper`
+`@addTagHelper *,Microsoft.AspNetCore.Mvc.TagHelpers`
+比如，链接TagHelper使用
+```
+<a asp-controller="Home" asp-action="details" asp-route-id="@student.Id" class="btn btn-primary">查看</a>
+@*<a href="#" class="btn btn-primary">查看</a>*@
+ ```
+ ###### ImageTaghelper(缓存破坏)
+ `<img class="card-img-top" src="~/images/46243214.jpg" width="50" asp-append-version="true" />`
+ Image TagHelper 增强了< img >标签，为静态图像文件提供缓存破坏行为。将图像的内容，生成唯一的散列值并将其附加到图片的 URL。此唯一字符串会提示浏览器从服务器重新加载图片，而不是从浏览器缓存重新加载。
+`<img class="card-img-top" src="/images/46243214.jpg?v=tL9eCId0npmRFYCfDFpRO9NRNK8EpIg3x20zfOQtVwM" width="50">`
+###### 环境 TagHelper
+在开发环境中使用本地css文件，在非开发环境下使用的是CDN的css文件。
+
+注：`integrity`是用来做完整性检查的，保证CDN提供文件的完整和安全。
+```
+<environment include="Development">
+        <link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" />
+    </environment>
+
+    <environment exclude="Development">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+              integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"
+              asp-fallback-href="~/lib/twitter-bootstrap/css/bootstrap.css"
+              asp-suppress-fallback-integrity="true">
+    </environment>
+ ```
+ 为了防止CDN加载失败页面无法显示，可以加上fallback相关属性，第一个是失败时加载的文件，第二个是不检查这个文件的完整性
+```
+asp-fallback-href="~/lib/twitter-bootstrap/css/bootstrap.css"
+asp-suppress-fallback-integrity="true"
+```
