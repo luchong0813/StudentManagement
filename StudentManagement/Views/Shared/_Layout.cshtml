@@ -9,9 +9,12 @@
 
     <environment include="Development">
         <link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" />
+        <script src="~/js/jquery.js"></script>
+        <script src="~/lib/twitter-bootstrap/js/bootstrap.js"></script>
     </environment>
 
-    <environment exclude="Development">S
+    <environment exclude="Development">
+        S
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
               integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"
               asp-fallback-href="~/lib/twitter-bootstrap/css/bootstrap.css"
@@ -20,9 +23,31 @@
 </head>
 <body>
     <div class="container">
+
+
+        <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+            <a asp-action="Index" asp-controller="Home">
+                <img src="~/images/abc.jpg" width="30" height="30" />
+            </a>
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="collapsibleNavbar">
+                <div class="navbar">
+                    <ul class="navbar-nav">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Index" asp-controller="Home">学生列表</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-action="Create" asp-controller="Home">添加学生</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
         @RenderBody()
     </div>
-
     @RenderSection("Scripts", required: false)
 </body>
 </html>
