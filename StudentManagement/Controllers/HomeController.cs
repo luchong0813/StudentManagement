@@ -23,16 +23,28 @@ namespace StudentManagement.Controllers
             return View(students);
         }
 
-        public IActionResult Details()
+        public IActionResult Details(int? id)
         {
 
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
                 PageTiltle = "学生详情",
-                Student = _studentRepository.GetStudent(1)
+                Student = _studentRepository.GetStudent(id ?? 1)
             };
 
             return View(homeDetailsViewModel);
+        }
+
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public RedirectToActionResult Create(Student student)
+        {
+            var stu = _studentRepository.Add(student);
+            return RedirectToAction("Details", new { id = stu.Id });
         }
     }
 }

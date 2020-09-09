@@ -13,12 +13,19 @@ namespace StudentManagement.Models
         {
             _students = new List<Student>()
             {
-                new Student{ Id=1,Name="张三",ClassName="17计应4班",Email="84512211@outlook.com"},
-                new Student{ Id=2,Name="李四",ClassName="17计应5班",Email="451515jshjd@outlook.com"},
-                new Student{ Id=3,Name="王五",ClassName="17计应4班",Email="sghdha52@qq.com"},
-                new Student{ Id=4,Name="赵六",ClassName="17计应6班",Email="45xshxdjn22@outlook.com"},
-                new Student{ Id=5,Name="鲁班",ClassName="17计应5班",Email="dxshjc1515251@163.com"}
+                new Student{ Id=1,Name="张三",ClassName=ClassName.ClassFour,Email="84512211@outlook.com"},
+                new Student{ Id=2,Name="李四",ClassName=ClassName.ClassSix,Email="451515jshjd@outlook.com"},
+                new Student{ Id=3,Name="王五",ClassName=ClassName.ClassFour,Email="sghdha52@qq.com"},
+                new Student{ Id=4,Name="赵六",ClassName=ClassName.ClassSix,Email="45xshxdjn22@outlook.com"},
+                new Student{ Id=5,Name="鲁班",ClassName=ClassName.ClassFive,Email="dxshjc1515251@163.com"}
             };
+        }
+
+        public Student Add(Student student)
+        {
+            student.Id = _students.Max(s => s.Id) + 1;
+            _students.Add(student);
+            return student;
         }
 
         public IEnumerable<Student> GetAllStudents()

@@ -556,3 +556,28 @@ public IActionResult Details(int id = 1)
 asp-fallback-href="~/lib/twitter-bootstrap/css/bootstrap.css"
 asp-suppress-fallback-integrity="true"
 ```
+###### 表单 Tag Helper
+直接贴上一个布局的代码，把class样式都去掉了，保留最基本代码。
+
+确实是很方便的，和Django、jinja2之类的模板比完全不输。
+```
+@model Student
+
+<form asp-controller="student" asp-action="create">
+    <label asp-for="Name"></label>
+    <input asp-for="Name" />
+
+    <label asp-for="Email"></label>
+    <input asp-for="Email" />
+
+    <label asp-for="ClassName"></label>
+    <select asp-for="ClassName" asp-items="Html.GetEnumSelectList<ClassNameEnum>()"></select>
+
+    <button type="submit">提交</button>
+</form>
+```
+# 模型绑定
+将Http请求中的数据绑定到控制器方法上对应参数的顺序：
++ Form Values （Post表单数据）
++ Route Values （路由中的值）
++ Query String （Get的查询字符串）
