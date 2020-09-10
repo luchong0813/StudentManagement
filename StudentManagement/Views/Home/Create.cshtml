@@ -1,14 +1,17 @@
 ﻿@model Student
+@inject IStudentRepository _studentRepositry
 
 @{
     ViewBag.Title = "创建学生信息";
 }
 
 <form asp-action="Create" asp-controller="Home" method="post" class="mt-3">
+    <div asp-validation-summary="All" class="text-danger"></div>
     <div class="form-group row">
         <label asp-for="Name" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
             <input asp-for="Name" class="form-control" placeholder="请输入姓名" />
+            <span asp-validation-for="Name" class="text-danger"></span>
         </div>
 
     </div>
@@ -16,17 +19,28 @@
         <label asp-for="Email" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
             <input asp-for="Email" class="form-control" placeholder="请输入邮箱" />
+            <span asp-validation-for="Email" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group row">
         <label asp-for="ClassName" class="col-sm-2 col-form-label"></label>
         <div class="col-sm-10">
-            <select asp-for="ClassName" asp-items="Html.GetEnumSelectList<ClassName>()" class="custom-select col-sm-8"></select>
+            <select asp-for="ClassName" asp-items="Html.GetEnumSelectList<ClassName>()" class="custom-select mr-sm-2">
+                <option value="">请选择</option>
+            </select>
+            <span asp-validation-for="ClassName" class="text-danger"></span>
         </div>
     </div>
     <div class="form-group row">
         <div class="col-sm-10">
             <button type="submit" class="btn btn-primary">创建</button>
+        </div>
+
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-10">
+            学生总人数：@_studentRepositry.GetAllStudents().Count().ToString()
         </div>
 
     </div>

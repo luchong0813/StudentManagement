@@ -581,3 +581,60 @@ asp-suppress-fallback-integrity="true"
 + Form Values （Post表单数据）
 + Route Values （路由中的值）
 + Query String （Get的查询字符串）
+
+# 模型验证
+###### 1、设置模型
+首先在Model中加入验证属性，如：
+```
+public int Id { get; set; }
+        [Display(Name = "姓名")]
+        [Required(ErrorMessage = "请输入姓名"), MaxLength(10, ErrorMessage = "姓名不能超过10位字符")]
+        public string Name { get; set; }
+        [Display(Name = "邮箱")]
+        public ClassName ClassName { get; set; }
+        [Display(Name = "邮箱")]
+        [Required(ErrorMessage = "请输入邮箱"), RegularExpression(@"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$", ErrorMessage = "邮箱格式不正确")]
+        public string Email { get; set; }
+ ```
+###### 常用的模型验证方法
++ `Required`：必填
++ `Range`：指定允许的最小值和最大值
++ `MinLength`：最小长度
++ `MaxLength`：最大长度
++ `Compare`：比较两个属性，比如密码和确认密码
++ `RegularExpression`：正则
+
+###### 2、在控制器中加入验证代码
+使用`ModelState.IsValid`来验证模型属性是否正确
+```
+[HttpPost]
+        public IActionResult Create(Student student)
+        {
+            if (ModelState.IsValid)
+            {
+                var stu = _studentRepository.Add(student);
+                return RedirectToAction("Details", new { id = stu.Id });
+            }
+            return View();
+        }
+```
+
+###### 3、使用TagHelper在网页上显示错误信息
+```
+<div asp-validation-summary="All" class="text-danger"></div>
+    <div class="form-group row">
+        <label asp-for="Name" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <input asp-for="Name" class="form-control" placeholder="请输入姓名" />
+            <span asp-validation-for="Name" class="text-danger"></span>
+        </div>
+
+    </div>
+```
+#  依赖注入
+一表搞懂`Scoped`、`Transient`、`Singleton`三个依赖注入服务
+|  服务类型   | 同一个HTTP请求的范围内  | 横跨多个不同的HTTP请求  |
+|  ----  | ----  | ----  |
+| Scoped（作用域）  | 同一个实例 | 新实例 |
+| Transient（瞬时）  | 新实例 | 新实例 |
+| Singleton（单例）  | 同一个实例 | 同一个实例 |
