@@ -638,3 +638,18 @@ public int Id { get; set; }
 | Scoped（作用域）  | 同一个实例 | 新实例 |
 | Transient（瞬时）  | 新实例 | 新实例 |
 | Singleton（单例）  | 同一个实例 | 同一个实例 |
+
+#  EF Core入门
+###### 首先实现DbContext
+```
+public class AppDbContext:DbContext
+{
+    // 将应用程序的配置传递给DbContext
+    public AppDbContext(DbContextOptions<AppDbContext> options) : base(options) { }
+
+    // 对要使用到的每个实体都添加 DbSet<TEntity> 属性
+    // 通过DbSet属性来进行增删改查操作
+    // 对DbSet采用Linq查询的时候，EFCore自动将其转换为SQL语句
+    public DbSet<Student> Students { get; set; }
+}
+```
