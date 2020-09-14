@@ -653,3 +653,98 @@ public class AppDbContext:DbContext
     public DbSet<Student> Students { get; set; }
 }
 ```
+###### 注册DbContext连接池
+```
+services.AddDbContextPool<AppDbContext>(
+                options => options.UseSqlServer(_configuration.GetConnectionString("StudentDBConnection"))
+                );
+```
++ 其中，本地SqlServer数据库的配置，在`appserttings.json`中：
+
+```
+"ConnectionStrings": {
+    "StudentDBConnection": "server=localhost;database=StudentDB;Trusted_Connection=true"
+  }
+```
++ vs自带的SQL资源管理器：
+
+```
+"ConnectionStrings": {
+    "StudentDBConnection": "server=(localdb)\\MSSQLLocalDB;database=StudentDB;Trusted_Connection=true"
+  }
+
+```
+###### 实现仓储
+```
+public class StudentRepository : IStudentRepository
+    {
+        private readonly AppDbContext _DbContext;
+
+        public StudentRepository(AppDbContext appDbContext)
+        {
+            _DbContext = appDbContext;
+        }
+
+        public Student Add(Student student)
+        {
+            _DbContext.Add(student);
+            _DbContext.SaveChanges();
+            return student;
+        }
+
+        public Student Delete(int id)
+        {
+            var student = _DbContext.students.Find(id);
+            if (student != null)
+            {
+                _DbContext.students.Remove(student);
+                _DbContext.SaveChanges();
+            }
+            return student;
+        }
+
+        public IEnumerable<Student> GetAllStudents()
+        {
+            return _DbContext.students;
+        }
+
+        public Student GetStudent(int id)
+        {
+            return _DbContext.students.Find(id);
+        }
+
+        public Student Update(Student updateStudent)
+        {
+            var student = _DbContext.students.Attach(updateStudent);
+            student.State = EntityState.Modified;
+            _DbContext.SaveChanges();
+            return updateStudent;
+        }
+    }
+```
+###### EF Core常用命令
++ Get-Help about_enti：显示帮助，`about_enti`全名很长可以只写前面的
++ Add-Migration：添加迁移记录
++ Update-Database：更新数据库
+
+###### 添加种子数据
+重写`DbContext`的`OnModelCreating`方法
+```
+protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.InsertSeedData();
+        }
+```
+为了避免`DbContext`代码太乱，也可以使用扩展方法的方式：
+```
+public static void InsertSeedData(this ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Student>().HasData(
+                new Student { Id = 1, Name = "张三", ClassName = ClassName.ClassFour, Email = "84512211@outlook.com" },
+                new Student { Id = 2, Name = "李四", ClassName = ClassName.ClassSix, Email = "451515jshjd@outlook.com" },
+                new Student { Id = 3, Name = "王五", ClassName = ClassName.ClassFour, Email = "sghdha52@qq.com" },
+                new Student { Id = 4, Name = "赵六", ClassName = ClassName.ClassSix, Email = "45xshxdjn22@outlook.com" },
+                new Student { Id = 5, Name = "鲁班", ClassName = ClassName.ClassFive, Email = "dxshjc1515251@163.com" });
+        }
+```
+
