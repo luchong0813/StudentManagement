@@ -2,6 +2,7 @@
 
 @{
     ViewBag.Title = Model.PageTiltle;
+    var phontPatn = "~/images/"+ (Model.Student.Photo ?? "abc.jpg");
 }
 
 <div class="row justify-content-center m-3">
@@ -12,14 +13,13 @@
             </div>
 
             <div class="card-body text-center">
-                <img class="card-img-top" src="~/images/46243214.jpg" width="50"/>
-
+                <img class="card-img-top" src=@phontPatn asp-append-version="true"/>
                 <h4>学生ID : @Model.Student.Id</h4>
                 <h4>邮箱 : @Model.Student.Email</h4>
                 <h4>班级名称 : @Model.Student.ClassName</h4>
             </div>
             <div class="card-footer text-center">
-                <a  asp-action="Index" asp-controller="Home" class="btn btn-primary m-1">返回</a>
+                <a asp-action="Index" asp-controller="Home" class="btn btn-primary m-1">返回</a>
                 <a href="#" class="btn btn-primary m-1">编辑</a>
                 <a href="#" class="btn btn-danger m-1">删除</a>
             </div>

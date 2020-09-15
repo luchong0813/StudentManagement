@@ -747,4 +747,94 @@ public static void InsertSeedData(this ModelBuilder modelBuilder)
                 new Student { Id = 5, Name = "鲁班", ClassName = ClassName.ClassFive, Email = "dxshjc1515251@163.com" });
         }
 ```
+###### 领域模型与数据库架构
++ 使用迁移功能同步领域模型和数据库架构
++ 使用`add-migration`添加迁移记录
++ 使用`remove-migration`删除最近一条记录
++ 使用`update-database`迁移记录名称 可以回滚至任意一次迁移
+
+# 文件上传
+###### 定义ViewModel
+要上传的字段采用`IFormFile`类型
+```
+public class StudentCreateViewModel
+    {
+        public int Id { get; set; }
+        ....
+
+        [Display(Name = "头像")]
+        public IFormFile Photo { get; set; }
+    }
+```
+###### 编写视图
+修改cshtml视图文件，修改模型绑定：
+`@model StudentCreateViewModel`
+加入上传文件的表单项
+```
+<div class="form-group row">
+        <label asp-for="Photo" class="col-sm-2 col-form-label"></label>
+        <div class="col-sm-10">
+            <div class="custom-file">
+                <input asp-for="Photo" class="form-control custom-file-input" />
+                <label class="custom-file-label">请选择头像...</label>
+            </div>
+        </div>
+    </div>
+```
+为了选择文件后能显示出文件名还要编写js：
+```
+@section Scripts{
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(".custom-file-input").on("change", function () {
+                    var fileName = $(this).val().split("\\").pop();
+                    $(this).next(".custom-file-label").html(fileName);
+                })
+            })
+        </script>
+    }
+```
+###### 编写控制器
+通过构造函数注入`WebHostEnvironment`
+```
+public HomeController(IStudentRepository studentRepository, IWebHostEnvironment webHostEnvironment)
+        {
+            _studentRepository = studentRepository;
+            this.webHostEnvironment = webHostEnvironment;
+        }
+```
+处理文件上传和保存的逻辑
+```
+[HttpPost]
+        public IActionResult Create(StudentCreateViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                string uniqueFileName = null;
+                if (model.Photo != null)
+                {
+                    //获取上传头像存放的路径
+                    string uploadFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                    //生成唯一的文件名
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
+                    string filePath = Path.Combine(uploadFolder, uniqueFileName);
+
+                    model.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                }
+
+                Student newStudent = new Student()
+                {
+                    Name = model.Name,
+                    Email = model.Email,
+                    ClassName = model.ClassName,
+                    Photo = uniqueFileName
+                };
+
+                _studentRepository.Add(newStudent);
+                return RedirectToAction("Details", new { id = newStudent.Id });
+            }
+            return View();
+        }
+```
+
 

@@ -1,16 +1,14 @@
 ﻿using Microsoft.AspNetCore.Http;
+using StudentManagement.Models;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace StudentManagement.Models
+namespace StudentManagement.ViewModels
 {
-    /// <summary>
-    /// 学生模型
-    /// </summary>
-    public class Student
+    public class StudentCreateViewModel
     {
         public int Id { get; set; }
         [Display(Name = "姓名")]
@@ -24,6 +22,6 @@ namespace StudentManagement.Models
         public string Email { get; set; }
 
         [Display(Name = "头像")]
-        public string Photo { get; set; }
+        public IFormFile Photo { get; set; }
     }
 }
