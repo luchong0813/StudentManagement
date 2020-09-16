@@ -836,5 +836,113 @@ public HomeController(IStudentRepository studentRepository, IWebHostEnvironment 
             return View();
         }
 ```
+###### 多文件上传
+和单文件差不多，其主要修改地方如下：
++ 在ViewModel中将属性改为`public List<IFormFile> Photos { get; set; }`
++ 在视图代码上的`input`中加入`multiple`以此来支持多文件
++ 更改JavaScript代码
+```
+var fileLable = $(this).next(".custom-file-label");
+                    var files = $(this)[0].files;
+                    if (files.length > 1) {
+                        fileLable.html("您已经选择了：" + files.length + "张图片");
+                    } else {
+                        fileLable.html(files[0].name);
+                    }
+```
++ 修改控制器操作方法,使用forech遍历
+```
+if (model.Photos != null && model.Photos.Count() > 1)
+                {
+                    foreach (var photo in model.Photos)
+                    {
+                        //获取上传头像存放的路径
+                        string uploadFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                        //生成唯一的文件名s
+                        uniqueFileName = Guid.NewGuid().ToString() + "_" + photo.FileName;
+                        string filePath = Path.Combine(uploadFolder, uniqueFileName);
 
+                        photo.CopyTo(new FileStream(filePath, FileMode.Create));
+                    }
+                }
+```
+# 编辑学生信息
+###### 编辑视图模型
+因为所用的属性大致与添加时一致，所以直接继承
+```
+public class StudentEditViewModel : StudentCreateViewModel
+    {
+        public int Id { get; set; }
+        public string ExistPhontPath { get; set; }
+    }
+```
+###### 视图Action
++ 先通过学生ID查询学生详细信息
++ 通过实例化的`StudentEditViewModel`将信息传递给视图
+```
+[HttpGet]
+        public ViewResult Edit(int id)
+        {
+            Student student = _studentRepository.GetStudent(id);
+
+            StudentEditViewModel studentEditViewModel = new StudentEditViewModel()
+            {
+                Id = student.Id,
+                Name = student.Name,
+                Email = student.Email,
+                ClassName = student.ClassName,
+                ExistPhontPath = student.Photo
+            };
+
+            return View(studentEditViewModel);
+        }
+```
+###### 编辑视图页面
+基本与添加大致一样
+```
+//当我们提交表单更新数据库中的数据时，可以通过以下两个隐藏的input存储
+<input hidden asp-for="Id" />
+<input hidden asp-for="ExistPhontPath"/>
+```
+
+###### 提交数据的Action
++ 检查提供的数据是否有效
++ 从数据库中查询正在编辑的学生信息
++ 用模型对象中的数据更新student对象
++ 如果用户上传了新的图片则删除服务器中原有的图片，再将新的图片保存进来
++ 最后调用仓储中的更新服务，然后返回到`Index`Action中
+
+大致代码如下：
+```
+[HttpPost]
+        public IActionResult Edit(StudentEditViewModel model)
+        {
+            //检查提供的数据是否有效
+            if (ModelState.IsValid)
+            {
+                //从数据库查询正在编辑的学生信息
+                Student student = _studentRepository.GetStudent(model.Id);
+
+                student.Name = model.Name;
+                student.Email = model.Email;
+                student.ClassName = model.ClassName;
+
+                if (model.Photo != null )
+                {
+                    if (model.ExistPhontPath != null)
+                    {
+                        string filePath = Path.Combine(webHostEnvironment.WebRootPath, "images", model.ExistPhontPath);
+
+                        //因为用户又上传了新的图片，所以为了避免占用资源，直接删掉原来的
+                        System.IO.File.Delete(filePath);
+                    }
+
+                    student.Photo = ProcessUploadFile(model);
+                }
+                Student updateStudent = _studentRepository.Update(student);
+                return RedirectToAction("Index");
+            }
+            return View(model);
+        }
+```
 
