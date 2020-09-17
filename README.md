@@ -945,4 +945,52 @@ public class StudentEditViewModel : StudentCreateViewModel
             return View(model);
         }
 ```
+###### 枚举的扩展方法实现
+```
+public static string GetDisplayClassName(this Enum en)
+        {
+            Type type = en.GetType();
+            MemberInfo[] memberInfos = type.GetMember(en.ToString());
+            if (memberInfos != null && memberInfos.Length > 0)
+            {
+                object[] attrs = memberInfos[0].GetCustomAttributes(typeof(DisplayAttribute), true);
+                if (attrs != null && attrs.Length > 0)
+                {
+                    return ((DisplayAttribute)attrs[0]).Name;
+                }
+            }
+            return en.ToString();
+        }
+```
+
+# 404错误与异常拦截
+### 找不到指定ID的异常
+修改查看详情的控制器，如果通过EF Core查询的学生信息为null则跳转到错误视图
+```
+Student student = _studentRepository.GetStudent(id);
+
+            if (student == null)
+            {
+                return View("StudentNotFound", id);
+            }
+```
+
+### 统一处理404错误
+###### 在`Startup.cs`中添加中间件
+`app.UseStatusCodePagesWithRedirects("/Error/{0}");`
+
+###### 编写错误操作控制器
+```
+[Route("Error/{statusCode}")]
+        public IActionResult HttpStatusCodeHandler(int statusCode)
+        {
+            switch (statusCode)
+            {
+                case 404:
+                    ViewBag.ErrorMessage = "少年,你走错路了吧！";
+                    break;
+            }
+            return View("NotFound");
+        }
+```
 

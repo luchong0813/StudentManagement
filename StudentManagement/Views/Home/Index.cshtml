@@ -4,23 +4,51 @@
     ViewBag.Title = "首页";
 }
 
+@*<div class="card-deck">
+        @foreach (var student in Model)
+        {
+            var phontPatn = $"~/images/{(student.Photo ?? "abc.jpg")}";
+            <div class="card m-3">
+                <div class="card-header">
+                    <h3>@student.Name</h3>
+                </div>
+                <img class="c imageThumbnail" src=@phontPatn asp-append-version="true" />
+                <div class="card-footer text-center">
+                    <a asp-controller="Home" asp-action="details" asp-route-id="@student.Id" class="btn btn-primary m-1">查看</a>
+                    <a asp-controller="Home" asp-action="edit" asp-route-id="@student.Id" class="btn btn-primary m-1">编辑</a>
+                    <a href="#" class="btn btn-danger m-1">删除</a>
+                </div>
+            </div>
+        }
+    </div>*@
+
+
 <div class="card-deck">
-    @foreach (var student in Model)
-    {
-        var phontPatn = $"~/images/{(student.Photo ?? "abc.jpg")}";
-        <div class="card m-3">
+        @foreach (var student in Model)
+        {
+            var phontPatn = $"~/images/{(student.Photo ?? "abc.jpg")}";
+
+        <div class="col-sm-6 col-md-4">
             <div class="card-header">
                 <h3>@student.Name</h3>
             </div>
-            <img class="card-img-top imageThumbnail" src=@phontPatn asp-append-version="true" />
-            <div class="card-footer text-center">
-                <a asp-controller="Home" asp-action="details" asp-route-id="@student.Id" class="btn btn-primary m-1">查看</a>
-                <a asp-controller="Home" asp-action="edit" asp-route-id="@student.Id" class="btn btn-primary m-1">编辑</a>
-                <a href="#" class="btn btn-danger m-1">删除</a>
+            <div class="thumbnail">
+                <img class="card-img-top m-auto imageThumbnail" src=@phontPatn asp-append-version="true" />
+                <div class="caption">
+                    <h4 class="text-center m-3">@student.ClassName.GetDisplayClassName()</h4>
+                    <p class="card-footer text-center">
+                        <a asp-controller="Home" asp-action="details" asp-route-id="@student.Id" class="btn btn-primary" role="button">查看</a>
+                        <a asp-controller="Home" asp-action="edit" asp-route-id="@student.Id" class="btn btn-info" role="button">编辑</a>
+                        <a asp-controller="Home" asp-action="delete" asp-route-id="@student.Id" class="btn btn-danger" role="button">删除</a>
+                    </p>
+                </div>
             </div>
         </div>
-    }
-</div>
+        }
+    </div>
+
+
+
 
 @section Scripts{
 }

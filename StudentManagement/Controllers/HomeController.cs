@@ -27,13 +27,19 @@ namespace StudentManagement.Controllers
             return View(students);
         }
 
-        public IActionResult Details(int? id)
+        public IActionResult Details(int id)
         {
+            Student student = _studentRepository.GetStudent(id);
+
+            if (student == null)
+            {
+                return View("StudentNotFound", id);
+            }
 
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()
             {
                 PageTiltle = "学生详情",
-                Student = _studentRepository.GetStudent(id ?? 1)
+                Student = student
             };
 
             return View(homeDetailsViewModel);
@@ -111,7 +117,7 @@ namespace StudentManagement.Controllers
                 student.Email = model.Email;
                 student.ClassName = model.ClassName;
 
-                if (model.Photo != null )
+                if (model.Photo != null)
                 {
                     if (model.ExistPhontPath != null)
                     {
@@ -127,6 +133,18 @@ namespace StudentManagement.Controllers
                 return RedirectToAction("Index");
             }
             return View(model);
+        }
+
+
+        public IActionResult Delete(int id)
+        {
+            Student student = _studentRepository.GetStudent(id);
+
+            if (student != null)
+            {
+                _studentRepository.Delete(student.Id);
+            }
+            return RedirectToAction("Index");
         }
 
 

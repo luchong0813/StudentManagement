@@ -41,7 +41,12 @@ namespace StudentManagement
         {
             if (env.IsDevelopment())
             {
-                app.UseDeveloperExceptionPage();
+                //app.UseDeveloperExceptionPage();
+                app.UseStatusCodePagesWithRedirects("/Error/{0}");
+            }
+            else
+            {
+                app.UseStatusCodePagesWithRedirects("/Error/{0}");
             }
 
             //添加静态文件中间件
@@ -56,10 +61,7 @@ namespace StudentManagement
                     pattern: "{Controller=Home}/{action=Index}/{id?}");
             });
 
-            app.Run(async (context) =>
-            {
-                await context.Response.WriteAsync($"Hello Word");
-            });
+          
         }
     }
 }
