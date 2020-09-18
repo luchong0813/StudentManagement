@@ -993,4 +993,23 @@ Student student = _studentRepository.GetStudent(id);
             return View("NotFound");
         }
 ```
+### 设置全局异常跳转
+添加中间件
+`app.UseExceptionHandler("/Error");`
+编写处理用的控制器，这里需要添加AllowAnonymous注解，允许用户在未登录的时候访问到这个异常页面，保证无论如何可以显示出异常页面。
+```
+[AllowAnonymous]
+        [Route("Error")]
+        public IActionResult Error()
+        {
+            var exception = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+            ViewBag.Message = exception.Error.Message;
+            ViewBag.Path = exception.Path;
+            ViewBag.StackTrace = exception.Error.StackTrace;
+
+            return View("Error");
+        }
+```
+
 

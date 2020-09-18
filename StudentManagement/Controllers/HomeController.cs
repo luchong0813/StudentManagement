@@ -29,6 +29,8 @@ namespace StudentManagement.Controllers
 
         public IActionResult Details(int id)
         {
+            throw new Exception("人为的抛出一个异常");
+
             Student student = _studentRepository.GetStudent(id);
 
             if (student == null)
@@ -91,6 +93,12 @@ namespace StudentManagement.Controllers
         public ViewResult Edit(int id)
         {
             Student student = _studentRepository.GetStudent(id);
+
+            if (student == null)
+            {
+                Response.StatusCode = 404;
+                return View("StudentNotFound", id);
+            }
 
             StudentEditViewModel studentEditViewModel = new StudentEditViewModel()
             {

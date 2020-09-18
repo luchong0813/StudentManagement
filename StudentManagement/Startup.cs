@@ -41,8 +41,15 @@ namespace StudentManagement
         {
             if (env.IsDevelopment())
             {
+
+                //app.UseDeveloperExceptionPage();  //当代码发生异常时处理，主要给开发人员使用
+
+                app.UseExceptionHandler("/Error");  //全局拦截代码异常
+
                 //app.UseDeveloperExceptionPage();
-                app.UseStatusCodePagesWithRedirects("/Error/{0}");
+                //app.UseStatusCodePagesWithRedirects("/Error/{0}");
+                //推荐使用这个
+                app.UseStatusCodePagesWithReExecute("/Error/{0}");  //拦截 404 NotFound
             }
             else
             {
@@ -61,7 +68,7 @@ namespace StudentManagement
                     pattern: "{Controller=Home}/{action=Index}/{id?}");
             });
 
-          
+
         }
     }
 }
