@@ -29,7 +29,7 @@ namespace StudentManagement.Controllers
 
         public IActionResult Details(int id)
         {
-            throw new Exception("人为的抛出一个异常");
+            //throw new Exception("人为的抛出一个异常");
 
             Student student = _studentRepository.GetStudent(id);
 

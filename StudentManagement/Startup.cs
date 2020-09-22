@@ -5,11 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StudentManagement.CustomerMiddlewares;
 using StudentManagement.Models;
 
 namespace StudentManagement
@@ -32,6 +34,22 @@ namespace StudentManagement
             services.AddDbContextPool<AppDbContext>(
                 options => options.UseSqlServer(_configuration.GetConnectionString("StudentDBConnection"))
                 );
+
+            services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddErrorDescriber<CustomerErrorDescriber>()
+                .AddEntityFrameworkStores<AppDbContext>();
+
+            services.Configure<IdentityOptions>(options =>
+            {
+                //密码中允许最大的重复数字
+                options.Password.RequiredUniqueChars = 3;
+                //密码至少包含一个非字母的数字的字符
+                options.Password.RequireNonAlphanumeric = false;
+                //密码是否必须包含小写字母
+                options.Password.RequireLowercase = false;
+                //密码是否必须包含大写字母
+                options.Password.RequireUppercase = false;
+            });
 
             services.AddScoped<IStudentRepository, StudentRepository>();
         }
@@ -58,6 +76,9 @@ namespace StudentManagement
 
             //添加静态文件中间件
             app.UseStaticFiles();
+
+            //添加验证中间件
+            app.UseAuthentication();
 
             //添加路由中间件
             app.UseRouting();

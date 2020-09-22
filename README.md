@@ -1011,5 +1011,214 @@ Student student = _studentRepository.GetStudent(id);
             return View("Error");
         }
 ```
+# 日志记录
+AspNetCore里面自带了一套日志系统，默认已经注册到了服务容器里了，只要在控制器的构造函数里注入就可以使用了，比如：
+```
+public class ErrorController : Controller
+{
+    private ILogger<ErrorController> _logger;
 
+    public ErrorController(ILogger<ErrorController> logger)
+    {
+        this._logger = logger;
+    }
+}
+```
+默认的日志只会记录到控制台或者调试输出，不过我们为了实现更多功能，比如记录到文件或者推送到日志服务器，我们需要使用第三方的日志组件。这里我用的是NLog。
+
+首先要安装NLog.Web.AspNetCore这个包。
+
+之后在Program.cs里引入nlog服务：
+```
+public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+    WebHost.CreateDefaultBuilder(args)
+    .ConfigureLogging((hostingContext, logging) =>
+     {
+         // 保留官方的代码中的默认日志程序
+ logging.AddConfiguration(hostingContext.Configuration.GetSection("Logging"));
+         logging.AddConsole();
+         logging.AddDebug();
+         logging.AddEventSourceLogger();
+         // 引入 nlog
+         logging.AddNLog();
+      }).UseStartup<Startup>();
+```
+保留官方默认日志程序那里，要看AspNetCore的源代码
+
+然后，为了使用nlog，需要创建一个配置文件，在项目根目录创建 NLog.config：
+
+关于配置文件的说明可以参考：https://github.com/NLog/NLog/wiki
+
+```
+<?xml version="1.0" encoding="utf-8" ?>
+<nlog xmlns="http://www.nlog-project.org/schemas/NLog.xsd"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      autoReload="true"
+      throwConfigExceptions="true">
+  <targets>
+    <target name="f1" xsi:type="File" fileName="Logs\nlog-all-${shortdate}.log"/>
+    <target name="n1" xsi:type="Network" address="tcp://localhost:4001"/>
+    <target name="c1" xsi:type="Console" encoding="utf-8"
+            error="true"
+            detectConsoleAvailable="true" />
+    <target name="c2" xsi:type="ColoredConsole" encoding="utf-8"
+          useDefaultRowHighlightingRules="true"
+          errorStream="true"
+          enableAnsiOutput="true"
+          detectConsoleAvailable="true"
+          DetectOutputRedirected="true">
+    </target>
+  </targets>
+  <rules>
+    <logger name="*" maxLevel="Debug" writeTo="c2" />
+    <logger name="*" minLevel="Info" writeTo="f1" />
+  </rules>
+</nlog>
+```
+之后在程序中就可以正常使用日志功能了。比如：
+```
+[AllowAnonymous]
+        [Route("Error")]
+        public IActionResult Error()
+        {
+            var exception = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
+
+            ViewBag.Message = exception.Error.Message;
+            //ViewBag.Path = exception.Path;
+            //ViewBag.StackTrace = exception.Error.StackTrace;
+            logger.LogError($"异常路径：{exception.Path},异常堆栈：{exception.Error}");
+
+            return View("Error");
+        }
+```
+还有可以在`appsettings.json`里面配置日志等级和命名空间过滤，跟在NLog.conf里面配置效果是一样的。例如：
+```
+"Logging": {
+    "LogLevel": {
+        "Default": "Warning",
+        "StudyManagement.Controllers.ErrorController": 
+        "Warning"
+    }
+}
+```
+# Identity身份验证框架
+### 配置Identity
+1、使用NuGet包安装`Microsoft.AspNetCore.Identity.EntityFrameworkCore`
+2、`AppDbContext`继承`IdentityDbContext`,`IdentityDbContext`继承了`DbContext`，所以不用再次显示继承`DbContext`
+3、注册依赖服务
+```
+services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddEntityFrameworkStores<AppDbContext>();
+```
+4、添加中间件，因为希望在请求到达MVC之前就对用户进行身份验证，所以需要在路由中间件之前添加
+```
+//添加验证中间件
+app.UseAuthentication();
+
+//添加路由中间件
+app.UseRouting();
+```
+5、添加身份迁移
+### 使用Identity注册新用户
+1、添加ViewModel模型
+```
+ public class RegisterViewModel
+    {
+        [Required]
+        [EmailAddress]
+        [Display(Name = "邮箱地址")]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        [Display(Name = "密码")]
+        public string Password { get; set; }
+
+        [Required]
+        [Compare("Password", ErrorMessage = "两次密码输入不一致，请检查后重新输入")]
+        [Display(Name = "确认密码")]
+        public string ConfirmPassword { get; set; }
+    }
+```
+2、编写控制器
+依赖注入`UserManager`和`SignInManager`，这是Identity默认提供用于创新新用户和登录的服务
+```
+private UserManager<IdentityUser> _usermanager;
+        private SignInManager<IdentityUser> _signmanager;
+
+        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        {
+            _usermanager = userManager;
+            _signmanager = signInManager;
+        }
+```
+3、编写视图页面
+4、实现注册功能
+```[HttpPost]
+        public async Task<IActionResult> Register(RegisterViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                //将数据从模型中复制到IdentityUser
+                var user = new IdentityUser
+                {
+                    UserName = model.Email,
+                    Email = model.Email
+                };
+
+                var result = await _usermanager.CreateAsync(user, model.Password);
+
+                //如果注册成功，则使用登录服务登录
+                //并重定向到HomeController的索引操作
+                if (result.Succeeded)
+                {
+                    await _signmanager.SignInAsync(user, isPersistent: false);
+                    return RedirectToAction("Index", "Home");
+                }
+
+                //如果有任何错误，则天机到ModelState对象中
+                //将由验证摘要标记助手显示到视图上
+                foreach (var item in result.Errors)
+                {
+                    ModelState.AddModelError(string.Empty, item.Description);
+                }
+            }
+            return View(model);
+        }
+```
+### Identity中对密码复杂度的处理
+使用`ConfigureServices`方法中的`Configure`，具体代码如下：
+```
+services.Configure<IdentityOptions>(options =>
+            {
+                //密码中允许最大的重复数字
+                options.Password.RequiredUniqueChars = 3;
+                //密码至少包含一个非字母的数字的字符
+                options.Password.RequireNonAlphanumeric = false;
+                //密码是否必须包含小写字母
+                options.Password.RequireLowercase = false;
+                //密码是否必须包含大写字母
+                options.Password.RequireUppercase = false;
+            });
+```
+###### 修改中文提示的错误信息
+Identity提供了`AddErrorDescriber`方法，需要创建一个错误描述类并继承自`IdentityErrorDescriber`，然后重写
+```
+ public class CustomerErrorDescriber : IdentityErrorDescriber
+    {
+        public override IdentityError DefaultError()
+        {
+            return new IdentityError { Code = nameof(DefaultError), Description = "发生了未知的故障" };
+        }
+
+          .......
+
+}
+```
+最后注册到`AddIdentity`中即可
+```
+services.AddIdentity<IdentityUser, IdentityRole>()
+                .AddErrorDescriber<CustomerErrorDescriber>()
+                .AddEntityFrameworkStores<AppDbContext>();
+```
 
