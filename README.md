@@ -1221,4 +1221,89 @@ services.AddIdentity<IdentityUser, IdentityRole>()
                 .AddErrorDescriber<CustomerErrorDescriber>()
                 .AddEntityFrameworkStores<AppDbContext>();
 ```
+### 登录状态及注销功能
+1、修改`_Layout`布局页面
+```
+@using Microsoft.AspNetCore.Identity
+@inject SignInManager<IdentityUser> _signInManager
 
+<ul class="navbar-nav ml-auto">
+    @*如果已经登录，则显示注销链接*@
+    @if (_signInManager.IsSignedIn(User))
+    {
+        <form method="post" asp-action="logout" asp-controller="account">
+            <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
+                注销 @User.Identity.Name
+            </button>
+        </form>
+    }
+    else
+    {
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Account" asp-action="Register">注册</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" asp-controller="Account" asp-action="Login">登录</a>
+        </li>
+    }
+</ul>
+```
+2、在控制器添加Logout方法
+```
+[HttpPost]
+public async Task<IActionResult> Logout()
+{
+    await _signmanager.SignOutAsync();
+    return RedirectToAction("index", "home");
+}
+```
+
+### 使用Identity实现登录功能
+大概需要如下步骤：
++ 创建视图模型
++ 登录视图
++ `HttpGet`和`HttpPost`方法
+
+1、创建`LoginViewModel`视图模型，`RememberMe`用于是否记录`Cookie`
+```
+public class LoginViewModel
+    {
+        [Required]
+        [EmailAddress]
+        public string Email { get; set; }
+
+        [Required]
+        [DataType(DataType.Password)]
+        public string Password { get; set; }
+
+        [Display(Name = "记住我")]
+        public bool RememberMe { get; set; }
+    }
+```
+2、编写登陆视图
+3、控制器编写操作方法,调用`Identity`中的`PasswordSignInAsync`并传入对应参数
+```
+[HttpGet]
+        public IActionResult Login()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Login(LoginViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var result = await _signmanager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+
+                if (result.Succeeded)
+                {
+                    return RedirectToAction("Index", "Home");
+                }
+
+                ModelState.AddModelError(string.Empty, "登录失败，请重试");
+            }
+
+            return View(model);
+        }
+```
