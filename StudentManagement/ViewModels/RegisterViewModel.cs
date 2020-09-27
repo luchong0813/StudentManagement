@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNetCore.Mvc;
+using StudentManagement.CustomerMiddlewares.Utils;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
@@ -11,6 +13,8 @@ namespace StudentManagement.ViewModels
         [Required]
         [EmailAddress]
         [Display(Name = "邮箱地址")]
+        [ValidEmailDomain(allowedDomain: "outlook.com", ErrorMessage = "邮箱的地址后缀必须是outlook.com")]
+        [Remote(action: "IsEmailUse", controller: "Account")]
         public string Email { get; set; }
 
         [Required]

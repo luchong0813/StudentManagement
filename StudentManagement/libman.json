@@ -9,6 +9,13 @@
     {
       "library": "jquery@3.5.1",
       "destination": "wwwroot/js/"
+    },
+    {
+      "library": "jquery-validate@1.19.2",
+      "destination": "wwwroot/lib/jquery.min.js"
+    },
+    { "library": "jquery-validation-unobtrusive@3.2.11",
+      "destination": "wwwroot/lib/jquery-validate-nobtrusive"
     }
   ]
 }

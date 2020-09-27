@@ -1281,6 +1281,7 @@ public class LoginViewModel
     }
 ```
 2、编写登陆视图
+
 3、控制器编写操作方法,调用`Identity`中的`PasswordSignInAsync`并传入对应参数
 ```
 [HttpGet]
@@ -1306,4 +1307,101 @@ public class LoginViewModel
 
             return View(model);
         }
+```
+# 授权与验证
+### Authorize属性
++ 可以在控制器上设置`[Authorize]`属性，表示这个控制器需要授权
++ 也可以在各个操作方法上
++ `AllowAnonymous`通常配合`Authorize`使用，功能恰恰相反，表示允许匿名访问，比如注册和登录
++ 全局应用`Authorize`属性
+
+```
+services.AddControllersWithViews(config =>
+ {
+     var poicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+     config.Filters.Add(new AuthorizeFilter(poicy));
+ }).AddXmlDataContractSerializerFormatters();
+```
+### 开放式重定向攻击
+```
+ if (result.Succeeded)
+ {
+     if (!string.IsNullOrEmpty(returnUrl))
+     {
+         if (Url.IsLocalUrl(returnUrl))
+         {
+             return Redirect(returnUrl);
+         }
+     }
+     else
+     {
+         return RedirectToAction("Index", "Home");
+     }
+
+ }
+```
+### 客户端验证
+服务端验证通常是由验证属性完成，例如常见的`[Required]`等
+###### 使用隐式客户端验证库
+通过LibMan安装库
+```
+{
+      "library": "jquery-validate@1.19.2",
+      "destination": "wwwroot/lib/jquery.min.js"
+    },
+    { "library": "jquery-validation-unobtrusive@3.2.11",
+      "destination": "wwwroot/lib/jquery-validate-nobtrusive"
+    }
+```
+在视图中引用这3个库(还有一个jQuery库，需按照顺序加载)
+
+### 远程验证
+> 假设现在有这样一个场景：注册时检查邮箱是否已经被注册了
+###### 新增一个操作方法，如下：
+```
+[AllowAnonymous]
+[AcceptVerbs("GET", "POST")]
+public async Task<IActionResult> IsEmailUse(string email)
+{
+    var user = await _usermanager.FindByEmailAsync(email);
+    if (user == null)
+    {
+        return Json(true);
+    }
+    else
+    {
+        return Json($"邮箱：{email}已经被注册了！");
+    }
+}
+```
+###### 使用远程属性
+```
+[Remote(action: "IsEmailUse", controller: "Account")]
+public string Email { get; set; }
+```
+### 自定义验证属性
+> 假设这样一个场景：注册时只能使用后缀为outlook.com的邮箱
+
+###### 创建一个派生自`ValidationAttribute`的类
+```
+public class ValidEmailDomainAttribute : ValidationAttribute
+{
+    private readonly string allowedDomail;
+
+    public ValidEmailDomainAttribute(string allowedDomain)
+    {
+        this.allowedDomail = allowedDomain;
+    }
+
+    public override bool IsValid(object value)
+    {
+        string[] strings = value.ToString().Split('@');
+        return strings[1].ToUpper() == allowedDomail.ToUpper();
+    }
+}
+```
+###### 使用自定义验证属性
+```
+[ValidEmailDomain(allowedDomain: "outlook.com", ErrorMessage = "邮箱的地址后缀必须是outlook.com")]
+public string Email { get; set; }
 ```
