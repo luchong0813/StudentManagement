@@ -5,39 +5,40 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using StudentManagement.Models;
 using StudentManagement.ViewModels;
 
 namespace StudentManagement.Controllers
 {
+    [AllowAnonymous]
     public class AccountController : Controller
     {
-        private UserManager<IdentityUser> _usermanager;
-        private SignInManager<IdentityUser> _signmanager;
+        private UserManager<ApplicationUser> _usermanager;
+        private SignInManager<ApplicationUser> _signmanager;
 
-        public AccountController(UserManager<IdentityUser> userManager, SignInManager<IdentityUser> signInManager)
+        public AccountController(UserManager<ApplicationUser> userManager, SignInManager<ApplicationUser> signInManager)
         {
             _usermanager = userManager;
             _signmanager = signInManager;
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult Register()
         {
             return View();
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
                 //将数据从模型中复制到IdentityUser
-                var user = new IdentityUser
+                var user = new ApplicationUser
                 {
                     UserName = model.Email,
-                    Email = model.Email
+                    Email = model.Email,
+                    City = model.City
                 };
 
                 var result = await _usermanager.CreateAsync(user, model.Password);
@@ -68,14 +69,12 @@ namespace StudentManagement.Controllers
         }
 
         [HttpGet]
-        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model, string returnUrl)
         {
             if (ModelState.IsValid)
@@ -107,7 +106,6 @@ namespace StudentManagement.Controllers
             return View(model);
         }
 
-        [AllowAnonymous]
         [AcceptVerbs("GET", "POST")]
         public async Task<IActionResult> IsEmailUse(string email)
         {

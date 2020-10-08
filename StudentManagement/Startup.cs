@@ -38,7 +38,7 @@ namespace StudentManagement
                 options => options.UseSqlServer(_configuration.GetConnectionString("StudentDBConnection"))
                 );
 
-            services.AddIdentity<IdentityUser, IdentityRole>()
+            services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddErrorDescriber<CustomerErrorDescriber>()
                 .AddEntityFrameworkStores<AppDbContext>();
 

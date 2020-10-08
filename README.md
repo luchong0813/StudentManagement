@@ -1,6 +1,4 @@
-# 视频教程
-[从零开始学ASP.NET Core与Entity Framework Core ]("https://www.bilibili.com/video/BV1wb411W7aB?p=1")
-
+《深入浅出ASP.NET Core》学习笔记
 
 # 托管设置
 设置项目文件的`AspNetCoreHostingModel`属性
@@ -1405,3 +1403,135 @@ public class ValidEmailDomainAttribute : ValidationAttribute
 [ValidEmailDomain(allowedDomain: "outlook.com", ErrorMessage = "邮箱的地址后缀必须是outlook.com")]
 public string Email { get; set; }
 ```
+
+# 角色管理与用户扩展
+### 扩展IdentityUser类
+1、新建一个`ApplicationUser`类继承自`IdentityUser`
+2、将引用`IdentityUser`的替换为`ApplicationUser`
+3、限定`AppDbContext`中继承的`IdentityUser`类型为`ApplicationUser`
+```
+public class AppDbContext : IdentityDbContext<ApplicationUser>
+```
+4、因为实体字段发生了变化，所以还需要使用EF Core迁移到数据库
+5、为了能够在`AspNetUsers`表中存储自定义的字段，需要修改以下内容
++ `RegisterViewModel`类
++ `Register.cshtml`视图
++ `AccountController`控制器中的`Register()`操作方法
+
+### 角色管理
+1、创建Admin控制器以及在构造方法中注入`RoleManager`服务
+```
+ private readonly RoleManager<IdentityRole> _roleManager;
+private readonly UserManager<ApplicationUser> _userManager;
+
+public AdminController(RoleManager<IdentityRole> roleManager, UserManager<ApplicationUser> userManager)
+{
+    _roleManager = roleManager;
+    _userManager = userManager;
+}
+```
+2、实现新建角色的操作方法
+```
+[HttpGet]
+public IActionResult CreateRole()
+{
+    return View();
+}
+
+/// <summary>
+/// 创建角色
+/// </summary>
+/// <param name="model"></param>
+/// <returns></returns>
+[HttpPost]
+public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
+{
+    if (ModelState.IsValid)
+    {
+        IdentityRole identityRole = new IdentityRole()
+        {
+            Name = model.RoleName
+        };
+
+        IdentityResult result = await _roleManager.CreateAsync(identityRole);
+
+        if (result.Succeeded)
+        {
+            return RedirectToAction("ListRoles", "Admin");
+        }
+
+        foreach (var item in result.Errors)
+        {
+            ModelState.AddModelError("", item.Description);
+        }
+    }
+    return View(model);
+}
+```
+3、创建ViewModel视图模型
+4、编写视图
+
+### 显示所有角色列表
+1、使用`RoleManager`类的角色属性返回所有`IdentityRole`对象
+```
+ [HttpGet]
+ public IActionResult ListRoles()
+ {
+     var roles = _roleManager.Roles;
+     return View(roles);
+ }
+```
+2、编写视图
+```
+@if (Model.Any())
+{
+    <a class="btn btn-primary mb-3" style="width:auto" asp-action="CreateRole" asp-controller="Admin">添加新角色</a>
+    foreach (var item in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">角色ID：@item.Id</div>
+            <div class="card-body">
+                <h5 class="card-title">@item.Name</h5>
+            </div>
+            <div class="card-footer">
+                <a class="btn btn-info" asp-action="EditRole" asp-controller="Admin" asp-route-id="@item.Id">编辑</a>
+                <a class="btn btn-danger" asp-action="DelRole" asp-controller="Admin" asp-route-id="@item.Id">删除</a>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="card-header">尚未创捷任何角色</div>
+    <div class="card-body">
+        <h5 class="card-title">点击下面的按钮创建角色</h5>
+        <a class="btn btn-primary" style="width:auto" asp-action="CreateRole" asp-controller="Admin">创建角色</a>
+    </div>
+}
+```
+
+### 编辑角色
+1、编写ViewModel类，这里的ID用String类型，因为ID是通过TagHelper传递过来的，这里仅作展示
+```
+public class EditRoleViewModel
+{
+    public EditRoleViewModel()
+    {
+        Users = new List<string>();
+    }
+
+
+    [Display(Name = "角色ID")]
+    public string Id { get; set; }
+
+    [Required(ErrorMessage = "角色名称是必填的")]
+    [Display(Name = "角色名称")]
+    public string RoleName { get; set; }
+
+    public List<string> Users { get; set; }
+}
+```
+2、实现编辑的操作方法，完整代码在`\Controllers\AdminController\EditRole`中
+3、编写视图
+> 当使用了`Model.Users.Any()`时角色下没有用户信息则会报错，只需要在ViewModel中初始化Users属性即可
+> 

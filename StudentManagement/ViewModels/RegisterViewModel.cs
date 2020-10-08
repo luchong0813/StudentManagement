@@ -26,5 +26,9 @@ namespace StudentManagement.ViewModels
         [Compare("Password", ErrorMessage = "两次密码输入不一致，请检查后重新输入")]
         [Display(Name = "确认密码")]
         public string ConfirmPassword { get; set; }
+
+        [Required]
+        [Display(Name = "城市")]
+        public string City { get; set; }
     }
 }
