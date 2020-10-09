@@ -1534,4 +1534,53 @@ public class EditRoleViewModel
 2、实现编辑的操作方法，完整代码在`\Controllers\AdminController\EditRole`中
 3、编写视图
 > 当使用了`Model.Users.Any()`时角色下没有用户信息则会报错，只需要在ViewModel中初始化Users属性即可
-> 
+
+### 角色管理中的用户关联
+Identity中`AspNetUserRoles`表分别与`AspNetUsers`的ID和`AspNetRoles`的ID对应
++ 创建ViewModel视图模型
++ 实现HttpGet操作方法
+
+  1. 通过roleId查询角色信息
+  2. 获取所有用户数据
+  3. 判断当前用户是否已经存在于角色当中
+  4. 存在则将IsSelected赋值为True，反之则为False
+
++ 实现HtppPost操作方法
+
+  1. 通过roleId查询角色信息
+  2. 循环遍历视图提交的模型数据
+  3. 查询当前循环的用户
+  4. 检查当前用户ID是否被选中
+  5. 如果选中了则添加到角色列表中，反之则移除
+  6. 对于其他情况则直接进入下一个循环
+  7. 最后再检查一下当前循环的用户是否为最后一个用户
+  8. 如果是则跳转到视图中，反之则跳出，进行下一个循环
+
++ 编写视图
+
+# 角色授权与用户管理
+### 基于角色的授权
+可以同时授权多个角色，只需用逗号隔开
+```
+[Authorize(Roles = "Admin")]
+public class AdminController : Controller
+{
+```
+Tips：需要添加授权中间件`UseAuthorization();`，
+要注册到`UseRouting();`和`UseEndpoints`之间。
+此中间件与身份验证`UseAuthentication();`中间件很相似，勿混淆。
+
+### 在菜单栏上显示或隐藏管理
+在布局视图上使用`SignInManager`服务判断用户是否登录和是否为管理员角色
+```
+@if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+```
+
+### 拒绝访问功能
+Authorize属性可防止未经授权访问，如果登录用户不是管理员角色，
+则会重定向到/Account/AccessDenied，所以只需要在Account控制器中添加AccessDenied操作方法，
+最后编写与之对应的视图代码即可。
+
+### 获取Identity中的用户列表
+1. 添加操作方法，使用`UserManager`查询所有用户
+2. 编写视图

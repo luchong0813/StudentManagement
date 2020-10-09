@@ -48,8 +48,7 @@
             }
         </div>
         <div class="card-footer">
-            <a href="#" class="btn btn-primary" style="width:auto">添加用户</a>
-            <a href="#" class="btn btn-danger" style="width:auto">删除用户</a>
+            <a asp-action="EditUsersInRole" asp-controller="Admin" asp-route-roleId="@Model.Id" class="btn btn-primary">从角色中添加或删除用户</a>
         </div>
     </div>
 </form>

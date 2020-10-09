@@ -119,5 +119,11 @@ namespace StudentManagement.Controllers
                 return Json($"邮箱：{email}已经被注册了！");
             }
         }
+
+        [HttpGet]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
     }
 }

@@ -91,6 +91,10 @@ namespace StudentManagement
 
             //添加路由中间件
             app.UseRouting();
+
+            //授权中间件
+            app.UseAuthorization();
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllerRoute(

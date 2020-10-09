@@ -47,11 +47,22 @@
                             <a class="nav-link" asp-action="Index" asp-controller="Home">学生列表</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-action="Create" asp-controller="Home">添加学生</a>
+                            <a class="nav-link " asp-action="Create" asp-controller="Home">添加学生</a>
                         </li>
+                        @if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item dropdown">
+                                <a id="navbarDropdownMenuLink" class="nav-link dropdown-toggle"  href="#" aria-expanded="false"
+                                   data-toggle="dropdown" aria-haspopup="true">管理</a>
+                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                    <a class="dropdown-item" asp-action="ListUsers" asp-controller="Admin">用户列表</a>
+                                    <a class="dropdown-item" asp-action="ListRoles" asp-controller="Admin">角色列表</a>
+                                </div>
+                            </li>
+                        }
                     </ul>
 
-                    <ul class="navbar-nav ml-auto">
+                    <ul class="nav navbar-nav navbar-right">
                         @*如果已经登录，则显示注销链接*@
                         @if (_signInManager.IsSignedIn(User))
                         {
