@@ -5,21 +5,34 @@
 
 <h1>所有角色</h1>
 
+
 @if (Model.Any())
 {
     <a class="btn btn-primary mb-3" style="width:auto" asp-action="CreateRole" asp-controller="Admin">添加新角色</a>
     foreach (var item in Model)
     {
-        <div class="card mb-3">
-            <div class="card-header">角色ID：@item.Id</div>
-            <div class="card-body">
-                <h5 class="card-title">@item.Name</h5>
+        <form method="post" asp-action="DeleteRole" asp-controller="Admin" asp-route-id="@item.Id">
+            <div class="card mb-3">
+                <div class="card-header">角色ID：@item.Id</div>
+                <div class="card-body">
+                    <h5 class="card-title">@item.Name</h5>
+                </div>
+                <div class="card-footer">
+                    <a class="btn btn-info" asp-action="EditRole" asp-controller="Admin" asp-route-id="@item.Id">编辑</a>
+                    @*<a class="btn btn-danger" asp-action="DelRole" asp-controller="Admin" asp-route-id="@item.Id">删除</a>*@
+
+                    <span id="confirmDeleteSpan_@item.Id" style="display:none">
+                        <span>您确定要删除？</span>
+                        <button type="submit" class="btn btn-danger">是</button>
+                        <a href="#" class="btn btn-success" onclick="confirmDelete('@item.Id', false)">否</a>
+                    </span>
+
+                    <span id="deleteSpan_@item.Id">
+                        <a href="#" class="btn btn-danger" onclick="confirmDelete('@item.Id', true)">删除</a>
+                    </span>
+                </div>
             </div>
-            <div class="card-footer">
-                <a class="btn btn-info" asp-action="EditRole" asp-controller="Admin" asp-route-id="@item.Id">编辑</a>
-                <a class="btn btn-danger" asp-action="DelRole" asp-controller="Admin" asp-route-id="@item.Id">删除</a>
-            </div>
-        </div>
+        </form>
     }
 }
 else
@@ -29,4 +42,8 @@ else
         <h5 class="card-title">点击下面的按钮创建角色</h5>
         <a class="btn btn-primary" style="width:auto" asp-action="CreateRole" asp-controller="Admin">创建角色</a>
     </div>
+}
+
+@section Scripts{
+    <script src="~/js/CustormScript.js" asp-append-version="true"></script>
 }

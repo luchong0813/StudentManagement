@@ -47,6 +47,11 @@ namespace StudentManagement.Controllers
                 //并重定向到HomeController的索引操作
                 if (result.Succeeded)
                 {
+
+                    if (_signmanager.IsSignedIn(User)&&User.IsInRole("Admin"))
+                    {
+                        return RedirectToAction("ListUsers", "Admin");
+                    }
                     await _signmanager.SignInAsync(user, isPersistent: false);
                     return RedirectToAction("Index", "Home");
                 }

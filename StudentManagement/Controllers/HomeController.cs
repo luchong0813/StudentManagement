@@ -35,7 +35,8 @@ namespace StudentManagement.Controllers
 
             if (student == null)
             {
-                return View("StudentNotFound", id);
+                ViewBag.ErrorMessage = $"学生ID：{id}的信息不存在，请重试！";
+                return View("NotFound", id);
             }
 
             HomeDetailsViewModel homeDetailsViewModel = new HomeDetailsViewModel()

@@ -1,0 +1,88 @@
+﻿@model EditUserViewModel
+@{
+    ViewBag.Title = "管理-编辑用户";
+}
+
+<h1>编辑用户</h1>
+<form method="post" class="mt-3">
+    <div class="form-group row">
+        <label asp-for="Id" class="col-sm-2 col-form-label">用户编号</label>
+        <div class="col-sm-10">
+            <input asp-for="Id" disabled class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="UserName" class="col-sm-2 col-form-label">姓名</label>
+        <div class="col-sm-10">
+            <input asp-for="UserName" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="Email" class="col-sm-2 col-form-label">邮箱</label>
+        <div class="col-sm-10">
+            <input asp-for="Email" class="form-control" />
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="City" class="col-sm-2 col-form-label">城市</label>
+        <div class="col-sm-10">
+            <input asp-for="City" class="form-control" />
+        </div>
+    </div>
+
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">更新</button>
+            <a asp-action="ListUsers" asp-controller="Admin" class="btn btn-light">取消</a>
+        </div>
+    </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>用户角色</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.Roles.Any())
+                {
+                    foreach (var item in Model.Roles)
+                    {
+                        <h5 class="card-title">@item</h5>
+                    }
+                }
+                else
+                {
+                    <h5 class="card-title">空空如也</h5>
+                }
+            </div>
+            <div class="card-footer">
+                <a style="width:auto" class="btn btn-primary">管理角色</a>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="card-header">
+                <h3>用户声明</h3>
+            </div>
+            <div class="card-body">
+                @if (Model.Claims.Any())
+                {
+                    foreach (var item in Model.Claims)
+                    {
+                        <h5 class="card-title">@item</h5>
+                    }
+                }
+                else
+                {
+                    <h5 class="card-title">空空如也</h5>
+                }
+            </div>
+            <div class="card-footer">
+                <a style="width:auto" class="btn btn-primary">管理声明</a>
+            </div>
+        </div>
+</form>

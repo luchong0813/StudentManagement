@@ -6,8 +6,12 @@
 }
 
 
-<div class="text-center">
-    <h1>@ViewBag.ErrorMessage</h1>
-    <h2>@ViewBag.Path@ViewBag.QueryStr</h2>
+<div class="alert alert-danger mt-1 mb-1">
+    @*<h1>@ViewBag.ErrorMessage</h1>
+    <h2>@ViewBag.Path@ViewBag.QueryStr</h2>*@
+
+    <h4>404 Not Found错误</h4>
+    <hr />
+    <h5>@ViewBag.ErrorMessage</h5>
     <a asp-controller="home" asp-action="index" class="btn btn-outline-success">返回首页</a>
 </div>

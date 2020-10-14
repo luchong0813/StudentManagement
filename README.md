@@ -1584,3 +1584,62 @@ Authorize属性可防止未经授权访问，如果登录用户不是管理员�
 ### 获取Identity中的用户列表
 1. 添加操作方法，使用`UserManager`查询所有用户
 2. 编写视图
+3. 修改注册操作方法
+
+```
+if (result.Succeeded)
+{
+
+    if (_signmanager.IsSignedIn(User)&&User.IsInRole("Admin"))
+    {
+        return RedirectToAction("ListUsers", "Admin");
+    }
+    await _signmanager.SignInAsync(user, isPersistent: false);
+    return RedirectToAction("Index", "Home");
+}
+```
+
+### 编辑Identity用户
+1. 添加编辑用户ViewModel
+2. 添加编辑用户操作方法
+3. 编写编辑用户视图
+
+### 删除用户
+不建议使用Get情趣删除数据，推荐使用POST请求
+1. 添加删除用户操作方法
+2. 完善删除按钮
+
+```
+<div class="card-footer">
+    <a asp-action="EditUser" asp-controller="Admin" asp-route-id="@item.Id" class="btn btn-primary">编辑</a>
+
+    <span id="confirmDeleteSpan_@item.Id" style="display:none">
+        <span>您确定要删除？</span>
+        <button type="submit" asp-action="DeleteUser" asp-route-id="@item.Id" class="btn btn-danger">是</button>
+        <a href="#" class="btn btn-success" onclick="confirmDelete('@item.Id', false)">否</a>
+    </span>
+
+    <span id="deleteSpan_@item.Id">
+        <a href="#" class="btn btn-danger" onclick="confirmDelete('@item.Id', true)">删除</a>
+    </span>
+
+</div>
+```
+JS代码：
+```
+function confirmDelete(uniqueId, isDeleteClicked) {
+var deleteSpan = "deleteSpan_" + uniqueId;
+var confirmDeleteSpan = "confirmDeleteSpan_" + uniqueId;
+
+if (isDeleteClicked) {
+    $("#" + deleteSpan).hide();
+    $("#" + confirmDeleteSpan).show();
+} else {
+    $("#" + deleteSpan).show();
+    $("#" + confirmDeleteSpan).hide();
+}
+}
+```
+
+### 删除角色
+与删除用户完全一样，照搬
