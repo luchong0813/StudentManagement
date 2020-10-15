@@ -1642,4 +1642,29 @@ if (isDeleteClicked) {
 ```
 
 ### 删除角色
-与删除用户完全一样，照搬
+xxxxx
+
+# EF Core中的数据完整性约束
+数据完整性约束是指当执行添加、更新、删除等操作时防止不符合规范的数据进入数据库。
+> 假设：某个用户因为误操作将Admin角色删除了，那么该角色下关联的用户也会一同被删除。
+
+##### 解决办法：
+重新配置它们的关联关系
+```
+ protected override void OnModelCreating(ModelBuilder modelBuilder)
+ {
+     //modelBuilder.InsertSeedData();
+     base.OnModelCreating(modelBuilder);
+     modelBuilder.InsertSeedData();
+
+     //获取当前系统中所有领域模型上的外键列表
+     var foreignKeys = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());
+
+
+     foreach (var item in foreignKeys)
+     {
+         //将它们的删除行为配置为无操作
+         item.DeleteBehavior = DeleteBehavior.Restrict;
+     }
+ }
+```

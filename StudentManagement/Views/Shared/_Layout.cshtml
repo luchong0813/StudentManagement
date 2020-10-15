@@ -16,11 +16,12 @@
         <script src="~/lib/jquery-validate-nobtrusive/jquery.validate.unobtrusive.js"></script>
     </environment>
 
+    @*非开发环境*@
     <environment exclude="Development">
-        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
-              integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous"
-              asp-fallback-href="~/lib/twitter-bootstrap/css/bootstrap.css"
-              asp-suppress-fallback-integrity="true">
+        <link href="~/css/Site.css" rel="stylesheet" />
+        <link href="~/lib/twitter-bootstrap/css/bootstrap.css" rel="stylesheet" />
+        <script src="~/js/jquery.js"></script>
+        <script src="~/lib/twitter-bootstrap/js/bootstrap.js"></script>
         <script src="~/lib/jquery.min.js/jquery.validate.js"></script>
         <script src="~/lib/jquery-validate-nobtrusive/jquery.validate.unobtrusive.js"></script>
     </environment>

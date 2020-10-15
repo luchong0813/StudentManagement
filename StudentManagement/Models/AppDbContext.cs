@@ -22,6 +22,16 @@ namespace StudentManagement.Models
             //modelBuilder.InsertSeedData();
             base.OnModelCreating(modelBuilder);
             modelBuilder.InsertSeedData();
+
+            //获取当前系统中所有领域模型上的外键列表
+            var foreignKeys = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());
+
+
+            foreach (var item in foreignKeys)
+            {
+                //将它们的删除行为配置为无操作
+                item.DeleteBehavior = DeleteBehavior.Restrict;
+            }
         }
     }
 }

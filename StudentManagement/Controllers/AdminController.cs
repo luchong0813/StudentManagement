@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using StudentManagement.Models;
 using StudentManagement.ViewModels;
 
@@ -142,18 +143,30 @@ namespace StudentManagement.Controllers
             }
             else
             {
-                var result = await _roleManager.DeleteAsync(user);
-                if (result.Succeeded)
+                try
                 {
-                    return RedirectToAction("ListRoles");
+                    var result = await _roleManager.DeleteAsync(user);
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ListRoles");
+                    }
+
+                    foreach (var item in result.Errors)
+                    {
+                        ModelState.AddModelError("", item.Description);
+                    }
+
+                    return View("ListRoles");
+                }
+                catch (DbUpdateException ex)
+                {
+                    ViewBag.ErrorTitle = $"角色：{user.Name}正在被使用中!";
+                    ViewBag.ErrorMessage = $"无法删除{user.Name}角色，因为此角色下还存在用户。如果您想删除此角色，需要先删除该角色下所有用户，然后再次尝试删除该角色本身。";
+                    return View("Error");
                 }
 
-                foreach (var item in result.Errors)
-                {
-                    ModelState.AddModelError("", item.Description);
-                }
             }
-            return View("ListRoles");
+
         }
 
         #endregion
