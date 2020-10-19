@@ -1668,3 +1668,55 @@ xxxxx
      }
  }
 ```
+
+# 声明授权
+### Identity中的用户角色
+Tips:详见Admin控制器中管理用户声明
+1. 添加视图模型
+2. 实现操作方法
+3. 编写视图文件
+
+### 启用MARS与模型绑定失效
+在`appsettings.json`修改数据库连接字符串
+```
+ "StudentDBConnection": "server=localhost;database=StudentDB;Trusted_Connection=true;MultipleActiveResultSets=True"
+```
+
+### 声明授权
+比如，我们希望程序支持只有拥有某个权限声明的用户才能操作某些特殊功能，这时候就可以使用声明授权了
+1. 增加`ClaimsStore`类，用于管理一些声明
+
+```
+public static List<Claim> AllClaims = new List<Claim>()
+{
+    new Claim("创建角色","Create Role"),
+    new Claim("编辑角色","Edit Role"),
+    new Claim("删除角色","Delete Role"),
+    new Claim("编辑学生信息", "Edit Student")
+};
+```
+2. 添加ViewModel视图模型
+
+```
+public class UserClaimsViewModel
+{
+    public UserClaimsViewModel()
+    {
+        Cliams = new List<UserClaim>();
+    }
+
+    public string UserId { get; set; }
+    public List<UserClaim> Cliams { get; set; }
+}
+```
+3. 添加`UserClaim`类，用户与声明之间存在一对多的关系，用于保存声明列表
+
+```
+public class UserClaim
+{
+    public string ClaimType { get; set; }
+    public bool IsSelected { get; set; }
+}
+```
+4. 实现操作方法
+5. 编写视图文件

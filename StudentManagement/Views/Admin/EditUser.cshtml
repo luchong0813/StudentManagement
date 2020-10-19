@@ -42,47 +42,47 @@
         </div>
     </div>
 
-        <div class="card">
-            <div class="card-header">
-                <h3>用户角色</h3>
-            </div>
-            <div class="card-body">
-                @if (Model.Roles.Any())
-                {
-                    foreach (var item in Model.Roles)
-                    {
-                        <h5 class="card-title">@item</h5>
-                    }
-                }
-                else
-                {
-                    <h5 class="card-title">空空如也</h5>
-                }
-            </div>
-            <div class="card-footer">
-                <a style="width:auto" class="btn btn-primary">管理角色</a>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h3>用户角色</h3>
         </div>
+        <div class="card-body">
+            @if (Model.Roles.Any())
+            {
+                foreach (var item in Model.Roles)
+                {
+                    <h5 class="card-title">@item</h5>
+                }
+            }
+            else
+            {
+                <h5 class="card-title">空空如也</h5>
+            }
+        </div>
+        <div class="card-footer">
+            <a asp-action="ManageUserRoles" asp-controller="Admin" asp-route-userId="@Model.Id" style="width:auto" class="btn btn-primary">管理角色</a>
+        </div>
+    </div>
 
-        <div class="card">
-            <div class="card-header">
-                <h3>用户声明</h3>
-            </div>
-            <div class="card-body">
-                @if (Model.Claims.Any())
-                {
-                    foreach (var item in Model.Claims)
-                    {
-                        <h5 class="card-title">@item</h5>
-                    }
-                }
-                else
-                {
-                    <h5 class="card-title">空空如也</h5>
-                }
-            </div>
-            <div class="card-footer">
-                <a style="width:auto" class="btn btn-primary">管理声明</a>
-            </div>
+    <div class="card">
+        <div class="card-header">
+            <h3>用户声明</h3>
         </div>
+        <div class="card-body">
+            @if (Model.Claims.Any())
+            {
+                foreach (var item in Model.Claims)
+                {
+                    <h5 class="card-title ">@item</h5>
+                }
+            }
+            else
+            {
+                <h5 class="card-title">空空如也</h5>
+            }
+        </div>
+        <div class="card-footer">
+            <a asp-action="ManageUserClaims" asp-controller="Admin" asp-route-userId="@Model.Id" style="width:auto" class="btn btn-primary">管理声明</a>
+        </div>
+    </div>
 </form>

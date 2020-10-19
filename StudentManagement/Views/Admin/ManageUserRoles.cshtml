@@ -1,0 +1,29 @@
+﻿@model List<RolesInUserViewModel>
+@{
+    ViewBag.Title = "管理用户角色";
+    var userId = ViewBag.userId;
+}
+
+<form method="post">
+    <div class="card">
+        <div class="card-header">
+            <h2>管理用户中的角色</h2>
+        </div>
+        <div class="card-body">
+            @for (int i = 0; i < Model.Count; i++)
+            {
+                <div class="form-check m-1">
+                    <input type="hidden" asp-for="@Model[i].RoleId" />
+                    <input type="hidden" asp-for="@Model[i].RoleName" />
+                    <input class="form-check-input" asp-for="@Model[i].IsSelected" />
+                    <label class="form-check-label" asp-for="@Model[i].IsSelected">@Model[i].RoleName</label>
+                </div>
+            }
+            <div class="text-danger" asp-validation-summary="All"></div>
+        </div>
+        <div class="card-footer">
+            <input type="submit" value="更新" class="btn btn-primary" style="width:auto" />
+            <a asp-action="EditUser" asp-controller="Admin" asp-route-id="@userId" class="btn btn-light" style="width:auto">取消</a>
+        </div>
+    </div>
+</form>
