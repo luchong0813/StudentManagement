@@ -1,4 +1,4 @@
-《深入浅出ASP.NET Core》学习笔记
+ASP.NET Core 学习笔记
 
 # 托管设置
 设置项目文件的`AspNetCoreHostingModel`属性
@@ -1720,3 +1720,119 @@ public class UserClaim
 ```
 4. 实现操作方法
 5. 编写视图文件
+
+# RBAC与CABC
+RBAC:基于角色的访问控制
+
+CABC:基于声明的授权也被称为基于上下文的访问控制协议
+
+### 角色与策略的结合
+```
+//策略结合声明授权
+services.AddAuthorization(options =>
+{
+    //只有满足删除角色声明，此策略才能成功
+    options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("删除角色"));
+    options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));
+
+    //策略结合多个角色进行授权
+    options.AddPolicy("SuperAdminPolicy", policy => policy.RequireRole("Admin", "User", "SuperManager"));
+
+    //必须包含编辑角色声明且为true，此策略才能成功
+    //options.AddPolicy("EditRolePolicy", policy =>
+    //policy.RequireClaim("编辑角色", "true", "yes")
+    //.RequireRole("Admin"));
+
+
+    options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context => AuthorizeAccess(context)));
+});
+```
+
+### 在MVC视图中进行角色与声明授权
+```
+@*将用户和策略名称作为参数传给IAuthorizationService的AuthorizeAsync方法，验证成功则为True*@
+@if ((await authorizationService.AuthorizeAsync(User, "EditRolePolicy")).Succeeded)
+{
+    <a class="btn btn-info" asp-action="EditRole" asp-controller="Admin" asp-route-id="@item.Id">编辑</a>
+}
+```
+
+### AccessDenied视图的路由配置修改
+```
+services.ConfigureApplicationCookie(options =>
+{
+    //修改拒绝访问的路由地址
+    options.AccessDeniedPath = new PathString("/Admin/AccessDenied");
+    //统一系统的全局Cookie名称
+    options.Cookie.Name = "StudentMangementCookie";
+    //登录用户Cookie的有效期
+    options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+    //是否对Cookie启用滑动过期时间
+    options.SlidingExpiration = true;
+});
+```
+
+### 策略授权中的ClaimType和ClaimValue
+Tips：详见代码，管理角色那一块
+```
+//必须包含编辑角色声明且为true，此策略才能成功
+options.AddPolicy("EditRolePolicy", policy =>
+policy.RequireClaim("编辑角色", "true", "yes")
+.RequireRole("Admin"));
+```
+
+### 使用委托创建自定义策略授权
+##### 创建自定义策略规则
+```
+options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context => AuthorizeAccess(context)));
+
+private bool AuthorizeAccess(AuthorizationHandlerContext context)
+{
+    return context.User.IsInRole("Admin") && context.User.HasClaim(claim => claim.Type == "编辑角色" && claim.Value == "编辑角色") || context.User.IsInRole("Super Admin");
+}
+```
+
+##### 自定义复杂授权需求
+ASP.NET Core中内置的授权需求有以下3个：
+
++ `RequireClaim()`方法用于管理声明授权的需求
++ `RequireRole()`方法用于管理角色授权的需求
++ `RequireAssertion()`方法可用于自定义授权的需求
+
+##### 自定义授权需求和处理程序
+1. 创建自定义需求，继承自`IAuthorizationRequirement`
+
+```
+/// <summary>
+/// 管理Admin角色与声明的需求
+/// </summary>
+public class ManageAdminRolesAndClaimsRequirement : IAuthorizationRequirement
+{
+
+}
+```
+2. 实现自定义授权处理程序
+
+继承自`AuthorizationHandler<T>`，并实现`HandleRequirementAsync()`方法，泛型T传入`ManageAdminRolesAndClaimsRequirement`类型
+3. 注册自定义授权处理程序
+
+`services.AddHttpContextAccessor();`
+4. 将自定义策略添加到对应控制器的操作方法上
+```
+[HttpGet]
+[Authorize(Policy ="EditRolePolicy")]
+public async Task<IActionResult> ManageUserRoles(string userId)
+```
+
+##### 多个自定义授权处理程序
++ context.Succed()-----成功
++ context.Fail()-----失败
++ Task.CompletedTask-----任务执行完毕
+
+Tips：如果一个授权需求有多个处理程序，失败是优于成功的，这意味着当其中一个处理程序返回失败时，即使其他处理程序返回成功，策略也会失败。一般来说，不推荐在处理程序返回失败。
+
+1. 创建自定义需求处理程序
+2. 注册自定义需求处理程序
+
+` services.AddSingleton<IAuthorizationHandler, SuperAdminHander>();`
+

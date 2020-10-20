@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 
 namespace StudentManagement.ViewModels
@@ -25,8 +26,8 @@ namespace StudentManagement.ViewModels
 
         public string City { get; set; }
 
-        public List<string> Claims { get; set; }
+        public IList<string> Claims { get; set; }
 
-        public List<string> Roles { get; set; }
+        public IList<string> Roles { get; set; }
     }
 }

@@ -16,6 +16,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StudentManagement.CustomerMiddlewares;
 using StudentManagement.Models;
+using StudentManagement.Security;
 
 namespace StudentManagement
 {
@@ -41,6 +42,42 @@ namespace StudentManagement
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddErrorDescriber<CustomerErrorDescriber>()
                 .AddEntityFrameworkStores<AppDbContext>();
+
+            services.AddHttpContextAccessor();
+            services.AddSingleton<IAuthorizationHandler, SuperAdminHander>();
+
+            //策略结合声明授权
+            services.AddAuthorization(options =>
+            {
+                //只有满足删除角色声明，此策略才能成功
+                options.AddPolicy("DeleteRolePolicy", policy => policy.RequireClaim("删除角色"));
+                options.AddPolicy("AdminRolePolicy", policy => policy.RequireRole("Admin"));
+
+                //策略结合多个角色进行授权
+                options.AddPolicy("SuperAdminPolicy", policy => policy.RequireRole("Admin", "User", "SuperManager"));
+
+                //必须包含编辑角色声明且为true，此策略才能成功
+                //options.AddPolicy("EditRolePolicy", policy =>
+                //policy.RequireClaim("编辑角色", "true", "yes")
+                //.RequireRole("Admin"));
+
+
+                options.AddPolicy("EditRolePolicy", policy => policy.RequireAssertion(context => AuthorizeAccess(context)));
+            });
+
+
+
+            services.ConfigureApplicationCookie(options =>
+            {
+                //修改拒绝访问的路由地址
+                options.AccessDeniedPath = new PathString("/Admin/AccessDenied");
+                //统一系统的全局Cookie名称
+                options.Cookie.Name = "StudentMangementCookie";
+                //登录用户Cookie的有效期
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                //是否对Cookie启用滑动过期时间
+                options.SlidingExpiration = true;
+            });
 
             services.Configure<IdentityOptions>(options =>
             {
@@ -71,7 +108,7 @@ namespace StudentManagement
 
                 app.UseDeveloperExceptionPage();  //当代码发生异常时处理，主要给开发人员使用
 
-               
+
 
                 //app.UseDeveloperExceptionPage();
                 //app.UseStatusCodePagesWithRedirects("/Error/{0}");
@@ -104,6 +141,11 @@ namespace StudentManagement
             });
 
 
+        }
+
+        private bool AuthorizeAccess(AuthorizationHandlerContext context)
+        {
+            return context.User.IsInRole("Admin") && context.User.HasClaim(claim => claim.Type == "编辑角色" && claim.Value == "编辑角色") || context.User.IsInRole("Super Admin");
         }
     }
 }

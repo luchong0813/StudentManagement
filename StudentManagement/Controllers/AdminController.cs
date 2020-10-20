@@ -74,6 +74,7 @@ namespace StudentManagement.Controllers
 
 
         [HttpGet]
+        [Authorize(Policy = "EditRolePolicy")]
         public async Task<IActionResult> EditRole(string id)
         {
             //通过TagHelper传进来的ID查询角色信息
@@ -289,6 +290,7 @@ namespace StudentManagement.Controllers
                 Email = user.Email,
                 City = user.City,
                 Claims = claims.Select(c => c.Value).ToList(),
+                //Claims = claims,
                 Roles = roles.ToList()
             };
             return View(model);
@@ -344,6 +346,7 @@ namespace StudentManagement.Controllers
         }
 
         [HttpGet]
+        //[Authorize(Policy ="EditRolePolicy")]
         public async Task<IActionResult> ManageUserRoles(string userId)
         {
             ViewBag.userId = userId;
@@ -468,7 +471,10 @@ namespace StudentManagement.Controllers
             }
 
             // 添加页面上所有选中的声明
-            result = await _userManager.AddClaimsAsync(user, model.Cliams.Where(c => c.IsSelected).Select(c => new Claim(c.ClaimType, c.ClaimType)));
+            //result = await _userManager.AddClaimsAsync(user, model.Cliams.Where(c => c.IsSelected).Select(c => new Claim(c.ClaimType, c.ClaimType)));
+
+            //添加Claim列表到数据库中，然后对UI界面上被选中的值进行bool判单
+            result = await _userManager.AddClaimsAsync(user, model.Cliams.Select(c => new Claim(c.ClaimType, c.IsSelected ? "true" : "false")));
             if (!result.Succeeded)
             {
                 ModelState.AddModelError("", "无法向用户添加选定的声明");
@@ -476,6 +482,15 @@ namespace StudentManagement.Controllers
             }
 
             return RedirectToAction("EditUser", new { Id = model.UserId });
+        }
+        #endregion
+
+        #region 视图授权
+        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
         }
         #endregion
     }
