@@ -1836,3 +1836,115 @@ Tips：如果一个授权需求有多个处理程序，失败是优于成功的�
 
 ` services.AddSingleton<IAuthorizationHandler, SuperAdminHander>();`
 
+# Identity的账户中心设计
+### MicroSoft授权登录
+1. 创建Azure OAuth凭据
+
++ 登录`https://portal.azure.com/`
++ 进入`Azure Active Directory`
++ 在左侧导航中进入`应用注册`
++ 注册应用程序，填写应用程序显示名称，选择第三项任何组织目录
++ 在`品牌打造`中填写相关信息
++ 点击`证书和密码`生成密钥
++ 在`概述`中可以找到客户端ID
+2. 在ASP.NET Core中启用MicroSoft身份验证
+
++ 通过Nuget添加`Microsoft.AspNetCore.Authentication.MicrosoftAccount`程序包
++ 在`ConfigureServices`注入
+
+```
+services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
+{
+    microsoftOptions.ClientId = _configuration["Authentication:Microsoft:ClientId"];
+    microsoftOptions.ClientSecret = _configuration["Authentication:Microsoft:ClientSecret"];
+});
+```
++ 将客户端ID和密钥配置到`appsettings.json`
+
+```
+{
+  "Authentication": {
+    "Microsoft": {
+      "ClientId": "315001c3-4a3a-4321-928e-d2bb04bcbaa0",
+      "ClientSecret": "xxxxxxxxxxxxxxx"
+    },
+    "GitHub": {
+      "ClientId": "96d72070581a0c81435c",
+      "ClientSecret": "xxxxxxxxxxxxxxxxx"
+    }
+  }
+}
+```
+3. 修改登录视图模型
+
+添加ReturnUrl和ExternalLogins属性分别用于重定向和启用第三方登录列表
+
+```
+public string ReturnUrl { get; set; }
+public IList<AuthenticationScheme> ExternalLogins { get; set; }
+```
+4. 修改登录视图
+使用forech遍历`Model.ExternalLogins`中每个第三方登录提供程序，动态为其创建一个按钮
+
+由于按钮的name属性设置为了`provider`，因此模型绑定器会将name属性设为`provider`，value属性值映射到`ExternalLogin()`操作方法的provider参数中
+```
+ <div class="col-md-6 border-left">
+        <h1>第三方授权登录</h1>
+        <form method="post" class="mt-3" asp-action="ExternalLogin" asp-controller="Account" asp-route-returnUrl="@Model.ReturnUrl">
+            <div>
+                @foreach (var item in Model.ExternalLogins)
+                {
+                    <button type="submit" class="btn btn-info" name="provider" value="@item.Name" title="使用您的 @item.DisplayName 账户 ">@item.DisplayName</button>
+                }
+            </div>
+        </form>
+    </div>
+```
+5. 实现`ExternalLogin`操作方法
+
+```
+[HttpPost]
+public IActionResult ExternalLogin(string provider, string returnUrl)
+{
+    var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
+    var properties = _signmanager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+    return new ChallengeResult(provider, properties);
+}
+```
+6. 实现`ExternalLoginCallback()`授权回调操作方法
+
++ 通过`returnUrl ?? Url.Content("~/")`获取重定向URL
++ 实例化视图模型，通过`Signmanager`下的`GetExternalAuthenticationSchemesAsync()`方法获取第三方登录列表并存储
++ 从第三方登录提供商中获取关于用户的登录信息
++ 如果用户之前已经授权过了，则无需创建新的数据，直接使用当前数据登录系统即可
++ 如果`AspNetUserLogins`表中没有该数据，则创建一个新的数据
++ 获取邮箱地址信息，通过邮箱查询用户是否存在，如不存在则创建，但该用户没有密码
++ 如果获取不到邮箱地址信息，则重定向到错误视图
+
+### 继承GitHub身份验证登录
+1. 在`Settings`中进入`Developer settings`,选择`OAuth Apps`进入
+2. 点击`New Oauth App`进入填写相关信息创建，然后就会生成客户端ID和密钥
+3. 添加`AspNet.Security.OAuth.GitHub`程序包
+4. 在`ConfigureServices`注入
+
+```
+services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
+{
+    microsoftOptions.ClientId = _configuration["Authentication:Microsoft:ClientId"];
+    microsoftOptions.ClientSecret = _configuration["Authentication:Microsoft:ClientSecret"];
+}).AddGitHub(options =>
+{
+    options.ClientId = _configuration["Authentication:GitHub:ClientId"];
+    options.ClientSecret=_configuration["Authentication:GitHub:ClientSecret"];
+});
+```
+5. 将客户端ID和密钥配置到`appsettings.json`
+
+Tips：Github身份验证，获取邮箱信息时可能为null，具体原因待深入探究
+
+### 用户机密
+存储在`appsettings.json`中的密钥等信息会随项目部署或开源等暴漏，所以像这类机密信息可以用到`用户机密`
+
+右键项目点击`管理用户机密`，此时会自动生成一个`serrets.json`文件，结构与`appsettings.json`一样，直接搬过来即可
+
+

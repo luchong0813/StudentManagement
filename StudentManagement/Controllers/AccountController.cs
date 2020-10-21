@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -48,7 +49,7 @@ namespace StudentManagement.Controllers
                 if (result.Succeeded)
                 {
 
-                    if (_signmanager.IsSignedIn(User)&&User.IsInRole("Admin"))
+                    if (_signmanager.IsSignedIn(User) && User.IsInRole("Admin"))
                     {
                         return RedirectToAction("ListUsers", "Admin");
                     }
@@ -74,9 +75,14 @@ namespace StudentManagement.Controllers
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public async Task<IActionResult> Login(string returnUrl)
         {
-            return View();
+            LoginViewModel loginViewModel = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signmanager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+            return View(loginViewModel);
         }
 
         [HttpPost]
@@ -129,6 +135,81 @@ namespace StudentManagement.Controllers
         public IActionResult AccessDenied()
         {
             return View();
+        }
+
+        [HttpPost]
+        public IActionResult ExternalLogin(string provider, string returnUrl)
+        {
+            var redirectUrl = Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl });
+            var properties = _signmanager.ConfigureExternalAuthenticationProperties(provider, redirectUrl);
+            return new ChallengeResult(provider, properties);
+        }
+
+
+        public async Task<IActionResult> ExternalLoginCallback(string returnUrl = null, string remoteError = null)
+        {
+            returnUrl = returnUrl ?? Url.Content("~/");
+
+            LoginViewModel model = new LoginViewModel
+            {
+                ReturnUrl = returnUrl,
+                ExternalLogins = (await _signmanager.GetExternalAuthenticationSchemesAsync()).ToList()
+            };
+
+            if (remoteError != null)
+            {
+                ModelState.AddModelError(string.Empty, $"第三方登录提供程序错误：{remoteError}");
+                return View("Login", model);
+            }
+
+            //从第三方登陆提供商获取关于用户的信息
+            var info = await _signmanager.GetExternalLoginInfoAsync();
+            if (info == null)
+            {
+                ModelState.AddModelError(string.Empty, "加载第三方登录信息出错");
+                return View("Login", model);
+            }
+
+            //如果用户之前已经登录过了，则会在AspNetUserLogins表产生对应的记录
+            //这个时候就无需创建新的记录，直接使用当前记录登录系统
+            var signInResult = await _signmanager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, isPersistent: false, bypassTwoFactor: true);
+
+            if (signInResult.Succeeded)
+            {
+                return LocalRedirect(returnUrl);
+            }
+            else
+            {
+                //否则就表示表中没有记录，则创建一个
+
+                var email = info.Principal.FindFirstValue(ClaimTypes.Email);
+                if (email != null)
+                {
+                    //通过邮箱去查询用户是否存在
+                    var user = await _usermanager.FindByEmailAsync(email);
+                    if (user == null)
+                    {
+                        user = new ApplicationUser
+                        {
+                            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+                            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+                        };
+
+                        await _usermanager.CreateAsync(user);
+                    }
+
+                    await _usermanager.AddLoginAsync(user, info);
+                    await _signmanager.SignInAsync(user, isPersistent: false);
+
+                    return LocalRedirect(returnUrl);
+                }
+
+                //如果获取不到用户邮箱，则重定向到错误视图
+                ViewBag.ErrorTitle = $"我们无法从提供商：{info.LoginProvider}中解析到您的邮件地址";
+                ViewBag.ErrorMessage = "请通过luchong1999@outlook.com寻求技术支持";
+
+                return View("Error");
+            }
         }
     }
 }

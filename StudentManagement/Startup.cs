@@ -98,6 +98,16 @@ namespace StudentManagement
                 var poicy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 config.Filters.Add(new AuthorizeFilter(poicy));
             }).AddXmlDataContractSerializerFormatters();
+
+            services.AddAuthentication().AddMicrosoftAccount(microsoftOptions =>
+            {
+                microsoftOptions.ClientId = _configuration["Authentication:Microsoft:ClientId"];
+                microsoftOptions.ClientSecret = _configuration["Authentication:Microsoft:ClientSecret"];
+            }).AddGitHub(options =>
+            {
+                options.ClientId = _configuration["Authentication:GitHub:ClientId"];
+                options.ClientSecret=_configuration["Authentication:GitHub:ClientSecret"];
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
