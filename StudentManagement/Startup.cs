@@ -41,7 +41,8 @@ namespace StudentManagement
 
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddErrorDescriber<CustomerErrorDescriber>()
-                .AddEntityFrameworkStores<AppDbContext>();
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
 
             services.AddHttpContextAccessor();
             services.AddSingleton<IAuthorizationHandler, SuperAdminHander>();
@@ -89,6 +90,10 @@ namespace StudentManagement
                 options.Password.RequireLowercase = false;
                 //密码是否必须包含大写字母
                 options.Password.RequireUppercase = false;
+
+
+                //启用邮箱验证
+                options.SignIn.RequireConfirmedEmail = true;
             });
 
             services.AddScoped<IStudentRepository, StudentRepository>();
@@ -106,7 +111,7 @@ namespace StudentManagement
             }).AddGitHub(options =>
             {
                 options.ClientId = _configuration["Authentication:GitHub:ClientId"];
-                options.ClientSecret=_configuration["Authentication:GitHub:ClientSecret"];
+                options.ClientSecret = _configuration["Authentication:GitHub:ClientSecret"];
             });
         }
 

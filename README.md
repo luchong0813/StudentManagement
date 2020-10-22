@@ -1921,7 +1921,7 @@ public IActionResult ExternalLogin(string provider, string returnUrl)
 + 获取邮箱地址信息，通过邮箱查询用户是否存在，如不存在则创建，但该用户没有密码
 + 如果获取不到邮箱地址信息，则重定向到错误视图
 
-### 继承GitHub身份验证登录
+### 集成GitHub身份验证登录
 1. 在`Settings`中进入`Developer settings`,选择`OAuth Apps`进入
 2. 点击`New Oauth App`进入填写相关信息创建，然后就会生成客户端ID和密钥
 3. 添加`AspNet.Security.OAuth.GitHub`程序包
@@ -1946,5 +1946,264 @@ Tips：Github身份验证，获取邮箱信息时可能为null，具体原因待
 存储在`appsettings.json`中的密钥等信息会随项目部署或开源等暴漏，所以像这类机密信息可以用到`用户机密`
 
 右键项目点击`管理用户机密`，此时会自动生成一个`serrets.json`文件，结构与`appsettings.json`一样，直接搬过来即可
+
+### 验证账户信息安全
+##### 阻止未验证的账户登录
+1. 启用电子邮箱验证
+
+```
+services.Configure<IdentityOptions>(options =>
+{
+    //启用邮箱验证
+    options.SignIn.RequireConfirmedEmail = true;
+});
+```
+2. 修改登录操作方法
+
+```
+if (user != null && !user.EmailConfirmed && (await _usermanager.CheckPasswordAsync(user, model.Password)))
+{
+    ModelState.AddModelError(string.Empty, "邮箱尚未验证");
+    return View(model);
+}
+```
+3. 阻止第三方未验证账户登录
+
+修改第三方登录回调操作方法
+```
+if (email != null)
+{
+    //通过邮箱去查询用户是否存在
+    user = await _usermanager.FindByEmailAsync(email);
+
+    if (user != null && !user.EmailConfirmed)
+    {
+        ModelState.AddModelError(string.Empty, "您的电子邮箱还未进行验证");
+        return View("Login", model);
+    }
+}
+```
+
+##### 电子邮箱确认令牌
+假设在注册时需要邮箱验证成功才能注册成功
+1. 创建确认邮箱操作方法
+
+```
+[HttpGet]
+public async Task<IActionResult> ConfirmEmail(string userId, string token)
+{
+    if (userId == null || token == null)
+    {
+        return RedirectToAction("index", "home");
+    }
+
+    var user = await _usermanager.FindByIdAsync(userId);
+
+    if (user == null)
+    {
+        ViewBag.ErrorMessage = $"当前{userId}无效";
+        return View("NotFound");
+    }
+
+    var result = await _usermanager.ConfirmEmailAsync(user, token);
+    if (result.Succeeded)
+    {
+        return View();
+    }
+
+    ViewBag.ErrorTitle = "您的电子邮箱还未进行验证";
+    return View("Error");
+}
+```
+> `ConfirmEmailAsync()`方法用于确认电子邮箱，需要传入用户和Token两个参数
+
+2. 修改注册操作方法
+
+```
+//如果注册成功，则使用登录服务登录
+//并重定向到HomeController的索引操作
+if (result.Succeeded)
+{
+    //生成电子游戏确认令牌
+    var token = await _usermanager.GenerateEmailConfirmationTokenAsync(user);
+
+    //生成电子邮箱的确认链接
+    var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+    _logger.Log(LogLevel.Warning, confirmationLink);
+
+    if (_signmanager.IsSignedIn(User) && User.IsInRole("Admin"))
+    {
+        return RedirectToAction("ListUsers", "Admin");
+    }
+    //await _signmanager.SignInAsync(user, isPersistent: false);
+    //return RedirectToAction("Index", "Home");
+
+    ViewBag.ErrorTitle = "注册成功";
+    ViewBag.ErrorMessage = "在您登入系统前，我们已经给您发了一封邮件，需要您进行邮件验证，点击确认链接即可完成";
+    return View("Error");
+}
+```
+3. 注入双因子身份验证服务
+AddDefaultTokenProviders()
+```
+services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddErrorDescriber<CustomerErrorDescriber>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders();
+```
+
+##### 第三方登录的电子邮箱确认令牌
+修改第三方登录回电操作方法`ExternalLoginCallback`
+```
+if (email != null)
+{
+
+    if (user == null)
+    {
+        user = new ApplicationUser
+        {
+            UserName = info.Principal.FindFirstValue(ClaimTypes.Email),
+            Email = info.Principal.FindFirstValue(ClaimTypes.Email),
+        };
+
+        await _usermanager.CreateAsync(user);
+
+        var token = await _usermanager.GenerateEmailConfirmationTokenAsync(user);
+
+        var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+        _logger.Log(LogLevel.Warning, confirmationLink);
+
+        ViewBag.ErrorTitle = "注册成功";
+        ViewBag.ErrorMessage = "在您登入系统前，我们已经给您发了一封邮件，需要您进行邮件验证，点击确认链接即可完成";
+        return View("Error");
+    }
+
+    await _usermanager.AddLoginAsync(user, info);
+    await _signmanager.SignInAsync(user, isPersistent: false);
+
+    return LocalRedirect(returnUrl);
+}
+```
+
+##### 激活用户邮箱
+1. 添加视图模型
+
+> 因为只需要对邮箱进行操作，所以目前暂时只有`Email`属性
+
+
+2. 新增两个激活邮箱的操作方法
+
+```
+XXXXX
+
+
+判断是否已经激活邮箱，如果没有激活则生成激活链接
+public async Task<IActionResult> ActivateUserEmail(EmailAdressViewModel model)
+{
+    if (ModelState.IsValid)
+    {
+        var user = await _usermanager.FindByEmailAsync(model.Email);
+
+        if (user != null)
+        {
+            if (!await _usermanager.IsEmailConfirmedAsync(user))
+            {
+                var token = await _usermanager.GenerateEmailConfirmationTokenAsync(user);
+
+                var confirmationLink = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, token = token }, Request.Scheme);
+                _logger.Log(LogLevel.Warning, confirmationLink);
+
+
+                ViewBag.Message = "如果您在我们系统有注册账户，我们已经发了邮件到您的邮箱中，请前往邮箱激活您的账户！";
+                return View("ActivateUserEmailConfirmation", ViewBag.Message);
+            }
+        }
+    }
+    ViewBag.Message = "请确认邮箱是否存在异常，现在我们无法给您发送激活链接。";
+    return View("ActivateUserEmailConfirmation", ViewBag.Message);
+}
+```
+3. 新增两个视图，分别用于提交邮箱地址和告知用户已经发送了邮箱地址
+
+##### 忘记密码功能
+1. 新增忘记密码操作方法
+
+   1. 通过邮箱查询用户
+   2. 如果查到了用户并且用户确认了电子邮箱
+   3. 生成重置密码令牌`GeneratePasswordResetTokenAsync(用户)`
+   4. 生成密码重置链接
+   5. 重定向用户到忘记密码确认视图
+2. 编写找回密码视图，用于提交邮箱
+3. 编写邮件发送通知视图
+
+##### 重置密码功能
+1. 创建视图模型
+
+```
+public class ResetPasswordViewModel
+{
+    [Required]
+    [EmailAddress]
+    [Display(Name = "邮箱地址：")]
+    public string Email { get; set; }
+
+    [Required]
+    [DataType(DataType.Password)]
+    [Display(Name = "密码：")]
+    public string Password { get; set; }
+
+    [DataType(DataType.Password)]
+    [Compare("Password", ErrorMessage = "两次密码不一致，请重新输入！")]
+    [Display(Name = "确认密码：")]
+    public string ConfirmPassword { get; set; }
+
+    public string Token { get; set; }
+}
+```
+2. 编写重置密码视图
+
+> Tips：使用两个`<input>`元素来存储邮箱和重置密码令牌，后面回调的时候需要使用它们
+
+
+3. 添加重置密码GET请求操作方法
+校验token和邮箱是否存在，也就是上面隐藏的那两个元素
+```
+[HttpGet]
+public IActionResult ResetPassword(string email, string token)
+{
+    if (email == null || token == null)
+    {
+        ModelState.AddModelError(string.Empty, "无效的密码重置令牌");
+
+    }
+
+    return View();
+}
+```
+4. 添加重置密码POST请求操作方法
+使用`ResetPasswordAsync()`方法传入用户、Token和邮箱重置
+```
+if (user != null)
+{
+    var result = await _usermanager.ResetPasswordAsync(user, model.Token, model.Password);
+
+    if (result.Succeeded)
+    {
+        return View("ResetPasswordConfirmation");
+    }
+
+    foreach (var item in result.Errors)
+    {
+        ModelState.AddModelError(string.Empty, item.Description);
+    }
+    return View(model);
+}
+```
+5. 最后编写一个用于告知用户重置成功视图
+
+
+
+
+
 
 
