@@ -2201,7 +2201,130 @@ if (user != null)
 ```
 5. 最后编写一个用于告知用户重置成功视图
 
+# 剖析Identity源代码
+### 自定义令牌有效期
+1. 创建令牌有效期配置类，并继承内置地`DataProtectionTokenProviderOptions`
+2. 创建令牌提供程序
 
+```
+public class CustomEmailConfirmationTokenProvider<Tuser> : DataProtectorTokenProvider<Tuser> where Tuser : class
+{
+    public CustomEmailConfirmationTokenProvider(IDataProtectionProvider dataProtectionProvider, IOptions<CustomEmailConfirmationTokenProviderOptions> options, ILogger<DataProtectorTokenProvider<Tuser>> logger) : base(dataProtectionProvider, options, logger)
+    {
+
+    }
+}
+```
+3. 依赖注入到项目中
+
+```
+//通过自定义的CustomEmailconfirmationmin名称覆盖旧有token名称，使它与AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation")关联在一起
+options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+
+
+services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddErrorDescriber<CustomerErrorDescriber>()
+                .AddEntityFrameworkStores<AppDbContext>()
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
+```
+4. 更改令牌有效期
+
+```
+//将所有令牌类型的有效期设置为30分钟
+services.Configure<DataProtectionTokenProviderOptions>(o =>
+{
+    o.TokenLifespan = TimeSpan.FromMinutes(30);
+});
+
+//使用自定义令牌有效期将邮箱验证有效期设置为5分钟
+services.Configure<CustomEmailConfirmationTokenProviderOptions>(o =>
+{
+    o.TokenLifespan = TimeSpan.FromMinutes(5);
+});
+```
+
+### DataProtection加密和解密
+1. 创建数据保护字符串类
+
+```
+public class DataProtectionPurposeStrings
+{
+    public readonly string StudentIdRouteValue = "StudentIdRouteValue";
+}
+```
+2. 依赖注入注册数据保护类
+
+```
+services.AddSingleton<DataProtectionPurposeStrings>();
+```
+3. 添加加密模型
+
+> `[NotMapped]`属性指示ORM框架不将此列映射到数据库中
+```
+[NotMapped]
+public string EncryptedId { get; set; }
+```
+4. 在控制器中注入`IDataProtector`，使用`Protect()`和`Unprotect()`即可实现加密解密
+```
+string decryptedId = protector.Unprotect(id);
+int decryptedStudentId = Convert.ToInt32(decryptedId);
+```
+
+### 更改密码
+Identity提供了`ChangePasswordAsync()`方法
+```
+await _usermanager.ChangePasswordAsync(user, model.CurrentPassword, model.NewPassword);
+```
+传入当前用户对象，当前账户密码，以及新密码。用户成功更改后，调用SignInManager的`RefreshSignInAsync()`刷新登录Cookie
+
+### w为第三方账户添加密码
+Identity已经封装好了`AddPasswordAsync()`方法,调用时传入用户对象以及新密码。
+```
+await _usermanager.AddPasswordAsync(user, model.NewPassword);
+```
+
+本地账户都是有密码的，所以只需要通过判断HasPassword是否为null。
+
+在授权登录回调操作犯法中判断，如果为null，则重定向到添加密码视图中
+```
+if (signInResult.Succeeded)
+{
+    //查询该用户是否有密码，没有则重定向添加密码页面
+    var userHasPassword = await _usermanager.HasPasswordAsync(user);
+    if (!userHasPassword)
+    {
+        return RedirectToAction("AddPassword");
+    }
+    return LocalRedirect(returnUrl);
+}
+```
+
+### 账户锁定
+1. 配置锁定规则
+
+```
+//设置登录失败次数和时间
+options.Lockout.MaxFailedAccessAttempts = 5;
+options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
+```
+2. 启用账户锁定
+
+```
+//最后一个布尔参数表示是否启用账户锁定
+var result = await _signmanager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, true);
+```
+3. 账户锁定后可通过重置密码再次登录，所以当重置密码成功后，需要将解锁时间设置为当前时间
+```
+if (result.Succeeded)
+{
+    if (await _usermanager.IsLockedOutAsync(user))
+    {
+        await _usermanager.SetLockoutEndDateAsync(user, DateTimeOffset.UtcNow);
+    }
+    return View("ResetPasswordConfirmation");
+}
+```
 
 
 

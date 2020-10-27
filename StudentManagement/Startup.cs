@@ -17,6 +17,7 @@ using Microsoft.Extensions.Logging;
 using StudentManagement.CustomerMiddlewares;
 using StudentManagement.Models;
 using StudentManagement.Security;
+using StudentManagement.Security.CustomTokenProvider;
 
 namespace StudentManagement
 {
@@ -42,7 +43,8 @@ namespace StudentManagement
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddErrorDescriber<CustomerErrorDescriber>()
                 .AddEntityFrameworkStores<AppDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation");
 
             services.AddHttpContextAccessor();
             services.AddSingleton<IAuthorizationHandler, SuperAdminHander>();
@@ -91,12 +93,20 @@ namespace StudentManagement
                 //密码是否必须包含大写字母
                 options.Password.RequireUppercase = false;
 
-
                 //启用邮箱验证
                 options.SignIn.RequireConfirmedEmail = true;
+
+                //通过自定义的CustomEmailconfirmationmin名称覆盖旧有token名称，使它与AddTokenProvider<CustomEmailConfirmationTokenProvider<ApplicationUser>>("CustomEmailConfirmation")关联在一起
+                options.Tokens.EmailConfirmationTokenProvider = "CustomEmailConfirmation";
+
+                //设置登录失败次数和时间
+                options.Lockout.MaxFailedAccessAttempts = 5;
+                options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
             });
 
             services.AddScoped<IStudentRepository, StudentRepository>();
+
+            services.AddSingleton<DataProtectionPurposeStrings>();
 
             services.AddControllersWithViews(config =>
             {
@@ -112,6 +122,18 @@ namespace StudentManagement
             {
                 options.ClientId = _configuration["Authentication:GitHub:ClientId"];
                 options.ClientSecret = _configuration["Authentication:GitHub:ClientSecret"];
+            });
+
+            //将所有令牌类型的有效期设置为30分钟
+            services.Configure<DataProtectionTokenProviderOptions>(o =>
+            {
+                o.TokenLifespan = TimeSpan.FromMinutes(30);
+            });
+
+            //使用自定义令牌有效期将邮箱验证有效期设置为5分钟
+            services.Configure<CustomEmailConfirmationTokenProviderOptions>(o =>
+            {
+                o.TokenLifespan = TimeSpan.FromMinutes(5);
             });
         }
 

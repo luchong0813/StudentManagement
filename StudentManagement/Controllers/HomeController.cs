@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using StudentManagement.Models;
+using StudentManagement.Security.CustomTokenProvider;
 using StudentManagement.ViewModels;
 
 namespace StudentManagement.Controllers
@@ -14,24 +16,34 @@ namespace StudentManagement.Controllers
     {
         private readonly IStudentRepository _studentRepository;
         private readonly IWebHostEnvironment webHostEnvironment;
+        private readonly IDataProtector protector;
 
-        public HomeController(IStudentRepository studentRepository, IWebHostEnvironment webHostEnvironment)
+        public HomeController(IStudentRepository studentRepository, IWebHostEnvironment webHostEnvironment, IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings)
         {
             _studentRepository = studentRepository;
             this.webHostEnvironment = webHostEnvironment;
+            protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.StudentIdRouteValue);
         }
 
         public IActionResult Index()
         {
-            var students = _studentRepository.GetAllStudents();
-            return View(students);
+            List<Student> model = _studentRepository.GetAllStudents().Select(s =>
+            {
+                s.EncryptedId = protector.Protect(s.Id.ToString());
+                return s;
+            }).ToList();
+            //var students = _studentRepository.GetAllStudents();
+            return View(model);
         }
 
-        public IActionResult Details(int id)
+        public IActionResult Details(string id)
         {
             //throw new Exception("人为的抛出一个异常");
 
-            Student student = _studentRepository.GetStudent(id);
+            string decryptedId = protector.Unprotect(id);
+            int decryptedStudentId = Convert.ToInt32(decryptedId);
+
+            Student student = _studentRepository.GetStudent(decryptedStudentId);
 
             if (student == null)
             {
@@ -44,6 +56,8 @@ namespace StudentManagement.Controllers
                 PageTiltle = "学生详情",
                 Student = student
             };
+
+            //ViewBag.EncryptedId = protector.Protect(decryptedStudentId.ToString());
 
             return View(homeDetailsViewModel);
         }
@@ -93,6 +107,9 @@ namespace StudentManagement.Controllers
         [HttpGet]
         public ViewResult Edit(int id)
         {
+            //string decryptedId = protector.Unprotect(id);
+            //int decryptedStudentId = Convert.ToInt32(decryptedId);
+
             Student student = _studentRepository.GetStudent(id);
 
             if (student == null)
@@ -107,8 +124,10 @@ namespace StudentManagement.Controllers
                 Name = student.Name,
                 Email = student.Email,
                 ClassName = student.ClassName,
-                ExistPhontPath = student.Photo
+                ExistPhontPath = student.Photo,
             };
+
+
 
             return View(studentEditViewModel);
         }
@@ -116,6 +135,8 @@ namespace StudentManagement.Controllers
         [HttpPost]
         public IActionResult Edit(StudentEditViewModel model)
         {
+           
+
             //检查提供的数据是否有效
             if (ModelState.IsValid)
             {

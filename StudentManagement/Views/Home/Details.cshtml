@@ -2,7 +2,8 @@
 
 @{
     ViewBag.Title = Model.PageTiltle;
-    var phontPatn = "~/images/"+ (Model.Student.Photo ?? "abc.jpg");
+    var phontPatn = "~/images/" + (Model.Student.Photo ?? "abc.jpg");
+    //var EncryptedId = ViewBag.EncryptedId;
 }
 
 <div class="row justify-content-center m-3">
@@ -13,7 +14,7 @@
             </div>
 
             <div class="card-body text-center">
-                <img class="card-img-top" src=@phontPatn asp-append-version="true"/>
+                <img class="card-img-top" src=@phontPatn asp-append-version="true" />
                 <h4>学生ID : @Model.Student.Id</h4>
                 <h4>邮箱 : @Model.Student.Email</h4>
                 <h4>班级名称 : @Model.Student.ClassName.GetDisplayClassName()</h4>

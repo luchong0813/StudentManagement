@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -25,5 +26,8 @@ namespace StudentManagement.Models
 
         [Display(Name = "头像")]
         public string Photo { get; set; }
+
+        [NotMapped]
+        public string EncryptedId { get; set; }
     }
 }
