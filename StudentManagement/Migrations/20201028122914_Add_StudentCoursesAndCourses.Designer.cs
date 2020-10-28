@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using StudentManagement.Models;
 
 namespace StudentManagement.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201028122914_Add_StudentCoursesAndCourses")]
+    partial class Add_StudentCoursesAndCourses
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -231,7 +233,7 @@ namespace StudentManagement.Migrations
 
                     b.HasKey("CourseId");
 
-                    b.ToTable("Course","School");
+                    b.ToTable("Course");
                 });
 
             modelBuilder.Entity("StudentManagement.Models.Student", b =>
@@ -261,7 +263,7 @@ namespace StudentManagement.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Student");
+                    b.ToTable("students");
 
                     b.HasData(
                         new
@@ -325,7 +327,7 @@ namespace StudentManagement.Migrations
 
                     b.HasIndex("StudentId");
 
-                    b.ToTable("StudentCourse");
+                    b.ToTable("StudentCourses");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

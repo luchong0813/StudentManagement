@@ -2326,7 +2326,120 @@ if (result.Succeeded)
 }
 ```
 
+# 架构
+架构规则：
++ 架构是顶层设计
++ 框架是面向编程或配置的半成品
++ 组件是从技术维度上的复用
++ 模块是从业务维度上职责的复用
++ 系统是相互协同可运行的实体
+
+# 仓储模式
+### 泛型仓储的实现
+创建`IRepository`接口用于仓储实现的约定
+```
+/// <summary>
+/// 此接口是所有仓储的约定, 此接口仅作为约定，用于标识它们。
+/// </summary>
+/// <typeparam name="TEntity">当前传入仓储的实体类型</typeparam>
+/// <typeparam name="TprimaryKey">传入仓储的主键类型</typeparam>
+public interface IRepository<TEntity, TprimaryKey> where TEntity : class
+{
+    #region 查询
+    /// <summary>
+    /// 获取用于整个表中检索实体的IQueryable
+    /// </summary>
+    /// <returns>可用于从数据库中选择实体</returns>
+    IQueryable<TEntity> GetAll();
+
+    /// <summary>
+    /// 用于获取所有实体
+    /// </summary>
+    /// <returns>所有实体列表</returns>
+    List<TEntity> GetAllList();
 
 
+    xxxxxxxxxx
+
+}
+```
+
+### 异步编程与同步编程
+异步编码在运行时，会增加少量的开销，在低流量时对性能的影响可以忽略不计，针对高流量的情况下潜在的性能提升时客观的
+栗子：
+```
+public async Task<List<TEntity>> GetAllListAsync()
+{
+    return await GetAll().ToListAsync();
+}
+```
+> 异步方法要正常执行必须要有`async`、`Task<T>`返回值和`await`关键字
+
+
+###  `IRepository`接口设计
+通过之前定义的接口，了解一下规则和设计
+```
+List<TEntity> GetAllList(); //同步方法
+Task<List<TEntity>> GetAllListAsync(); //异步方法
+List<TEntity> GetAllList(Expression<Func<TEntity, bool>> predicate); //支持动态Linq的同步方法
+Task<List<TEntity>> GetAllListAsync(Expression<Func<TEntity, bool>> predicate); //支持动态Linq的异步方法
+```
+
+
+###  `RepositoryBase`实现
+```
+public class RepositoryBase<TEntity, TPrimaryKey> : IRepository<TEntity, TPrimaryKey> where TEntity : class
+{
+    private readonly AppDbContext _dbContext;
+
+    /// <summary>
+    /// 通过泛型从上下文中获取领域模型
+    /// </summary>
+    public virtual DbSet<TEntity> Table => _dbContext.Set<TEntity>();
+
+    public RepositoryBase(AppDbContext dbContext)
+    {
+        _dbContext = dbContext;
+    }
+}
+```
+
+> 由于像更新添加删除这样的操作，后面都需要调用`SaveChange`，所以可以风封装以便复用
+
+```
+#region 私有方法
+/// <summary>
+/// 调用数据库上下文保存数据
+/// </summary>
+protected void Save()
+{
+    _dbContext.SaveChanges();
+}
+
+protected async Task SaveAsync()
+{
+    await _dbContext.SaveChangesAsync();
+}
+
+/// <summary>
+/// 检查实体是否处于跟踪状态，如果是则返回；反之则添加跟踪状态
+/// </summary>
+/// <param name="entity"></param>
+protected virtual void AttachIfNot(TEntity entity)
+{
+    var entry = _dbContext.ChangeTracker.Entries().FirstOrDefault(ent => ent.Entity == entity);
+
+    if (entry != null)
+    {
+        return;
+    }
+    Table.Attach(entity);
+}
+#endregion
+```
+
+#### 总结
++ 仓储类应该时无状态的。这意味着我们不该定义仓储等级的状态对象，并且仓储方法的调用也不应该影响到其它调用
++ 仓储可以使用依赖注入，但尽可能较少或是不依赖于其它服务
 
 

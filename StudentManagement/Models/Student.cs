@@ -29,5 +29,12 @@ namespace StudentManagement.Models
 
         [NotMapped]
         public string EncryptedId { get; set; }
+
+        /// <summary>
+        /// 入学时间
+        /// </summary>
+        public DateTime EnrollmentDate { get; set; }
+
+        public ICollection<StudentCourse> StudentCourses { get; set; }
     }
 }

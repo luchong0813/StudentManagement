@@ -16,12 +16,20 @@ namespace StudentManagement.Models
         }
 
         public DbSet<Student> students { get; set; }
+        public DbSet<Course> Course { get; set; }
+        public DbSet<StudentCourse> StudentCourses { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.InsertSeedData();
             base.OnModelCreating(modelBuilder);
             modelBuilder.InsertSeedData();
+
+            //指定实体在数据库中生成的名称
+            //ToTable中，第二个参数指定表前缀名称
+            modelBuilder.Entity<Course>().ToTable("Course", "School");
+            modelBuilder.Entity<Student>().ToTable("Student");
+            modelBuilder.Entity<StudentCourse>().ToTable("StudentCourse");
 
             //获取当前系统中所有领域模型上的外键列表
             var foreignKeys = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());

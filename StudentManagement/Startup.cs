@@ -15,6 +15,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using StudentManagement.CustomerMiddlewares;
+using StudentManagement.Infrastructure.Repositories;
 using StudentManagement.Models;
 using StudentManagement.Security;
 using StudentManagement.Security.CustomTokenProvider;
@@ -105,6 +106,9 @@ namespace StudentManagement
             });
 
             services.AddScoped<IStudentRepository, StudentRepository>();
+
+            //ÒÀÀµ×¢Èë²Ö´¢µ½ÈÝÆ÷ÖÐ
+            services.AddTransient(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 
             services.AddSingleton<DataProtectionPurposeStrings>();
 
