@@ -1,29 +1,13 @@
-﻿@model IEnumerable<Student>
+﻿@model List<Student>
 
 @{
     ViewBag.Title = "首页";
 }
 
+
+
+
 @*<div class="card-deck">
-        @foreach (var student in Model)
-        {
-            var phontPatn = $"~/images/{(student.Photo ?? "abc.jpg")}";
-            <div class="card m-3">
-                <div class="card-header">
-                    <h3>@student.Name</h3>
-                </div>
-                <img class="c imageThumbnail" src=@phontPatn asp-append-version="true" />
-                <div class="card-footer text-center">
-                    <a asp-controller="Home" asp-action="details" asp-route-id="@student.Id" class="btn btn-primary m-1">查看</a>
-                    <a asp-controller="Home" asp-action="edit" asp-route-id="@student.Id" class="btn btn-primary m-1">编辑</a>
-                    <a href="#" class="btn btn-danger m-1">删除</a>
-                </div>
-            </div>
-        }
-    </div>*@
-
-
-<div class="card-deck">
         @foreach (var student in Model)
         {
             var phontPatn = $"~/images/{(student.Photo ?? "abc.jpg")}";
@@ -45,10 +29,55 @@
             </div>
         </div>
         }
-    </div>
+    </div>*@
 
 
+<div class="row">
+    <table class="table table-bordered table-striped">
+        <thead>
+            <tr>
+                <th scope="col">头像</th>
+                <th scope="col">名字</th>
+                <th scope="col">邮箱地址</th>
+                <th scope="col">班级</th>
+                <th scope="col">入学时间</th>
+                <th scope="col">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var phontPatn = $"~/images/{(item.Photo ?? "abc.jpg")}";
+                <tr>
+                    <td>
+                        <img class="table-img imageThumbnail" src="@phontPatn" asp-append-version="true" />
+                    </td>
+                    <th scope="row">@item.Name</th>
+                    <td>@item.Email</td>
+                    <td>@item.ClassName.GetDisplayClassName()</td>
+                    <td>@item.EnrollmentDate.ToString("yyyy-MM-dd")</td>
+                    <td>
+                        <form method="post">
+                            <a asp-action="Details" asp-controller="Home" asp-route-id="@item.EncryptedId" class="btn btn-info">查看</a>
+                            <a asp-action="Edit" asp-controller="Home" asp-route-id="@item.EncryptedId" class="btn btn-primary m-1">编辑</a>
 
+                            <span id="confirmDeleteSpan_@item.EncryptedId" style="display:none">
+                                <span>您确定要删除？</span>
+                                <button type="submit" asp-action="Delete" asp-route-id="@item.EncryptedId" class="btn btn-danger">是</button>
+                                <a href="#" class="btn btn-success" onclick="confirmDelete('@item.EncryptedId', false)">否</a>
+                            </span>
+
+                            <span id="deleteSpan_@item.EncryptedId">
+                                <a href="#" class="btn btn-danger" onclick="confirmDelete('@item.EncryptedId', true)">删除</a>
+                            </span>
+                        </form>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
 
 @section Scripts{
+    <script src="~/js/CustormScript.js" asp-append-version="true"></script>
 }

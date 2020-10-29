@@ -6,6 +6,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore.Migrations.Internal;
+using StudentManagement.Infrastructure.Repositories;
 using StudentManagement.Models;
 using StudentManagement.Security.CustomTokenProvider;
 using StudentManagement.ViewModels;
@@ -14,25 +16,41 @@ namespace StudentManagement.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IStudentRepository _studentRepository;
-        private readonly IWebHostEnvironment webHostEnvironment;
-        private readonly IDataProtector protector;
+        private readonly IRepository<Student, int> _studentRepository;
+        private readonly IDataProtector _protector;
+        private readonly IWebHostEnvironment _webHostEnvironment;
 
-        public HomeController(IStudentRepository studentRepository, IWebHostEnvironment webHostEnvironment, IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings)
+        //private readonly IStudentRepository _studentRepository;
+        //private readonly IWebHostEnvironment webHostEnvironment;
+        //private readonly IDataProtector protector;
+
+        //public HomeController(IStudentRepository studentRepository, IWebHostEnvironment webHostEnvironment, IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings)
+        //{
+        //    _studentRepository = studentRepository;
+        //    this.webHostEnvironment = webHostEnvironment;
+        //    protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.StudentIdRouteValue);
+        //}
+        public HomeController(IRepository<Student, int> studentRepository, IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings, IWebHostEnvironment webHostEnvironment)
         {
             _studentRepository = studentRepository;
-            this.webHostEnvironment = webHostEnvironment;
-            protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.StudentIdRouteValue);
+            _protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.StudentIdRouteValue);
+            _webHostEnvironment = webHostEnvironment;
         }
 
         public IActionResult Index()
         {
-            List<Student> model = _studentRepository.GetAllStudents().Select(s =>
+            //List<Student> model = _studentRepository.GetAllStudents().Select(s =>
+            //{
+            //    s.EncryptedId = protector.Protect(s.Id.ToString());
+            //    return s;
+            //}).ToList();
+            //var students = _studentRepository.GetAllStudents();
+
+            List<Student> model = _studentRepository.GetAllList().Select(s =>
             {
-                s.EncryptedId = protector.Protect(s.Id.ToString());
+                s.EncryptedId = _protector.Protect(s.Id.ToString());
                 return s;
             }).ToList();
-            //var students = _studentRepository.GetAllStudents();
             return View(model);
         }
 
@@ -40,10 +58,11 @@ namespace StudentManagement.Controllers
         {
             //throw new Exception("人为的抛出一个异常");
 
-            string decryptedId = protector.Unprotect(id);
-            int decryptedStudentId = Convert.ToInt32(decryptedId);
+            //string decryptedId = protector.Unprotect(id);
+            //int decryptedStudentId = Convert.ToInt32(decryptedId);
+            var student = DecryPtedStudent(id);
 
-            Student student = _studentRepository.GetStudent(decryptedStudentId);
+            //Student student = _studentRepository.GetStudent(decryptedStudentId);
 
             if (student == null)
             {
@@ -56,7 +75,7 @@ namespace StudentManagement.Controllers
                 PageTiltle = "学生详情",
                 Student = student
             };
-
+            homeDetailsViewModel.Student.EncryptedId = _protector.Protect(student.Id.ToString());
             //ViewBag.EncryptedId = protector.Protect(decryptedStudentId.ToString());
 
             return View(homeDetailsViewModel);
@@ -95,23 +114,29 @@ namespace StudentManagement.Controllers
                     Name = model.Name,
                     Email = model.Email,
                     ClassName = model.ClassName,
-                    Photo = uniqueFileName
+                    Photo = uniqueFileName,
+                    EnrollmentDate = model.EnrollmentDate
                 };
 
-                _studentRepository.Add(newStudent);
-                return RedirectToAction("Details", new { id = newStudent.Id });
+                //_studentRepository.Add(newStudent);
+
+                _studentRepository.Insert(newStudent);
+
+                var encryptedId = _protector.Protect(newStudent.Id.ToString());
+
+                return RedirectToAction("Details", new { id = encryptedId });
             }
             return View();
         }
 
         [HttpGet]
-        public ViewResult Edit(int id)
+        public ViewResult Edit(string id)
         {
             //string decryptedId = protector.Unprotect(id);
             //int decryptedStudentId = Convert.ToInt32(decryptedId);
 
-            Student student = _studentRepository.GetStudent(id);
-
+            //Student student = _studentRepository.GetStudent(id);
+            var student = DecryPtedStudent(id);
             if (student == null)
             {
                 Response.StatusCode = 404;
@@ -125,36 +150,39 @@ namespace StudentManagement.Controllers
                 Email = student.Email,
                 ClassName = student.ClassName,
                 ExistPhontPath = student.Photo,
+                EnrollmentDate = student.EnrollmentDate,
+                EncryptedId = student.EncryptedId
             };
-
-
-
             return View(studentEditViewModel);
         }
 
         [HttpPost]
         public IActionResult Edit(StudentEditViewModel model)
         {
-           
-
             //检查提供的数据是否有效
             if (ModelState.IsValid)
             {
                 //从数据库查询正在编辑的学生信息
-                Student student = _studentRepository.GetStudent(model.Id);
+                //Student student = _studentRepository.GetStudent(model.Id);
+                var student = DecryPtedStudent(model.Id.ToString());
 
                 student.Name = model.Name;
                 student.Email = model.Email;
                 student.ClassName = model.ClassName;
+                student.EnrollmentDate = model.EnrollmentDate;
 
                 if (model.Photo != null)
                 {
                     if (model.ExistPhontPath != null)
                     {
-                        string filePath = Path.Combine(webHostEnvironment.WebRootPath, "images", model.ExistPhontPath);
+                        string filePath = Path.Combine(_webHostEnvironment.WebRootPath, "images", model.ExistPhontPath);
 
                         //因为用户又上传了新的图片，所以为了避免占用资源，直接删掉原来的
-                        System.IO.File.Delete(filePath);
+                        if (System.IO.File.Exists(filePath))
+                        {
+                            System.IO.File.Delete(filePath);
+                        }
+
                     }
 
                     student.Photo = ProcessUploadFile(model);
@@ -165,16 +193,19 @@ namespace StudentManagement.Controllers
             return View(model);
         }
 
-
-        public IActionResult Delete(int id)
+        [HttpPost]
+        public async Task<IActionResult> Delete(int id)
         {
-            Student student = _studentRepository.GetStudent(id);
-
-            if (student != null)
+            //Student student = _studentRepository.GetStudent(id);
+            var student = _studentRepository.FirstOrDefaultAsync(s => s.EncryptedId == id.ToString());
+            if (student == null)
             {
-                _studentRepository.Delete(student.Id);
+                //_studentRepository.Delete(student.Id);
+                ViewBag.ErrorMessage = $"学生ID：{id}的信息不存在，请重试！";
+                return View("NotFound", id);
             }
-            return RedirectToAction("Index");
+            await _studentRepository.DeleteAsync(s => s.Id == id);
+            return RedirectToAction("Index", "Home");
         }
 
 
@@ -184,7 +215,7 @@ namespace StudentManagement.Controllers
             if (model.Photo != null)
             {
                 //获取上传头像存放的路径
-                string uploadFolder = Path.Combine(webHostEnvironment.WebRootPath, "images");
+                string uploadFolder = Path.Combine(_webHostEnvironment.WebRootPath, "images");
                 //生成唯一的文件名
                 uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
                 string filePath = Path.Combine(uploadFolder, uniqueFileName);
@@ -197,6 +228,20 @@ namespace StudentManagement.Controllers
             }
 
             return uniqueFileName;
+        }
+
+        /// <summary>
+        /// 解密学生信息
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        private Student DecryPtedStudent(string id)
+        {
+            string decryptedId = _protector.Unprotect(id);
+            int decryptedStudentId = Convert.ToInt32(decryptedId);
+
+            Student student = _studentRepository.FirstOrDefault(s => s.Id == decryptedStudentId);
+            return student;
         }
     }
 }

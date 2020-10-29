@@ -14,7 +14,7 @@ namespace StudentManagement.ViewModels
         [Display(Name = "姓名")]
         [Required(ErrorMessage = "请输入姓名"), MaxLength(10, ErrorMessage = "姓名不能超过10位字符")]
         public string Name { get; set; }
-        [Display(Name = "邮箱")]
+        [Display(Name = "班级")]
         [Required(ErrorMessage = "请选择一个班级")]
         public ClassName? ClassName { get; set; }
         [Display(Name = "邮箱")]
@@ -23,6 +23,9 @@ namespace StudentManagement.ViewModels
 
         [Display(Name = "头像")]
         public IFormFile Photo { get; set; }
+
+        [Display(Name ="入学时间")]
+        public DateTime EnrollmentDate { get; set; }
 
         //[Display(Name = "头像")]
         //public List<IFormFile> Photos { get; set; }

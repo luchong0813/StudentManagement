@@ -2443,3 +2443,4 @@ protected virtual void AttachIfNot(TEntity entity)
 + 仓储可以使用依赖注入，但尽可能较少或是不依赖于其它服务
 
 
+# 重构学生管理功能
