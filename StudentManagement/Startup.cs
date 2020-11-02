@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StudentManagement.Application.Students;
 using StudentManagement.CustomerMiddlewares;
 using StudentManagement.Infrastructure.Repositories;
 using StudentManagement.Models;
@@ -111,6 +112,7 @@ namespace StudentManagement
             services.AddTransient(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 
             services.AddSingleton<DataProtectionPurposeStrings>();
+            services.AddScoped<IStudentService, StudentService>();
 
             services.AddControllersWithViews(config =>
             {

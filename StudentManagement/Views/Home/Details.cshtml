@@ -24,7 +24,7 @@
             </div>
             <div class="card-footer text-center">
                 <a asp-action="Index" asp-controller="Home" class="btn btn-primary m-1">返回</a>
-                <a asp-action="edit" asp-controller="home" asp-route-id="@Model.Student.Id" class="btn btn-primary m-1">编辑</a>
+                <a asp-action="edit" asp-controller="home" asp-route-id="@Model.Student.EncryptedId" class="btn btn-primary m-1">编辑</a>
                 <a asp-action="delete" asp-controller="home" class="btn btn-danger m-1">删除</a>
             </div>
         </div>

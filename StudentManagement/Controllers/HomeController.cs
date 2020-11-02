@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Linq.Dynamic.Core;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.DataProtection;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Internal;
+using StudentManagement.Application.Dtos;
+using StudentManagement.Application.Students;
 using StudentManagement.Infrastructure.Repositories;
 using StudentManagement.Models;
 using StudentManagement.Security.CustomTokenProvider;
@@ -19,39 +24,45 @@ namespace StudentManagement.Controllers
         private readonly IRepository<Student, int> _studentRepository;
         private readonly IDataProtector _protector;
         private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IStudentService _studentService;
 
-        //private readonly IStudentRepository _studentRepository;
-        //private readonly IWebHostEnvironment webHostEnvironment;
-        //private readonly IDataProtector protector;
-
-        //public HomeController(IStudentRepository studentRepository, IWebHostEnvironment webHostEnvironment, IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings)
-        //{
-        //    _studentRepository = studentRepository;
-        //    this.webHostEnvironment = webHostEnvironment;
-        //    protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.StudentIdRouteValue);
-        //}
-        public HomeController(IRepository<Student, int> studentRepository, IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings, IWebHostEnvironment webHostEnvironment)
+        public HomeController(IRepository<Student, int> studentRepository, IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings, IWebHostEnvironment webHostEnvironment, IStudentService studentService)
         {
             _studentRepository = studentRepository;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.StudentIdRouteValue);
             _webHostEnvironment = webHostEnvironment;
+            _studentService = studentService;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index(string serachStr, int currentPage, string sortBy = "Id")
         {
-            //List<Student> model = _studentRepository.GetAllStudents().Select(s =>
-            //{
-            //    s.EncryptedId = protector.Protect(s.Id.ToString());
-            //    return s;
-            //}).ToList();
-            //var students = _studentRepository.GetAllStudents();
+            ViewBag.CurrentFilter = serachStr?.Trim();
 
-            List<Student> model = _studentRepository.GetAllList().Select(s =>
+            PaginationModel paginationModel = new PaginationModel();
+            //获取总条数
+            paginationModel.Count = await _studentRepository.CountAsync();
+            //获取当前页
+            paginationModel.CurrentPage = currentPage;
+            //获取分页结果
+            var students = await _studentService.GetPaginatedResult(paginationModel.CurrentPage, serachStr, sortBy);
+            paginationModel.Data = students.Select(s =>
             {
                 s.EncryptedId = _protector.Protect(s.Id.ToString());
                 return s;
             }).ToList();
-            return View(model);
+
+            //IQueryable<Student> query = _studentRepository.GetAll();
+            //if (!string.IsNullOrEmpty(serachStr))
+            //{
+            //    query = query.Where(s => s.Name.Contains(serachStr) || s.Email.Contains(serachStr));
+            //}
+            //query = query.OrderBy(sortBy).AsNoTracking();
+            //var model = query.ToList().Select(s =>
+            //{
+            //    s.EncryptedId = _protector.Protect(s.Id.ToString());
+            //    return s;
+            //}).ToList();
+            return View(paginationModel);
         }
 
         public IActionResult Details(string id)
@@ -145,7 +156,7 @@ namespace StudentManagement.Controllers
 
             StudentEditViewModel studentEditViewModel = new StudentEditViewModel()
             {
-                Id = student.Id,
+                Id = id,
                 Name = student.Name,
                 Email = student.Email,
                 ClassName = student.ClassName,

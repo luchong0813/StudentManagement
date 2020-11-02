@@ -2444,3 +2444,83 @@ protected virtual void AttachIfNot(TEntity entity)
 
 
 # 重构学生管理功能
+### 学生列表排序
+NuGet安装`System.Linq.Dynamic.Core`
+```
+IQueryable<Student> query = _studentRepository.GetAll();
+if (!string.IsNullOrEmpty(serachStr))
+{
+    query = query.Where(s => s.Name.Contains(serachStr) || s.Email.Contains(serachStr));
+}
+query = query.OrderBy(sortBy).AsNoTracking();
+```
+
++ 对于返回类型`IQueryable<Student> query`，`OrderBy(sortBy)`即我们提供的扩展方法，只需要传入sortBy字符串即可
++ `AsNoTracking()`方法用于提升性能。该方法会告诉EF Core不要跟踪查询的结果。
+
+### 模糊查询
+```
+var query = _studentRepository.GetAll();
+if (!string.IsNullOrEmpty(searchString))
+{
+    query = query.Where(s => s.Name.Contains(searchString) || s.Email.Contains(searchString));
+    
+}
+query = query.OrderBy(sortBy);
+```
+
+### 一个简单分页的实现
++ 创建模型
+
+```
+public class PaginationModel
+{
+    /// <summary>
+    /// 当前页
+    /// </summary>
+    public int CurrentPage { get; set; } = 1;
+
+    /// <summary>
+    /// 总条数
+    /// </summary>
+    public int Count { get; set; }
+
+    /// <summary>
+    /// 每页分页条数
+    /// </summary>
+    public int PageSize { get; set; } = 10;
+
+    /// <summary>
+    /// 总页数
+    /// </summary>
+    public int TotalPages => (int)Math.Ceiling(decimal.Divide(Count, PageSize));
+
+    public List<Student> Data { get; set; }
+
+    //上一页
+    public bool ShowPrevious => CurrentPage > 1;
+    //下一页
+    public bool ShowNext => CurrentPage < TotalPages;
+    //返回第一页
+    public bool ShowFirst => CurrentPage != 1;
+    //返回最后一页
+    public bool ShowLast => CurrentPage != TotalPages;
+}
+```
++ 封装分页方法
+
+```
+public  async Task<List<Student>> GetPaginatedResult(int currentPage, string searchString, string sortBy, int pageSize = 10)
+{
+    var query = _studentRepository.GetAll();
+    if (!string.IsNullOrEmpty(searchString))
+    {
+        query = query.Where(s => s.Name.Contains(searchString) || s.Email.Contains(searchString));
+        
+    }
+    query = query.OrderBy(sortBy);
+
+    return await query.Skip((currentPage - 1) * pageSize).Take(pageSize).AsNoTracking().ToListAsync();
+}
+```
++ 修改视图
