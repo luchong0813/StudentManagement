@@ -2524,3 +2524,6 @@ public  async Task<List<Student>> GetPaginatedResult(int currentPage, string sea
 }
 ```
 + 修改视图
+
+# 课程列表与分组统计功能
+

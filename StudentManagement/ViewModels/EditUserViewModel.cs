@@ -11,7 +11,7 @@ namespace StudentManagement.ViewModels
     {
         public EditUserViewModel()
         {
-            Claims = new List<string>();
+            Claims = new List<Claim>();
             Roles = new List<string>();
         }
 
@@ -26,7 +26,7 @@ namespace StudentManagement.ViewModels
 
         public string City { get; set; }
 
-        public IList<string> Claims { get; set; }
+        public IList<Claim> Claims { get; set; }
 
         public IList<string> Roles { get; set; }
     }

@@ -14,8 +14,10 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using StudentManagement.Application.Courses;
 using StudentManagement.Application.Students;
 using StudentManagement.CustomerMiddlewares;
+using StudentManagement.Infrastructure.Data;
 using StudentManagement.Infrastructure.Repositories;
 using StudentManagement.Models;
 using StudentManagement.Security;
@@ -113,6 +115,7 @@ namespace StudentManagement
 
             services.AddSingleton<DataProtectionPurposeStrings>();
             services.AddScoped<IStudentService, StudentService>();
+            services.AddScoped<ICourseService, CourseService>();
 
             services.AddControllersWithViews(config =>
             {
@@ -163,6 +166,8 @@ namespace StudentManagement
                 app.UseExceptionHandler("/Error");  //全局拦截代码异常
                 app.UseStatusCodePagesWithRedirects("/Error/{0}");
             }
+            //添加种子数据
+            app.UseDataInitializer();
 
             //添加静态文件中间件
             app.UseStaticFiles();

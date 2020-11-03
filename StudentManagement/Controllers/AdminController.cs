@@ -160,7 +160,7 @@ namespace StudentManagement.Controllers
 
                     return View("ListRoles");
                 }
-                catch (DbUpdateException ex)
+                catch (DbUpdateException)
                 {
                     ViewBag.ErrorTitle = $"角色：{user.Name}正在被使用中!";
                     ViewBag.ErrorMessage = $"无法删除{user.Name}角色，因为此角色下还存在用户。如果您想删除此角色，需要先删除该角色下所有用户，然后再次尝试删除该角色本身。";
@@ -289,8 +289,8 @@ namespace StudentManagement.Controllers
                 UserName = user.UserName,
                 Email = user.Email,
                 City = user.City,
-                Claims = claims.Select(c => c.Value).ToList(),
-                //Claims = claims,
+                //Claims = claims.Select(c => c.Value).ToList(),
+                Claims = claims,
                 Roles = roles.ToList()
             };
             return View(model);

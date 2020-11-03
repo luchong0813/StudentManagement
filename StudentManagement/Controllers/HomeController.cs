@@ -34,35 +34,18 @@ namespace StudentManagement.Controllers
             _studentService = studentService;
         }
 
-        public async Task<IActionResult> Index(string serachStr, int currentPage, string sortBy = "Id")
+        public async Task<IActionResult> Index(GetStudentInput input)
         {
-            ViewBag.CurrentFilter = serachStr?.Trim();
 
-            PaginationModel paginationModel = new PaginationModel();
-            //获取总条数
-            paginationModel.Count = await _studentRepository.CountAsync();
-            //获取当前页
-            paginationModel.CurrentPage = currentPage;
             //获取分页结果
-            var students = await _studentService.GetPaginatedResult(paginationModel.CurrentPage, serachStr, sortBy);
-            paginationModel.Data = students.Select(s =>
+            var dtos = await _studentService.GetPaginatedResult(input);
+            dtos.Data = dtos.Data.Select(s =>
             {
                 s.EncryptedId = _protector.Protect(s.Id.ToString());
                 return s;
             }).ToList();
 
-            //IQueryable<Student> query = _studentRepository.GetAll();
-            //if (!string.IsNullOrEmpty(serachStr))
-            //{
-            //    query = query.Where(s => s.Name.Contains(serachStr) || s.Email.Contains(serachStr));
-            //}
-            //query = query.OrderBy(sortBy).AsNoTracking();
-            //var model = query.ToList().Select(s =>
-            //{
-            //    s.EncryptedId = _protector.Protect(s.Id.ToString());
-            //    return s;
-            //}).ToList();
-            return View(paginationModel);
+            return View(dtos);
         }
 
         public IActionResult Details(string id)
