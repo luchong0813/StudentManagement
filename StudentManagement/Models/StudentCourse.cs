@@ -13,6 +13,9 @@ namespace StudentManagement.Models
 
         public int CourseId { get; set; }
         public int StudentId { get; set; }
+
+        [DisplayFormat(NullDisplayText ="无成绩")]
+        public Grade? Grade { get; set; }
         public Course Course { get; set; }
         public Student Student { get; set; }
     }

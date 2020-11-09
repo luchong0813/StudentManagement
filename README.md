@@ -2526,4 +2526,67 @@ public  async Task<List<Student>> GetPaginatedResult(int currentPage, string sea
 + 修改视图
 
 # 课程列表与分组统计功能
+### 分部视图
+分部视图调用有一下3种方式：
++ `@await Html.PartialAsync("_Pagination")`
++ `@Html.Partial("_Pagination")`
++ `<Partial name="_Pagination"/>`
 
+推荐使用异步的形式，也就是第一种和第三种
+
+### 学生信息统计
+使用Linq配合仓储模式实现
+1. 创建Dto类
+
+```
+public class EnrollmentDateGroupDto
+{
+    [DataType(DataType.Time)]
+    [DisplayFormat(DataFormatString ="{0:yyyy-MM-dd}",ApplyFormatInEditMode =true)]
+    public DateTime? EnrollmentDate { get; set; }
+
+
+    public int StudentCount { get; set; }
+}
+```
+> 入学时间只需要日期而不需要精确到时分秒，所以可以使用`DisplayFormat`对其进行转换，通常建议配合`DataType`一起使用
+
+2. 操作方法实现
+
+```
+public async Task<IActionResult> About()
+{
+    var data = from Student in _studentRepository.GetAll()
+               group Student by Student.EnrollmentDate into dategroup
+               select new EnrollmentDateGroupDto()
+               {
+                   EnrollmentDate=dategroup.Key,
+                   StudentCount=dategroup.Count()
+               };
+    var dtos = await data.AsNoTracking().ToListAsync();
+    return View(dtos);
+}
+```
+### Razor条件运行时编译
+1. 安装`Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilatio`包
+2. 依赖服务注册
+
+```
+//运行时编译==>会降低性能，不建议在生产环境中使用
+var builder = services.AddControllersWithViews(config =>
+ {
+     var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+     config.Filters.Add(new AuthorizeFilter(policy));
+ }).AddXmlSerializerFormatters();
+```
+3. 条件判断启用
+
+```
+//如果市开发环境则启用运行时编译
+ if (_env.IsDevelopment())
+ {
+     builder.AddRazorRuntimeCompilation();
+ }
+```
+
+# 复杂数据类型及自动依赖注入

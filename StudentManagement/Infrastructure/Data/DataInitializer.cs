@@ -41,6 +41,35 @@ namespace StudentManagement.Infrastructure.Data
                 dbcontext.SaveChanges();
                 #endregion
 
+                #region 教师种子数据
+                var teachers = new[] {
+                    new Teacher{Name="张老师",HireDate=DateTime.Parse("1995-03-11")},
+                    new Teacher{Name="王老师",HireDate=DateTime.Parse("2005-02-28")},
+                    new Teacher{Name="李老师",HireDate=DateTime.Parse("1985-09-26")},
+                    new Teacher{Name="刘老师",HireDate=DateTime.Parse("2011-03-13")},
+                    new Teacher{Name="赵老师",HireDate=DateTime.Parse("2017-04-13")},
+                    new Teacher{Name="胡老师",HireDate=DateTime.Parse("2019-05-23")}
+                };
+                foreach (var item in teachers)
+                {
+                    dbcontext.Teachers.Add(item);
+                    dbcontext.SaveChanges();
+                }
+                #endregion
+
+                #region 学院种子数据
+                var departments = new[] {
+                    new Department{Name="信息传媒学院",Budget=35000,StartDate=DateTime.Parse("2017-09-01"),TeacherId=teachers.Single(t=>t.Name=="刘老师").Id},
+                     new Department{Name="生物工程学院",Budget=12000,StartDate=DateTime.Parse("2018-09-01"),TeacherId=teachers.Single(t=>t.Name=="赵老师").Id},
+                      new Department{Name="经济管理学院",Budget=8000,StartDate=DateTime.Parse("2019-09-01"),TeacherId=teachers.Single(t=>t.Name=="胡老师").Id},
+                       new Department{Name="土木工程学院",Budget=18000,StartDate=DateTime.Parse("2019-09-01"),TeacherId=teachers.Single(t=>t.Name=="王老师").Id}
+                };
+                foreach (var item in departments)
+                    dbcontext.Departments.Add(item);
+                dbcontext.SaveChanges();
+
+                #endregion
+
                 #region 课程种子数据
                 if (dbcontext.Course.Any())
                 {
@@ -48,13 +77,10 @@ namespace StudentManagement.Infrastructure.Data
                 }
 
                 var courses = new[] {
-                    new Course{ CourseId=1050,Title="毛泽东思想概论",Credits=3},
-                    new Course{ CourseId=4022,Title="微积分",Credits=3},
-                    new Course{ CourseId=4041,Title="高等数学",Credits=3},
-                    new Course{ CourseId=1045,Title="大学英语",Credits=4},
-                    new Course{ CourseId=3141,Title="心理健康教育",Credits=4},
-                    new Course{ CourseId=2021,Title="计算机科学",Credits=3},
-                    new Course{ CourseId=2042,Title="C语言程序设计",Credits=4}
+                    new Course{ CourseId=1050,Title="毛泽东思想概论",Credits=3,DepartmentId=departments.Single(d=>d.Name=="信息传媒学院").DepartmentId},
+                    new Course{ CourseId=4022,Title="微积分",Credits=3,DepartmentId=departments.Single(d=>d.Name=="生物工程学院").DepartmentId},
+                    new Course{ CourseId=1045,Title="大学英语",Credits=4,DepartmentId=departments.Single(d=>d.Name=="土木工程学院").DepartmentId},
+                    new Course{ CourseId=3141,Title="心理健康教育",Credits=4,DepartmentId=departments.Single(d=>d.Name=="生物工程学院").DepartmentId},
                 };
                 foreach (var item in courses)
                 {
@@ -63,13 +89,45 @@ namespace StudentManagement.Infrastructure.Data
                 dbcontext.SaveChanges();
                 #endregion
 
+                #region 办公室分配的种子数据
+                var officeLocations = new[]
+                {
+                    new OfficeLocation{TeacherId=teachers.Single(t=>t.Name=="刘老师").Id,Location="F2203"},
+                    new OfficeLocation{TeacherId=teachers.Single(t=>t.Name=="王老师").Id,Location="F3301"},
+                    new OfficeLocation{TeacherId=teachers.Single(t=>t.Name=="胡老师").Id,Location="F5902"},
+                    new OfficeLocation{TeacherId=teachers.Single(t=>t.Name=="赵老师").Id,Location="F3304"},
+                    new OfficeLocation{TeacherId=teachers.Single(t=>t.Name=="李老师").Id,Location="F1101"},
+                };
+                foreach (var item in officeLocations)
+                {
+                    dbcontext.OfficeLocations.Add(item);
+                    dbcontext.SaveChanges();
+                }
+                #endregion
+
+                #region 为教师分配课程的种子数据
+                var courseTeachers = new[]
+                {
+                    new CourseAssignment{CourseId=courses.Single(c=>c.Title=="毛泽东思想概论").CourseId,TeacherId=teachers.Single(t=>t.Name=="王老师").Id},
+                     new CourseAssignment{CourseId=courses.Single(c=>c.Title=="微积分").CourseId,TeacherId=teachers.Single(t=>t.Name=="张老师").Id},
+   
+                       new CourseAssignment{CourseId=courses.Single(c=>c.Title=="大学英语").CourseId,TeacherId=teachers.Single(t=>t.Name=="赵老师").Id},
+                          new CourseAssignment{CourseId=courses.Single(c=>c.Title=="心理健康教育").CourseId,TeacherId=teachers.Single(t=>t.Name=="胡老师").Id}
+                };
+                foreach (var item in courseTeachers)
+                {
+                    dbcontext.CourseAssignments.Add(item);
+                    dbcontext.SaveChanges();
+                }
+
+                #endregion
+
                 #region 学生课程关联种子数据
+
                 var studentCourses = new[] {
-                    new StudentCourse{ CourseId=1050,StudentId=6},
-                    new StudentCourse{ CourseId=4022,StudentId=7},
-                    new StudentCourse{ CourseId=3141,StudentId=9},
-                    new StudentCourse{ CourseId=2021,StudentId=8},
-                    new StudentCourse{ CourseId=2042,StudentId=10}
+                    new StudentCourse{StudentId=students.Single(s=>s.Name=="鲁小冲").Id,CourseId=courses.Single(c=>c.Title=="毛泽东思想概论").CourseId ,Grade=Grade.A},
+                     new StudentCourse{StudentId=students.Single(s=>s.Name=="刘小彤").Id,CourseId=courses.Single(c=>c.Title=="大学英语").CourseId ,Grade=Grade.B},
+                      new StudentCourse{StudentId=students.Single(s=>s.Name=="张小三").Id,CourseId=courses.Single(c=>c.Title=="心理健康教育").CourseId ,Grade=Grade.C},
                };
                 foreach (var item in studentCourses)
                 {

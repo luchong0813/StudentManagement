@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Internal;
 using StudentManagement.Application.Dtos;
 using StudentManagement.Application.Students;
+using StudentManagement.Application.Students.Dtos;
 using StudentManagement.Infrastructure.Repositories;
 using StudentManagement.Models;
 using StudentManagement.Security.CustomTokenProvider;
@@ -202,6 +203,19 @@ namespace StudentManagement.Controllers
             return RedirectToAction("Index", "Home");
         }
 
+        public async Task<IActionResult> About()
+        {
+            var data = from Student in _studentRepository.GetAll()
+                       group Student by Student.EnrollmentDate into dategroup
+                       select new EnrollmentDateGroupDto()
+                       {
+                           EnrollmentDate=dategroup.Key,
+                           StudentCount=dategroup.Count()
+                       };
+            var dtos = await data.AsNoTracking().ToListAsync();
+            return View(dtos);
+        }
+
 
         private string ProcessUploadFile(StudentCreateViewModel model)
         {
@@ -237,5 +251,7 @@ namespace StudentManagement.Controllers
             Student student = _studentRepository.FirstOrDefault(s => s.Id == decryptedStudentId);
             return student;
         }
+
+
     }
 }

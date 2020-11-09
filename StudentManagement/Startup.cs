@@ -28,10 +28,12 @@ namespace StudentManagement
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        private readonly IWebHostEnvironment _env;
 
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration,IWebHostEnvironment env)
         {
             _configuration = configuration;
+            _env = env;
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -144,6 +146,19 @@ namespace StudentManagement
             {
                 o.TokenLifespan = TimeSpan.FromMinutes(5);
             });
+
+            //运行时编译==>会降低性能，不建议在生产环境中使用
+            var builder = services.AddControllersWithViews(config =>
+             {
+                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                 config.Filters.Add(new AuthorizeFilter(policy));
+             }).AddXmlSerializerFormatters();
+
+            //如果市开发环境则启用运行时编译
+            if (_env.IsDevelopment())
+            {
+                builder.AddRazorRuntimeCompilation();
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

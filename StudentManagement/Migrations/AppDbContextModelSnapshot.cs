@@ -226,12 +226,73 @@ namespace StudentManagement.Migrations
                     b.Property<int>("Credits")
                         .HasColumnType("int");
 
+                    b.Property<int>("DepartmentId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Title")
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("CourseId");
 
+                    b.HasIndex("DepartmentId");
+
                     b.ToTable("Course","School");
+                });
+
+            modelBuilder.Entity("StudentManagement.Models.CourseAssignment", b =>
+                {
+                    b.Property<int>("CourseId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("CourseId", "TeacherId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("CourseAssignments");
+                });
+
+            modelBuilder.Entity("StudentManagement.Models.Department", b =>
+                {
+                    b.Property<int>("DepartmentId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<decimal>("Budget")
+                        .HasColumnType("money");
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.Property<DateTime>("StartDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int?>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.HasKey("DepartmentId");
+
+                    b.HasIndex("TeacherId");
+
+                    b.ToTable("Departments");
+                });
+
+            modelBuilder.Entity("StudentManagement.Models.OfficeLocation", b =>
+                {
+                    b.Property<int>("TeacherId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Location")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("TeacherId");
+
+                    b.ToTable("OfficeLocations");
                 });
 
             modelBuilder.Entity("StudentManagement.Models.Student", b =>
@@ -274,6 +335,9 @@ namespace StudentManagement.Migrations
                     b.Property<int>("CourseId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("Grade")
+                        .HasColumnType("int");
+
                     b.Property<int>("StudentId")
                         .HasColumnType("int");
 
@@ -284,6 +348,27 @@ namespace StudentManagement.Migrations
                     b.HasIndex("StudentId");
 
                     b.ToTable("StudentCourse","School");
+                });
+
+            modelBuilder.Entity("StudentManagement.Models.Teacher", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<DateTime>("HireDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnName("TeacherName")
+                        .HasColumnType("nvarchar(50)")
+                        .HasMaxLength(50);
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Teachers");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -333,6 +418,47 @@ namespace StudentManagement.Migrations
                     b.HasOne("StudentManagement.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StudentManagement.Models.Course", b =>
+                {
+                    b.HasOne("StudentManagement.Models.Department", "Department")
+                        .WithMany("Courses")
+                        .HasForeignKey("DepartmentId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StudentManagement.Models.CourseAssignment", b =>
+                {
+                    b.HasOne("StudentManagement.Models.Course", "Course")
+                        .WithMany("CourseAssignments")
+                        .HasForeignKey("CourseId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+
+                    b.HasOne("StudentManagement.Models.Teacher", "Teacher")
+                        .WithMany("CourseAssignments")
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Restrict)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("StudentManagement.Models.Department", b =>
+                {
+                    b.HasOne("StudentManagement.Models.Teacher", "Administrator")
+                        .WithMany()
+                        .HasForeignKey("TeacherId")
+                        .OnDelete(DeleteBehavior.Restrict);
+                });
+
+            modelBuilder.Entity("StudentManagement.Models.OfficeLocation", b =>
+                {
+                    b.HasOne("StudentManagement.Models.Teacher", "Teacher")
+                        .WithOne("OfficeLocation")
+                        .HasForeignKey("StudentManagement.Models.OfficeLocation", "TeacherId")
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
                 });

@@ -50,7 +50,16 @@
                             <a class="nav-link" asp-action="Index" asp-controller="Home">学生列表</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link " asp-action="Create" asp-controller="Home">添加学生</a>
+                            <a class="nav-link " asp-action="Index" asp-controller="Course">课程管理</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " asp-action="Index" asp-controller="Teacher">教师管理</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " asp-action="Index" asp-controller="Departments">学院管理</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link " asp-action="About" asp-controller="Home">关于我们</a>
                         </li>
                         @if (_signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
                         {

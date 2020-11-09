@@ -19,6 +19,11 @@ namespace StudentManagement.Models
         public DbSet<Course> Course { get; set; }
         public DbSet<StudentCourse> StudentCourses { get; set; }
 
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Teacher> Teachers { get; set; }
+        public DbSet<OfficeLocation> OfficeLocations { get; set; }
+        public DbSet<CourseAssignment> CourseAssignments { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             //modelBuilder.InsertSeedData();
@@ -29,7 +34,8 @@ namespace StudentManagement.Models
             //ToTable中，第二个参数指定表前缀名称
             modelBuilder.Entity<Course>().ToTable("Course", "School");
             modelBuilder.Entity<Student>().ToTable("Student");
-            modelBuilder.Entity<StudentCourse>().ToTable("StudentCourse");
+            modelBuilder.Entity<StudentCourse>().ToTable("StudentCourse", "School");
+            modelBuilder.Entity<CourseAssignment>().HasKey(c => new { c.CourseId, c.TeacherId });
 
             //获取当前系统中所有领域模型上的外键列表
             var foreignKeys = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());
