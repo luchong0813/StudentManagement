@@ -2590,3 +2590,25 @@ var builder = services.AddControllersWithViews(config =>
 ```
 
 # 复杂数据类型及自动依赖注入
+### 注解属性
+1. `Column`属性：
+
++ `[Column("TeacherName")]`:用于更改列名称映射
++ `[Column(TypeName = "money")]`:用于更改SQL数据类型映射
+2. `StringLength`属性：用于设置数据库中字段的长度，还可以用作客户端数据验证
+
+### 服务之间的自动注册
+1. Nuget安装`NetCore.AutoRegisterDi`（同类型的还可以使用`Autofac`，但过于臃肿，小项目不推荐使用）
+2. 依赖注入
+
+```
+services.RegisterAssemblyPublicNonGenericClasses()
+                .Where(c => c.Name.EndsWith("Service"))
+                .AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
+```
+> + `RegisterAssemblyPublicNonGenericClasses()`方法用于查找所有类，通过筛选所有以`Service`结尾的类
+> + `AsPublicImplementedInterfaces`用于查询每个公共接口，排除非嵌套接口后，将每个接口的实现类都注入到依赖注入容器中
+
+Tips:默认情况下注册的生命周期都是`Transient`，可以通过参数配置来修改，例如：`AsPublicImplementedInterfaces(ServiceLifetime.Scoped)`
+
+# 课程与教师的CRUD

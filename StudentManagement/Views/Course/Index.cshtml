@@ -43,6 +43,11 @@
                            asp-route-CurrentPage="@Model.CurrentPage"
                            asp-route-FilterText="@Model.FilterText">课程学分</a>
                     </th>
+                    <th scope="col" class="sort-link">
+                        <a asp-action="Index" asp-route-Sorting="Department"
+                           asp-route-CurrentPage="@Model.CurrentPage"
+                           asp-route-FilterText="@Model.FilterText">学院</a>
+                    </th>
 
                     <th scope="col">操作</th>
                 </tr>
@@ -50,27 +55,28 @@
             <tbody>
                 @foreach (var item in Model.Data)
                 {
-                    <tr>
-                        <td>@item.CourseId</td>
-                        <td>@item.Title</td>
-                        <td>@item.Credits</td>
-                        <td>
-                            <form method="post" asp-action="Delete" asp-route-id="@item.CourseId">
-                                <a asp-controller="Course" asp-action="Details" class="btn btn-info">查看</a>
-                                <a asp-controller="Course" asp-action="Edit" class="btn btn-primary m-1">编辑</a>
+                <tr>
+                    <td>@item.CourseId</td>
+                    <td>@item.Title</td>
+                    <td>@item.Credits</td>
+                    <td>@item.Department.Name</td>
+                    <td>
+                        <form method="post" asp-action="Delete" asp-route-id="@item.CourseId">
+                            <a asp-controller="Course" asp-action="Details" class="btn btn-info">查看</a>
+                            <a asp-controller="Course" asp-action="Edit" class="btn btn-primary m-1">编辑</a>
 
-                                <span id="confirmDeleteSpan_@item.CourseId" style="display:none">
-                                    <span>您确定要删除？</span>
-                                    <button type="submit" asp-action="Delete" asp-route-id="@item.CourseId" class="btn btn-danger">是</button>
-                                    <a href="#" class="btn btn-success" onclick="confirmDelete('@item.CourseId', false)">否</a>
-                                </span>
+                            <span id="confirmDeleteSpan_@item.CourseId" style="display:none">
+                                <span>您确定要删除？</span>
+                                <button type="submit" asp-action="Delete" asp-route-id="@item.CourseId" class="btn btn-danger">是</button>
+                                <a href="#" class="btn btn-success" onclick="confirmDelete('@item.CourseId', false)">否</a>
+                            </span>
 
-                                <span id="deleteSpan_@item.CourseId">
-                                    <a href="#" class="btn btn-danger" onclick="confirmDelete('@item.CourseId', true)">删除</a>
-                                </span>
-                            </form>
-                        </td>
-                    </tr>
+                            <span id="deleteSpan_@item.CourseId">
+                                <a href="#" class="btn btn-danger" onclick="confirmDelete('@item.CourseId', true)">删除</a>
+                            </span>
+                        </form>
+                    </td>
+                </tr>
 
                 }
             </tbody>

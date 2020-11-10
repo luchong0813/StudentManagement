@@ -14,6 +14,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using NetCore.AutoRegisterDi;
 using StudentManagement.Application.Courses;
 using StudentManagement.Application.Students;
 using StudentManagement.CustomerMiddlewares;
@@ -30,7 +31,7 @@ namespace StudentManagement
         private readonly IConfiguration _configuration;
         private readonly IWebHostEnvironment _env;
 
-        public Startup(IConfiguration configuration,IWebHostEnvironment env)
+        public Startup(IConfiguration configuration, IWebHostEnvironment env)
         {
             _configuration = configuration;
             _env = env;
@@ -116,8 +117,14 @@ namespace StudentManagement
             services.AddTransient(typeof(IRepository<,>), typeof(RepositoryBase<,>));
 
             services.AddSingleton<DataProtectionPurposeStrings>();
-            services.AddScoped<IStudentService, StudentService>();
-            services.AddScoped<ICourseService, CourseService>();
+
+            //services.AddScoped<IStudentService, StudentService>();
+            //services.AddScoped<ICourseService, CourseService>();
+
+            //自动注入服务到依赖注入容器
+            services.RegisterAssemblyPublicNonGenericClasses()
+                .Where(c => c.Name.EndsWith("Service"))
+                .AsPublicImplementedInterfaces(ServiceLifetime.Scoped);
 
             services.AddControllersWithViews(config =>
             {

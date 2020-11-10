@@ -28,7 +28,8 @@ namespace StudentManagement.Application.Courses
             //根据需求进行排序，然后进行分页逻辑的计算
             query = query.OrderBy(input.Sorting).Skip((input.CurrentPage - 1) * input.MaxResultCount).Take(input.MaxResultCount);
             //将查询结果转换为List集合，加载到内存中
-            var models = await query.AsNoTracking().ToListAsync();
+            //var models = await query.AsNoTracking().ToListAsync();
+            var models = await query.Include(a => a.Department).AsNoTracking().ToListAsync();
 
             var dtos = new PageResultDto<Course>
             {
