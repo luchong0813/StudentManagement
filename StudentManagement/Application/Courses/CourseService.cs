@@ -13,14 +13,14 @@ namespace StudentManagement.Application.Courses
 {
     public class CourseService : ICourseService
     {
-        private readonly IRepository<Course, int> _courseRepository;
+        private readonly IRepository<Models.Course, int> _courseRepository;
 
-        public CourseService(IRepository<Course, int> courseRepository)
+        public CourseService(IRepository<Models.Course, int> courseRepository)
         {
             _courseRepository = courseRepository;
         }
 
-        public async Task<PageResultDto<Course>> GetPaginatedResult(GetCourseInput input)
+        public async Task<PageResultDto<Models.Course>> GetPaginatedResult(GetCourseInput input)
         {
             var query = _courseRepository.GetAll();
             //统计查询数据的总条数，用于分页计算总页数
@@ -31,7 +31,7 @@ namespace StudentManagement.Application.Courses
             //var models = await query.AsNoTracking().ToListAsync();
             var models = await query.Include(a => a.Department).AsNoTracking().ToListAsync();
 
-            var dtos = new PageResultDto<Course>
+            var dtos = new PageResultDto<Models.Course>
             {
                 TotalCount = count,
                 CurrentPage = input.CurrentPage,

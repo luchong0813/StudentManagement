@@ -10,6 +10,6 @@ namespace StudentManagement.Application.Courses
 {
     public interface ICourseService
     {
-        Task<PageResultDto<Course>> GetPaginatedResult(GetCourseInput input);
+        Task<PageResultDto<Models.Course>> GetPaginatedResult(GetCourseInput input);
     }
 }

@@ -1,0 +1,50 @@
+﻿@model StudentManagement.Application.Courses.Dtos.CourseCreateViewModel
+@{
+    ViewBag.Title = "创建课程";
+}
+
+<form class="mt-3" method="post" asp-action="Create">
+    <div asp-validation-summary="All" class="text-danger"></div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="CourseID"></label>
+        <div class="col-sm-10">
+            <input class="form-control" asp-for="CourseID" placeholder="请输入课程编号" />
+            <span asp-validation-for="CourseID" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Title"></label>
+        <div class="col-sm-10">
+            <input class="form-control" asp-for="Title" placeholder="请输入课程名称" />
+            <span asp-validation-for="Title" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Credits"></label>
+        <div class="col-sm-10">
+            <input class="form-control" asp-for="Credits" placeholder="请输入课程学分" />
+            <span asp-validation-for="Credits" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label class="col-sm-2 col-form-label" asp-for="Credits"></label>
+        <div class="col-sm-10">
+            <select asp-for="DepartmentID"
+                    asp-items="@Model.DepartmentList"
+                    class="custom-select mr-sm-2">
+                <option value="">请选择</option>
+            </select>
+            <span asp-validation-for="DepartmentList" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-10">
+            <button type="submit" class="btn btn-primary">创建</button>
+        </div>
+    </div>
+</form>
