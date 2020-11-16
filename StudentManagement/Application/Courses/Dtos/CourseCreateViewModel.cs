@@ -18,7 +18,7 @@ namespace StudentManagement.Application.Courses.Dtos
         [Display(Name ="课程学分")]
         public int Credits { get; set; }
 
-        public int DepartmentID { get; set; }
+        public int DepartmentId { get; set; }
 
         [Display(Name = "学院")]
         public SelectList DepartmentList { get; set; }

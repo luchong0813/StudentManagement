@@ -62,8 +62,8 @@
                     <td>@item.Department.Name</td>
                     <td>
                         <form method="post" asp-action="Delete" asp-route-id="@item.CourseId">
-                            <a asp-controller="Course" asp-action="Details" class="btn btn-info">查看</a>
-                            <a asp-controller="Course" asp-action="Edit" class="btn btn-primary m-1">编辑</a>
+                            <a asp-controller="Course" asp-action="Details" asp-route-courseId="@item.CourseId" class="btn btn-info">查看</a>
+                            <a asp-controller="Course" asp-action="Edit" asp-route-courseId="@item.CourseId" class="btn btn-primary m-1">编辑</a>
 
                             <span id="confirmDeleteSpan_@item.CourseId" style="display:none">
                                 <span>您确定要删除？</span>

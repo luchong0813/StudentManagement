@@ -1,15 +1,16 @@
 ﻿@model StudentManagement.Application.Courses.Dtos.CourseCreateViewModel
-@{
-    ViewBag.Title = "创建课程";
+@{ 
+    ViewBag.Title = "编辑课程信息";
 }
-<form class="mt-3" method="post" asp-action="Create">
+
+<form class="mt-3" method="post" asp-action="Edit">
     <div asp-validation-summary="All" class="text-danger"></div>
 
     <div class="form-group row">
         <label class="col-sm-2 col-form-label" asp-for="CourseID"></label>
         <div class="col-sm-10">
-            <input class="form-control" asp-for="CourseID" placeholder="请输入课程编号" />
-            <span asp-validation-for="CourseID" class="text-danger"></span>
+            <input class="form-control" disabled asp-for="CourseID" />
+            <input type="hidden" asp-for="CourseID" />
         </div>
     </div>
 
@@ -43,7 +44,8 @@
 
     <div class="form-group row">
         <div class="col-sm-10">
-            <button type="submit" class="btn btn-primary">创建</button>
+            <button type="submit" class="btn btn-primary">更新</button>
+            <a asp-action="Index" class="btn btn-light">取消</a>
         </div>
     </div>
 </form>
