@@ -79,7 +79,7 @@
                                asp-route-CurrentPage="@Model.Teachers.CurrentPage"
                                asp-route-id="@item.Id">查看</a>
 
-                            <a asp-controller="Course" asp-action="Edit" class="btn btn-primary m-1">编辑</a>
+                            <a asp-controller="Teacher" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-primary m-1">编辑</a>
 
                             <span id="confirmDeleteSpan_@item.Id" style="display:none">
                                 <span>您确定要删除？</span>

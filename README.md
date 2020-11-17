@@ -2612,3 +2612,28 @@ services.RegisterAssemblyPublicNonGenericClasses()
 Tips:默认情况下注册的生命周期都是`Transient`，可以通过参数配置来修改，例如：`AsPublicImplementedInterfaces(ServiceLifetime.Scoped)`
 
 # 课程与教师的CRUD
+### EF Core中预加载的使用
+```
+//将查询结果转换为List集合，加载到内存中
+var models = await query.Include(a => a.Department).AsNoTracking().ToListAsync();
+```
+方法：
++ `Include()`
++ `ThenInclude()`
+
+>这里使用`Include()`加载了Course中的导航属性Department，它会读取对应Department实体中关联的数据
+
+### 预加载的综合运用
+```
+var models = await query.Include(a => a.OfficeLocation)   //加载导航属性==>OfficeLocation
+.Include(a => a.CourseAssignments)  //加载导航属性==>CourseAssignments
+.ThenInclude(a => a.Course)  //加载CourseAssignments的导航属性==>Course
+.ThenInclude(a => a.StudentCourse)  //加载Course的导航属性==>StudentCourse
+.ThenInclude(a => a.Student)  //加载StudentCourse的导航属性==>Student
+.Include(i => i.CourseAssignments)  //加载导航属性==>CourseAssignments
+.ThenInclude(i => i.Course)  //加载CourseAssignments的导航属性==>Course
+.ThenInclude(i => i.Department)  //加载CourseAssignments的导航属性==>Department
+.AsNoTracking().ToListAsync();
+```
+
+
