@@ -2636,4 +2636,8 @@ var models = await query.Include(a => a.OfficeLocation)   //加载导航属性==
 .AsNoTracking().ToListAsync();
 ```
 
+# EF Core中的并发控制
+
+
+
 

@@ -14,6 +14,7 @@ namespace StudentManagement.Models
     {
         public int DepartmentId { get; set; }
 
+        [Display(Name ="学院名称")]
         [StringLength(50, MinimumLength = 3)]
         public string Name { get; set; }
 
@@ -32,6 +33,7 @@ namespace StudentManagement.Models
         [Display(Name="成立时间")]
         public DateTime StartDate { get; set; }
 
+        [Display(Name ="负责人")]
         public int? TeacherId { get; set; }
 
         /// <summary>
@@ -40,5 +42,9 @@ namespace StudentManagement.Models
         public Teacher Administrator { get; set; }
 
         public ICollection<Course> Courses { get; set; }
+
+
+        [Timestamp]
+        public byte[] RowVersion { get; set; }
     }
 }

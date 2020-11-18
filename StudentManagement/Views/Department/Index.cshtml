@@ -1,0 +1,99 @@
+﻿@model StudentManagement.Application.Dtos.PageResultDto<Department>
+@{
+    ViewBag.Title = "学院列表";
+}
+
+<h1>学院列表</h1>
+<form asp-action="Index" method="get">
+    <div class="form-actions no-color">
+        <input type="hidden" name="CurrentPage" value="@Model.CurrentPage" />
+        <input type="hidden" name="Sorting" value="@Model.Sorting" />
+        <p>
+            请输入名称：
+            <input type="text" name="FilterText" value="@Model.FilterText" />
+            <input type="submit" value="查询" class="btn btn-outline-dark" />
+            <a asp-action="Index">刷新列表</a> |
+            <a asp-action="Create">创建学院</a>
+        </p>
+    </div>
+</form>
+
+<div class="table-responsive-sm">
+    @if (Model.Data.Any())
+    {
+        <table class="table table-bordered table-striped">
+
+                <thead>
+                <tr>
+                    <th scope="col" class="sort-link">
+                        <a asp-action="Index"
+                           asp-route-Sorting="Name"
+                           asp-route-CurrentPage="@Model.CurrentPage"
+                           asp-route-FilterText="@Model.FilterText">学院名称</a>
+                        <a class="pl-3" asp-action="Index"
+                           asp-route-Sorting="Name desc"
+                           asp-route-CurrentPage="@Model.CurrentPage"
+                           asp-route-FilterText="@Model.FilterText">降序</a>
+                    </th>
+                    <th scope="col" class="sort-link">
+                        <a asp-action="Index"
+                           asp-route-Sorting="StartDate"
+                           asp-route-CurrentPage="@Model.CurrentPage"
+                           asp-route-FilterText="@Model.FilterText">成立时间</a>
+                        <a class="pl-3" asp-action="Index"
+                           asp-route-Sorting="StartDate desc"
+                           asp-route-CurrentPage="@Model.CurrentPage"
+                           asp-route-FilterText="@Model.FilterText">降序</a>
+                    </th>
+                    <th scope="col" class="sort-link">
+                        <a asp-action="Index"
+                           asp-route-Sorting="Budget"
+                           asp-route-CurrentPage="@Model.CurrentPage"
+                           asp-route-FilterText="@Model.FilterText">预算</a>
+                        <a class="pl-3" asp-action="Index"
+                           asp-route-Sorting="Budget desc"
+                           asp-route-CurrentPage="@Model.CurrentPage"
+                           asp-route-FilterText="@Model.FilterText">降序</a>
+                    </th>
+                  
+                    <th>负责人</th>
+                    <th scope="col">操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Data)
+                {
+                    
+                    <tr>
+                        <td>@item.Name</td>
+                        <td>@item.StartDate.ToString("yyyy-MM-dd")</td>
+                        <td>@item.Budget.ToString("0.00")</td>
+                        <td>@item.Administrator.Name</td>
+                        <td>
+                            <form method="post" >
+                                <a asp-action="Details" asp-controller="Department" asp-route-id="@item.DepartmentId" class="btn btn-info">查看</a>
+                                <a asp-action="Edit" asp-controller="Department" asp-route-id="@item.DepartmentId" class="btn btn-primary m-1">编辑</a>
+
+                                <span id="confirmDeleteSpan_@item.DepartmentId" style="display:none">
+                                    <span>您确定要删除？</span>
+                                    <button type="submit" asp-action="Delete" asp-route-id="@item.DepartmentId" class="btn btn-danger">是</button>
+                                    <a href="#" class="btn btn-success" onclick="confirmDelete('@item.DepartmentId', false)">否</a>
+                                </span>
+
+                                <span id="deleteSpan_@item.DepartmentId">
+                                    <a href="#" class="btn btn-danger" onclick="confirmDelete('@item.DepartmentId', true)">删除</a>
+                                </span>
+                            </form>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+</div>
+
+@await Html.PartialAsync("_Pagination");
+
+@section Scripts{
+    <script src="~/js/CustormScript.js" asp-append-version="true"></script>
+}
