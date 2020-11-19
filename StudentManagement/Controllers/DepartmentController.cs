@@ -133,8 +133,55 @@ namespace StudentManagement.Controllers
                 model.StartDate = input.StartDate;
                 model.TeacherId = input.TeacherId;
 
-                await _departmentRepository.UpdateAsync(model);
-                return RedirectToAction(nameof(Index));
+                //从数据中获取实体中的RowVersion属性，然后将当前用户提交的RowVersion赋值到OriginalValue中，EF Core会对这两个值进行比较
+                _dbContext.Entry(model).Property("RowVersion").OriginalValue = input.RowVersion;
+                try
+                {
+                    //UpdateAsync方法执行SaveChangesAsync()方法时，如果检测到并发冲突则会触发DbUpdateConcurrencyException异常
+                    await _departmentRepository.UpdateAsync(model);
+                    return RedirectToAction(nameof(Index));
+                }
+                catch (DbUpdateConcurrencyException ex)
+                {
+                    //获取异常的实体
+                    var exceptionEntry = ex.Entries.Single();
+                    var clientValues = (Department)exceptionEntry.Entity;
+
+                    //从数据库中获取实体异常信息
+                    var databaseEntry = exceptionEntry.GetDatabaseValues();
+                    if (databaseEntry == null)
+                    {
+                        ModelState.AddModelError(string.Empty, "无法进行数据修改，该信息已经被其他人所删除！");
+                    }
+                    else
+                    {
+                        var databaseValues = (Department)databaseEntry.ToObject();
+                        if (databaseValues.Name != clientValues.Name)
+                        {
+                            ModelState.AddModelError("Name", $"当前值：{databaseValues.Name}");
+                        }
+                        if (databaseValues.Budget != clientValues.Budget)
+                        {
+                            ModelState.AddModelError("Budget", $"当前值：{databaseValues.Budget}");
+                        }
+                        if (databaseValues.StartDate != clientValues.StartDate)
+                        {
+                            ModelState.AddModelError("StartDate", $"当前值：{databaseValues.StartDate}");
+                        }
+                        if (databaseValues.TeacherId != clientValues.TeacherId)
+                        {
+                            var teacherEntity = await _teacherRepository.FirstOrDefaultAsync(a => a.Id == databaseValues.TeacherId);
+                            ModelState.AddModelError("TeacherId", $"当前值：{teacherEntity?.Name}");
+                        }
+                        ModelState.AddModelError(string.Empty, $"你正在编辑的记录已经被其他用户修改，编辑操作已经被取消，数据库当前的值已经显示在页面上，请再次单击保存，否则请返回列表。");
+                        input.RowVersion = databaseValues.RowVersion;
+
+                        //初始化教师列表
+                        input.TeacherList = TeachersDropDownList();
+                        ModelState.Remove("RowVersion");
+                    }
+                }
+
             }
             return View(input);
         }

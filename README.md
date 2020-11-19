@@ -2637,7 +2637,51 @@ var models = await query.Include(a => a.OfficeLocation)   //加载导航属性==
 ```
 
 # EF Core中的并发控制
++ 使用`Entry()`方法获取实体中的RowVersion属性，并对它进行跟踪检测是否引起了冲突
++ 在调用SaveChange()之前，将该原始RowVersion属性设置到实体的OriginalValue集合中
 
+```
+_dbContext.Entry(model).Property("RowVersion").OriginalValue = input.RowVersion;
+```
++ 当EF Core生成SQL命令时，该命令包含一个Where子句，用于查找具有原始RowVersion值的行数据。
+如果没有行数据受到SQL命令影响，则EF Core会引发`DbUpdateConcurrencyException`异常
+
+```
+//从数据中获取实体中的RowVersion属性，然后将当前用户提交的RowVersion赋值到OriginalValue中，EF Core会对这两个值进行比较
+_dbContext.Entry(model).Property("RowVersion").OriginalValue = input.RowVersion;
+try
+{
+    //UpdateAsync方法执行SaveChangesAsync()方法时，如果检测到并发冲突则会触发DbUpdateConcurrencyException异常
+    await _departmentRepository.UpdateAsync(model);
+    return RedirectToAction(nameof(Index));
+}
+catch (DbUpdateConcurrencyException ex)
+{
+    //获取异常的实体
+    var exceptionEntry = ex.Entries.Single();
+    var clientValues = (Department)exceptionEntry.Entity;
+
+    //从数据库中获取实体异常信息
+    var databaseEntry = exceptionEntry.GetDatabaseValues();
+    if (databaseEntry == null)
+    {
+        ModelState.AddModelError(string.Empty, "无法进行数据修改，该信息已经被其他人所删除！");
+    }
+    else
+    {
+        var databaseValues = (Department)databaseEntry.ToObject();
+        ....
+        ModelState.AddModelError(string.Empty, $"你正在编辑的记录已经被其他用户修改，编辑操作已经被取消，数据库当前的值已经显示在页面上，请再次单击保存，否则请返回列表。");
+        input.RowVersion = databaseValues.RowVersion;
+
+        //初始化教师列表
+        input.TeacherList = TeachersDropDownList();
+        ModelState.Remove("RowVersion");
+    }
+}
+```
+
+Tips：以上栗子使用的是EF Core当前支持的乐观并发方式（乐观锁），在实际生产环境中也推荐使用乐观锁的方式，减轻数据库的压力。使用乐观锁即使出了问题，也可以对逻辑进行优化处理。
 
 
 
