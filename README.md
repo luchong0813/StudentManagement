@@ -2683,5 +2683,59 @@ catch (DbUpdateConcurrencyException ex)
 
 Tips：以上栗子使用的是EF Core当前支持的乐观并发方式（乐观锁），在实际生产环境中也推荐使用乐观锁的方式，减轻数据库的压力。使用乐观锁即使出了问题，也可以对逻辑进行优化处理。
 
+# EF Core中的继承与原生SQL语句使用
+### DBSet.FromSqlRaw的使用
+```
+string query = $"SELECT * FROM Departments WHERE DepartmentId={id}";
+var model = await _dbContext.Departments.FromSqlRaw(query, id).Include(d => d.Administrator).AsNoTracking().FirstOrDefaultAsync();
+```
+> + 若要使用纯字符串SQL查询返回对象，使用`FromSqlRaw`
+> + 若要使用插值字符串语法从SQL查询返回对象以创建参数，则使用`FromSqlInterpolated`
+
+### Database.ExecuteSqlComma的使用
+```
+List<EnrollmentDateGroupDto> groups = new List<EnrollmentDateGroupDto>();
+//获取数据库上下文连接
+var conn = _dbContext.Database.GetDbConnection();
+try
+{
+    //打开数据库连接
+    await conn.OpenAsync();
+    //建立连接，因为非委托资源，所以需要释放
+    using (var command = conn.CreateCommand())
+    {
+        string query = $"SELECT School.Student.EnrollmentDate,COUNT(*) FROM School.Student GROUP BY School.Student.EnrollmentDate";
+        command.CommandText = query;
+        var reader = await command.ExecuteReaderAsync();
+        if (reader.HasRows) //判断是否有返回行
+        {
+            while (await reader.ReadAsync())
+            {
+                var row = new EnrollmentDateGroupDto
+                {
+                    EnrollmentDate = reader.GetDateTime(0),
+                    StudentCount = reader.GetInt32(1)
+                };
+                groups.Add(row);
+
+            }
+
+        }
+        await reader.DisposeAsync();
+    }
+}
+catch (Exception)
+{
+}
+finally
+{
+    conn.Close();
+}
+```
+
+### 执行原生SQL实现更新
+```
+await _dbContext.Database.ExecuteSqlRawAsync("UPDATE School.Course SET Credits=Credits*{0}", multiplier);
+```
 
 

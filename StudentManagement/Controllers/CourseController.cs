@@ -18,13 +18,15 @@ namespace StudentManagement.Controllers
         private readonly IRepository<Department, int> _departmentRepository;
         private readonly IRepository<Course, int> _courseRepositry;
         private readonly IRepository<CourseAssignment, int> _courseassignmentRepository;
+        private readonly AppDbContext _dbContext;
 
-        public CourseController(ICourseService courseService, IRepository<Department, int> departmentRepository, IRepository<Course, int> courseRepositry, IRepository<CourseAssignment, int> courseassignmentRepository)
+        public CourseController(ICourseService courseService, IRepository<Department, int> departmentRepository, IRepository<Course, int> courseRepositry, IRepository<CourseAssignment, int> courseassignmentRepository, AppDbContext dbContext)
         {
             _courseService = courseService;
             _departmentRepository = departmentRepository;
             _courseRepositry = courseRepositry;
             _courseassignmentRepository = courseassignmentRepository;
+            _dbContext = dbContext;
         }
 
         public async Task<IActionResult> Index(GetCourseInput input)
@@ -143,6 +145,24 @@ namespace StudentManagement.Controllers
             await _courseassignmentRepository.DeleteAsync(c => c.CourseId == model.CourseId);
             await _courseRepositry.DeleteAsync(c => c.CourseId == id);
             return RedirectToAction(nameof(Index));
+        }
+        #endregion
+
+        #region 修改课程学分
+        public IActionResult UpdateCourseCredits()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> UpdateCourseCredits(int? multiplier)
+        {
+            if (multiplier != null)
+            {
+                //通过ExecuteSqlRawAsync方法执行SQL
+                ViewBag.RowsAffected = await _dbContext.Database.ExecuteSqlRawAsync("UPDATE School.Course SET Credits=Credits*{0}", multiplier);
+            }
+            return View();
         }
         #endregion
 

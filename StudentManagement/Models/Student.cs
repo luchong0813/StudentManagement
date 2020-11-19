@@ -20,6 +20,7 @@ namespace StudentManagement.Models
         [Display(Name = "邮箱")]
         [Required(ErrorMessage = "请选择一个班级")]
         public ClassName? ClassName { get; set; }
+
         [Display(Name = "邮箱")]
         [Required(ErrorMessage = "请输入邮箱"), RegularExpression(@"^[a-zA-Z0-9_-]+@[a-zA-Z0-9_-]+(\.[a-zA-Z0-9_-]+)+$", ErrorMessage = "邮箱格式不正确")]
         public string Email { get; set; }

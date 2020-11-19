@@ -23,6 +23,7 @@ namespace StudentManagement.Models
         /// </summary>
         [DataType(DataType.Currency)]
         [Column(TypeName = "money")]
+        [Display(Name ="预算")]
         public decimal Budget { get; set; }
 
         /// <summary>

@@ -360,7 +360,6 @@ E:\Source\StudentManagement\StudentManagement\bin\Debug\netcoreapp3.1\runtimes\w
 E:\Source\StudentManagement\StudentManagement\bin\Debug\netcoreapp3.1\runtimes\unix\lib\netcoreapp2.0\System.Runtime.Caching.dll
 E:\Source\StudentManagement\StudentManagement\bin\Debug\netcoreapp3.1\runtimes\win\lib\netcoreapp2.0\System.Runtime.Caching.dll
 E:\Source\StudentManagement\StudentManagement\bin\Debug\netcoreapp3.1\runtimes\win\lib\netstandard2.0\System.Security.Cryptography.ProtectedData.dll
-E:\Source\StudentManagement\StudentManagement\obj\Debug\netcoreapp3.1\StudentManagement.csprojAssemblyReference.cache
 E:\Source\StudentManagement\StudentManagement\obj\Debug\netcoreapp3.1\StudentManagement.AssemblyInfoInputs.cache
 E:\Source\StudentManagement\StudentManagement\obj\Debug\netcoreapp3.1\StudentManagement.AssemblyInfo.cs
 E:\Source\StudentManagement\StudentManagement\obj\Debug\netcoreapp3.1\StudentManagement.csproj.CoreCompileInputs.cache
@@ -428,3 +427,4 @@ E:\Source\StudentManagement\StudentManagement\obj\Debug\netcoreapp3.1\StudentMan
 E:\Source\StudentManagement\StudentManagement\obj\Debug\netcoreapp3.1\StudentManagement.dll
 E:\Source\StudentManagement\StudentManagement\obj\Debug\netcoreapp3.1\StudentManagement.pdb
 E:\Source\StudentManagement\StudentManagement\obj\Debug\netcoreapp3.1\StudentManagement.genruntimeconfig.cache
+E:\Source\StudentManagement\StudentManagement\obj\Debug\netcoreapp3.1\Razor\Views\Course\UpdateCourseCredits.cshtml.g.cs

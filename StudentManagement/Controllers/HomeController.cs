@@ -26,13 +26,15 @@ namespace StudentManagement.Controllers
         private readonly IDataProtector _protector;
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IStudentService _studentService;
+        private readonly AppDbContext _dbContext;
 
-        public HomeController(IRepository<Student, int> studentRepository, IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings, IWebHostEnvironment webHostEnvironment, IStudentService studentService)
+        public HomeController(IRepository<Student, int> studentRepository, IDataProtectionProvider dataProtectionProvider, DataProtectionPurposeStrings dataProtectionPurposeStrings, IWebHostEnvironment webHostEnvironment, IStudentService studentService, AppDbContext dbContext)
         {
             _studentRepository = studentRepository;
             _protector = dataProtectionProvider.CreateProtector(dataProtectionPurposeStrings.StudentIdRouteValue);
             _webHostEnvironment = webHostEnvironment;
             _studentService = studentService;
+            _dbContext = dbContext;
         }
 
         public async Task<IActionResult> Index(GetStudentInput input)
@@ -205,15 +207,54 @@ namespace StudentManagement.Controllers
 
         public async Task<IActionResult> About()
         {
-            var data = from Student in _studentRepository.GetAll()
-                       group Student by Student.EnrollmentDate into dategroup
-                       select new EnrollmentDateGroupDto()
-                       {
-                           EnrollmentDate=dategroup.Key,
-                           StudentCount=dategroup.Count()
-                       };
-            var dtos = await data.AsNoTracking().ToListAsync();
-            return View(dtos);
+            //var data = from Student in _studentRepository.GetAll()
+            //           group Student by Student.EnrollmentDate into dategroup
+            //           select new EnrollmentDateGroupDto()
+            //           {
+            //               EnrollmentDate=dategroup.Key,
+            //               StudentCount=dategroup.Count()
+            //           };
+            //var dtos = await data.AsNoTracking().ToListAsync();
+
+            List<EnrollmentDateGroupDto> groups = new List<EnrollmentDateGroupDto>();
+            //获取数据库上下文连接
+            var conn = _dbContext.Database.GetDbConnection();
+            try
+            {
+                //打开数据库连接
+                await conn.OpenAsync();
+                //建立连接，因为非委托资源，所以需要释放
+                using (var command = conn.CreateCommand())
+                {
+                    string query = $"SELECT School.Student.EnrollmentDate,COUNT(*) FROM School.Student GROUP BY School.Student.EnrollmentDate";
+                    command.CommandText = query;
+                    var reader = await command.ExecuteReaderAsync();
+                    if (reader.HasRows) //判断是否有返回行
+                    {
+                        while (await reader.ReadAsync())
+                        {
+                            var row = new EnrollmentDateGroupDto
+                            {
+                                EnrollmentDate = reader.GetDateTime(0),
+                                StudentCount = reader.GetInt32(1)
+                            };
+                            groups.Add(row);
+
+                        }
+
+                    }
+                    await reader.DisposeAsync();
+                }
+            }
+            catch (Exception)
+            {
+            }
+            finally
+            {
+                conn.Close();
+            }
+
+            return View(groups);
         }
 
 

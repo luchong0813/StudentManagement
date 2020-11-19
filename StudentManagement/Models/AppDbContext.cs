@@ -23,6 +23,7 @@ namespace StudentManagement.Models
         public DbSet<Teacher> Teachers { get; set; }
         public DbSet<OfficeLocation> OfficeLocations { get; set; }
         public DbSet<CourseAssignment> CourseAssignments { get; set; }
+        //public DbSet<Person> Pelple { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -36,6 +37,7 @@ namespace StudentManagement.Models
             modelBuilder.Entity<Student>().ToTable("Student");
             modelBuilder.Entity<StudentCourse>().ToTable("StudentCourse", "School");
             modelBuilder.Entity<CourseAssignment>().HasKey(c => new { c.CourseId, c.TeacherId });
+            //modelBuilder.Entity<Person>().ToTable("Person");
 
             //获取当前系统中所有领域模型上的外键列表
             var foreignKeys = modelBuilder.Model.GetEntityTypes().SelectMany(e => e.GetForeignKeys());

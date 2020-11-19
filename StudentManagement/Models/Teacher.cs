@@ -12,11 +12,11 @@ namespace StudentManagement.Models
     /// </summary>
     public class Teacher
     {
-        
+
         public int Id { get; set; }
 
         [Required]
-        [Display(Name ="姓名")]
+        [Display(Name = "姓名")]
         [StringLength(50)]
         [Column("TeacherName")]
         public string Name { get; set; }

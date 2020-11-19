@@ -69,7 +69,10 @@ namespace StudentManagement.Controllers
         #region 学院详情
         public async Task<IActionResult> Details(int id)
         {
-            var model = await _departmentRepository.GetAll().Include(a => a.Administrator).FirstOrDefaultAsync(a => a.DepartmentId == id);
+            string query = $"SELECT * FROM Departments WHERE DepartmentId={id}";
+            var model = await _dbContext.Departments.FromSqlRaw(query, id).Include(d => d.Administrator).AsNoTracking().FirstOrDefaultAsync();
+
+            //var model = await _departmentRepository.GetAll().Include(a => a.Administrator).FirstOrDefaultAsync(a => a.DepartmentId == id);
             if (model == null)
             {
                 ViewBag.ErrorMessage = $"学院信息Id为{id}的信息不存在！";
