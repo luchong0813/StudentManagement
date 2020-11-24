@@ -1,8 +1,0 @@
-E:\Source\StudentManagement\StudentManagement.Core\obj\Debug\netcoreapp3.1\StudentManagement.Core.AssemblyInfoInputs.cache
-E:\Source\StudentManagement\StudentManagement.Core\obj\Debug\netcoreapp3.1\StudentManagement.Core.AssemblyInfo.cs
-E:\Source\StudentManagement\StudentManagement.Core\obj\Debug\netcoreapp3.1\StudentManagement.Core.csproj.CoreCompileInputs.cache
-E:\Source\StudentManagement\StudentManagement.Core\bin\Debug\netcoreapp3.1\StudentManagement.Core.deps.json
-E:\Source\StudentManagement\StudentManagement.Core\bin\Debug\netcoreapp3.1\StudentManagement.Core.dll
-E:\Source\StudentManagement\StudentManagement.Core\bin\Debug\netcoreapp3.1\StudentManagement.Core.pdb
-E:\Source\StudentManagement\StudentManagement.Core\obj\Debug\netcoreapp3.1\StudentManagement.Core.dll
-E:\Source\StudentManagement\StudentManagement.Core\obj\Debug\netcoreapp3.1\StudentManagement.Core.pdb

@@ -2,30 +2,6 @@
   "version": 3,
   "targets": {
     ".NETCoreApp,Version=v3.1": {
-      "AspNet.Security.OAuth.GitHub/3.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/netcoreapp3.0/AspNet.Security.OAuth.GitHub.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/AspNet.Security.OAuth.GitHub.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
-      },
-      "AspNet.Security.OAuth.LinkedIn/3.0.0": {
-        "type": "package",
-        "compile": {
-          "lib/netcoreapp3.0/AspNet.Security.OAuth.LinkedIn.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/AspNet.Security.OAuth.LinkedIn.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
-      },
       "AspNetCore.HealthChecks.SqlServer/3.0.0": {
         "type": "package",
         "dependencies": {
@@ -59,18 +35,6 @@
         "runtime": {
           "lib/netstandard1.5/Castle.Core.dll": {}
         }
-      },
-      "Microsoft.AspNetCore.Authentication.MicrosoftAccount/3.1.0": {
-        "type": "package",
-        "compile": {
-          "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.MicrosoftAccount.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.MicrosoftAccount.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
       },
       "Microsoft.AspNetCore.Authorization/3.1.0": {
         "type": "package",
@@ -173,39 +137,6 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.AspNetCore.Metadata.dll": {}
-        }
-      },
-      "Microsoft.AspNetCore.Mvc.Razor.Extensions/3.1.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Razor.Language": "3.1.0",
-          "Microsoft.CodeAnalysis.Razor": "3.1.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll": {}
-        }
-      },
-      "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation/3.1.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.AspNetCore.Mvc.Razor.Extensions": "3.1.0",
-          "Microsoft.CodeAnalysis.Razor": "3.1.0",
-          "Microsoft.Extensions.DependencyModel": "3.1.0"
-        },
-        "compile": {
-          "lib/netcoreapp3.1/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.1/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ],
-        "build": {
-          "buildTransitive/netcoreapp3.1/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.targets": {}
         }
       },
       "Microsoft.AspNetCore.Razor/2.2.0": {
@@ -501,7 +432,7 @@
           }
         }
       },
-      "Microsoft.CSharp/4.7.0": {
+      "Microsoft.CSharp/4.5.0": {
         "type": "package",
         "compile": {
           "ref/netcoreapp2.0/_._": {}
@@ -577,22 +508,6 @@
           "lib/netstandard2.0/_._": {}
         }
       },
-      "Microsoft.EntityFrameworkCore.Design/3.1.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.CSharp": "4.7.0",
-          "Microsoft.EntityFrameworkCore.Relational": "3.1.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/_._": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Design.dll": {}
-        },
-        "build": {
-          "build/netcoreapp2.0/Microsoft.EntityFrameworkCore.Design.props": {}
-        }
-      },
       "Microsoft.EntityFrameworkCore.Proxies/3.1.0": {
         "type": "package",
         "dependencies": {
@@ -629,29 +544,6 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.EntityFrameworkCore.SqlServer.dll": {}
-        }
-      },
-      "Microsoft.EntityFrameworkCore.Tools/3.1.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.EntityFrameworkCore.Design": "3.1.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/_._": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/_._": {}
-        }
-      },
-      "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
-        "type": "package",
-        "build": {
-          "build/Microsoft.Extensions.ApiDescription.Server.props": {},
-          "build/Microsoft.Extensions.ApiDescription.Server.targets": {}
-        },
-        "buildMultiTargeting": {
-          "buildMultiTargeting/Microsoft.Extensions.ApiDescription.Server.props": {},
-          "buildMultiTargeting/Microsoft.Extensions.ApiDescription.Server.targets": {}
         }
       },
       "Microsoft.Extensions.Caching.Abstractions/3.1.0": {
@@ -736,18 +628,6 @@
         },
         "runtime": {
           "lib/netstandard2.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll": {}
-        }
-      },
-      "Microsoft.Extensions.DependencyModel/3.1.0": {
-        "type": "package",
-        "dependencies": {
-          "System.Text.Json": "4.7.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/Microsoft.Extensions.DependencyModel.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.Extensions.DependencyModel.dll": {}
         }
       },
       "Microsoft.Extensions.Diagnostics.HealthChecks/3.0.0": {
@@ -851,18 +731,6 @@
           "lib/netstandard2.0/Microsoft.Extensions.Logging.Abstractions.dll": {}
         }
       },
-      "Microsoft.Extensions.Logging.Debug/3.1.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.Logging": "3.1.0"
-        },
-        "compile": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.Logging.Debug.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.1/Microsoft.Extensions.Logging.Debug.dll": {}
-        }
-      },
       "Microsoft.Extensions.Options/3.1.0": {
         "type": "package",
         "dependencies": {
@@ -920,15 +788,6 @@
         },
         "runtime": {
           "lib/netstandard1.0/_._": {}
-        }
-      },
-      "Microsoft.OpenApi/1.1.4": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/Microsoft.OpenApi.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/Microsoft.OpenApi.dll": {}
         }
       },
       "Microsoft.VisualStudio.Web.CodeGeneration/3.1.0": {
@@ -1071,18 +930,6 @@
           }
         }
       },
-      "NetCore.AutoRegisterDi/1.1.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.DependencyInjection": "2.1.0"
-        },
-        "compile": {
-          "lib/netstandard2.0/NetCore.AutoRegisterDi.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/NetCore.AutoRegisterDi.dll": {}
-        }
-      },
       "NETStandard.Library/1.6.1": {
         "type": "package",
         "dependencies": {
@@ -1140,43 +987,6 @@
         "runtime": {
           "lib/netstandard2.0/Newtonsoft.Json.dll": {}
         }
-      },
-      "NLog/4.6.7": {
-        "type": "package",
-        "compile": {
-          "lib/netstandard2.0/NLog.dll": {}
-        },
-        "runtime": {
-          "lib/netstandard2.0/NLog.dll": {}
-        }
-      },
-      "NLog.Extensions.Logging/1.6.0": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.Logging": "3.0.0",
-          "NLog": "[4.6.7, 5.0.0-beta01)"
-        },
-        "compile": {
-          "lib/netcoreapp3.0/NLog.Extensions.Logging.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/NLog.Extensions.Logging.dll": {}
-        }
-      },
-      "NLog.Web.AspNetCore/4.9.0": {
-        "type": "package",
-        "dependencies": {
-          "NLog.Extensions.Logging": "1.6.0"
-        },
-        "compile": {
-          "lib/netcoreapp3.0/NLog.Web.AspNetCore.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/NLog.Web.AspNetCore.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
       },
       "NuGet.Frameworks/4.7.0": {
         "type": "package",
@@ -1395,60 +1205,6 @@
             "rid": "win-x86"
           }
         }
-      },
-      "Swashbuckle.AspNetCore/5.0.0-rc5": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.Extensions.ApiDescription.Server": "3.0.0",
-          "Swashbuckle.AspNetCore.Swagger": "5.0.0-rc5",
-          "Swashbuckle.AspNetCore.SwaggerGen": "5.0.0-rc5",
-          "Swashbuckle.AspNetCore.SwaggerUI": "5.0.0-rc5"
-        },
-        "build": {
-          "build/Swashbuckle.AspNetCore.props": {}
-        }
-      },
-      "Swashbuckle.AspNetCore.Swagger/5.0.0-rc5": {
-        "type": "package",
-        "dependencies": {
-          "Microsoft.OpenApi": "1.1.4"
-        },
-        "compile": {
-          "lib/netcoreapp3.0/Swashbuckle.AspNetCore.Swagger.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/Swashbuckle.AspNetCore.Swagger.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
-      },
-      "Swashbuckle.AspNetCore.SwaggerGen/5.0.0-rc5": {
-        "type": "package",
-        "dependencies": {
-          "Swashbuckle.AspNetCore.Swagger": "5.0.0-rc5"
-        },
-        "compile": {
-          "lib/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerGen.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
-      },
-      "Swashbuckle.AspNetCore.SwaggerUI/5.0.0-rc5": {
-        "type": "package",
-        "compile": {
-          "lib/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerUI.dll": {}
-        },
-        "frameworkReferences": [
-          "Microsoft.AspNetCore.App"
-        ]
       },
       "System.AppContext/4.3.0": {
         "type": "package",
@@ -2869,15 +2625,6 @@
           "lib/netstandard2.0/System.Text.Encodings.Web.dll": {}
         }
       },
-      "System.Text.Json/4.7.0": {
-        "type": "package",
-        "compile": {
-          "lib/netcoreapp3.0/System.Text.Json.dll": {}
-        },
-        "runtime": {
-          "lib/netcoreapp3.0/System.Text.Json.dll": {}
-        }
-      },
       "System.Text.RegularExpressions/4.3.0": {
         "type": "package",
         "dependencies": {
@@ -3032,21 +2779,6 @@
           "lib/netstandard1.3/System.Xml.XmlSerializer.dll": {}
         }
       },
-      "StudentManagement.Application/1.0.0": {
-        "type": "project",
-        "framework": ".NETCoreApp,Version=v3.1",
-        "dependencies": {
-          "StudentManagement.Core": "1.0.0",
-          "StudentManagement.EntityFrameworkCore": "1.0.0",
-          "System.Linq.Dynamic.Core": "1.0.19"
-        },
-        "compile": {
-          "bin/placeholder/StudentManagement.Application.dll": {}
-        },
-        "runtime": {
-          "bin/placeholder/StudentManagement.Application.dll": {}
-        }
-      },
       "StudentManagement.Core/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v3.1",
@@ -3088,34 +2820,6 @@
     }
   },
   "libraries": {
-    "AspNet.Security.OAuth.GitHub/3.0.0": {
-      "sha512": "BjbVf4TEjOgYou94ruP2s0p9VsyWYL85ga1PZmnrXI3oMxB5AThk+qb67ba56lZE9nvgeGb2PlHKWcZ3HDiKjA==",
-      "type": "package",
-      "path": "aspnet.security.oauth.github/3.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "aspnet.security.oauth.github.3.0.0.nupkg.sha512",
-        "aspnet.security.oauth.github.nuspec",
-        "lib/netcoreapp3.0/AspNet.Security.OAuth.GitHub.dll",
-        "lib/netcoreapp3.0/AspNet.Security.OAuth.GitHub.xml",
-        "package-icon.png"
-      ]
-    },
-    "AspNet.Security.OAuth.LinkedIn/3.0.0": {
-      "sha512": "PY0yVKO1wMHhEtTu/jE3gbAQ24pGm7qsKHKy6cqKpdfDS6QSe2qGjibI6wmCdv9uXX6KrBvkRANMEJ5GpCeV4A==",
-      "type": "package",
-      "path": "aspnet.security.oauth.linkedin/3.0.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "aspnet.security.oauth.linkedin.3.0.0.nupkg.sha512",
-        "aspnet.security.oauth.linkedin.nuspec",
-        "lib/netcoreapp3.0/AspNet.Security.OAuth.LinkedIn.dll",
-        "lib/netcoreapp3.0/AspNet.Security.OAuth.LinkedIn.xml",
-        "package-icon.png"
-      ]
-    },
     "AspNetCore.HealthChecks.SqlServer/3.0.0": {
       "sha512": "ruGsczkxHZ3WT5tfAKKLQ46wPQWFafR6Ozn8oq8yrEr+OHrFd7eeLeVDSyJ9lpO3YoRFAZ68oBtjN6NVWLnPUQ==",
       "type": "package",
@@ -3151,20 +2855,6 @@
         "lib/netstandard1.5/Castle.Core.dll",
         "lib/netstandard1.5/Castle.Core.xml",
         "readme.txt"
-      ]
-    },
-    "Microsoft.AspNetCore.Authentication.MicrosoftAccount/3.1.0": {
-      "sha512": "r5SjnVDOCvkQ4Zj8DB1S6bZFmzRObt2pHTecezWKh5pkCW/mNJJ8UVMt/52pzsxs/VyGHbNfLSDuT9XGSoBtiQ==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.authentication.microsoftaccount/3.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.MicrosoftAccount.dll",
-        "lib/netcoreapp3.1/Microsoft.AspNetCore.Authentication.MicrosoftAccount.xml",
-        "microsoft.aspnetcore.authentication.microsoftaccount.3.1.0.nupkg.sha512",
-        "microsoft.aspnetcore.authentication.microsoftaccount.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Authorization/3.1.0": {
@@ -3294,36 +2984,6 @@
         "lib/netstandard2.0/Microsoft.AspNetCore.Metadata.xml",
         "microsoft.aspnetcore.metadata.3.1.0.nupkg.sha512",
         "microsoft.aspnetcore.metadata.nuspec"
-      ]
-    },
-    "Microsoft.AspNetCore.Mvc.Razor.Extensions/3.1.0": {
-      "sha512": "rXCWtoYzHe9rszNcbgl1k+wQU2dTSc+ersp3wFRv79FG7fTw1pljWqzzQ1CX7ipr40YArOp95IJACXUSE6mIpA==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.mvc.razor.extensions/3.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.dll",
-        "lib/netstandard2.0/Microsoft.AspNetCore.Mvc.Razor.Extensions.xml",
-        "microsoft.aspnetcore.mvc.razor.extensions.3.1.0.nupkg.sha512",
-        "microsoft.aspnetcore.mvc.razor.extensions.nuspec",
-        "packageIcon.png"
-      ]
-    },
-    "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation/3.1.0": {
-      "sha512": "SihuJFWfV6pRz5/yQm46luEQcoFIaDW+TDQBgAuRZeSKYJiGPmnUqpLX95ZcCwP7bd2pg5CwFA5el4C3KpfSGg==",
-      "type": "package",
-      "path": "microsoft.aspnetcore.mvc.razor.runtimecompilation/3.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "Icon.png",
-        "build/netcoreapp3.1/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.targets",
-        "buildTransitive/netcoreapp3.1/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.targets",
-        "lib/netcoreapp3.1/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.dll",
-        "lib/netcoreapp3.1/Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation.xml",
-        "microsoft.aspnetcore.mvc.razor.runtimecompilation.3.1.0.nupkg.sha512",
-        "microsoft.aspnetcore.mvc.razor.runtimecompilation.nuspec"
       ]
     },
     "Microsoft.AspNetCore.Razor/2.2.0": {
@@ -3613,10 +3273,10 @@
         "microsoft.codeanalysis.workspaces.common.nuspec"
       ]
     },
-    "Microsoft.CSharp/4.7.0": {
-      "sha512": "pTj+D3uJWyN3My70i2Hqo+OXixq3Os2D1nJ2x92FFo6sk8fYS1m1WLNTs0Dc1uPaViH0YvEEwvzddQ7y4rhXmA==",
+    "Microsoft.CSharp/4.5.0": {
+      "sha512": "kaj6Wb4qoMuH3HySFJhxwQfe8R/sJsNJnANrvv8WdFPMoNbKY5htfNscv+LHCu5ipz+49m2e+WQXpLXr9XYemQ==",
       "type": "package",
-      "path": "microsoft.csharp/4.7.0",
+      "path": "microsoft.csharp/4.5.0",
       "files": [
         ".nupkg.metadata",
         ".signature.p7s",
@@ -3629,7 +3289,6 @@
         "lib/netcoreapp2.0/_._",
         "lib/netstandard1.3/Microsoft.CSharp.dll",
         "lib/netstandard2.0/Microsoft.CSharp.dll",
-        "lib/netstandard2.0/Microsoft.CSharp.xml",
         "lib/portable-net45+win8+wp8+wpa81/_._",
         "lib/uap10.0.16299/_._",
         "lib/win8/_._",
@@ -3639,7 +3298,7 @@
         "lib/xamarinmac20/_._",
         "lib/xamarintvos10/_._",
         "lib/xamarinwatchos10/_._",
-        "microsoft.csharp.4.7.0.nupkg.sha512",
+        "microsoft.csharp.4.5.0.nupkg.sha512",
         "microsoft.csharp.nuspec",
         "ref/MonoAndroid10/_._",
         "ref/MonoTouch10/_._",
@@ -3767,22 +3426,6 @@
         "packageIcon.png"
       ]
     },
-    "Microsoft.EntityFrameworkCore.Design/3.1.0": {
-      "sha512": "zxyus0fUcAhst5Essf2g+GFgKN7BCITJ004DR4uAkLkn8lLS5MoxNDCBNjCF5lGrNx7a6wBaqQE7tgt7Ss2Hog==",
-      "type": "package",
-      "path": "microsoft.entityframeworkcore.design/3.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "build/net461/Microsoft.EntityFrameworkCore.Design.props",
-        "build/netcoreapp2.0/Microsoft.EntityFrameworkCore.Design.props",
-        "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Design.dll",
-        "lib/netstandard2.0/Microsoft.EntityFrameworkCore.Design.xml",
-        "microsoft.entityframeworkcore.design.3.1.0.nupkg.sha512",
-        "microsoft.entityframeworkcore.design.nuspec",
-        "packageIcon.png"
-      ]
-    },
     "Microsoft.EntityFrameworkCore.Proxies/3.1.0": {
       "sha512": "COaP5hxQTbCJVKE4ssv/ebwjTtk1hVQ5f/QPuFqKLLrOr9Sx+YtSG3TCXkupOmy/1HG0gGHcd/wWC3mZ+henfg==",
       "type": "package",
@@ -3823,57 +3466,6 @@
         "microsoft.entityframeworkcore.sqlserver.3.1.0.nupkg.sha512",
         "microsoft.entityframeworkcore.sqlserver.nuspec",
         "packageIcon.png"
-      ]
-    },
-    "Microsoft.EntityFrameworkCore.Tools/3.1.0": {
-      "sha512": "b209nM8vHZXKG6hqZH2cYLpSVEmty9aDZf2gcYyJhpaEhf94AGdRfh8mlZCclJudjk07B37ebRysT1G//0IRzQ==",
-      "type": "package",
-      "path": "microsoft.entityframeworkcore.tools/3.1.0",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netstandard2.0/_._",
-        "microsoft.entityframeworkcore.tools.3.1.0.nupkg.sha512",
-        "microsoft.entityframeworkcore.tools.nuspec",
-        "packageIcon.png",
-        "tools/EntityFrameworkCore.PS2.psd1",
-        "tools/EntityFrameworkCore.PS2.psm1",
-        "tools/EntityFrameworkCore.psd1",
-        "tools/EntityFrameworkCore.psm1",
-        "tools/about_EntityFrameworkCore.help.txt",
-        "tools/init.ps1",
-        "tools/net461/any/ef.exe",
-        "tools/net461/win-x86/ef.exe",
-        "tools/netcoreapp2.0/any/ef.dll",
-        "tools/netcoreapp2.0/any/ef.runtimeconfig.json"
-      ]
-    },
-    "Microsoft.Extensions.ApiDescription.Server/3.0.0": {
-      "sha512": "LH4OE/76F6sOCslif7+Xh3fS/wUUrE5ryeXAMcoCnuwOQGT5Smw0p57IgDh/pHgHaGz/e+AmEQb7pRgb++wt0w==",
-      "type": "package",
-      "path": "microsoft.extensions.apidescription.server/3.0.0",
-      "hasTools": true,
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "build/Microsoft.Extensions.ApiDescription.Server.props",
-        "build/Microsoft.Extensions.ApiDescription.Server.targets",
-        "buildMultiTargeting/Microsoft.Extensions.ApiDescription.Server.props",
-        "buildMultiTargeting/Microsoft.Extensions.ApiDescription.Server.targets",
-        "microsoft.extensions.apidescription.server.3.0.0.nupkg.sha512",
-        "microsoft.extensions.apidescription.server.nuspec",
-        "tools/Newtonsoft.Json.dll",
-        "tools/dotnet-getdocument.deps.json",
-        "tools/dotnet-getdocument.dll",
-        "tools/dotnet-getdocument.runtimeconfig.json",
-        "tools/net461-x86/GetDocument.Insider.exe",
-        "tools/net461-x86/GetDocument.Insider.exe.config",
-        "tools/net461/GetDocument.Insider.exe",
-        "tools/net461/GetDocument.Insider.exe.config",
-        "tools/netcoreapp2.1/GetDocument.Insider.deps.json",
-        "tools/netcoreapp2.1/GetDocument.Insider.dll",
-        "tools/netcoreapp2.1/GetDocument.Insider.runtimeconfig.json"
       ]
     },
     "Microsoft.Extensions.Caching.Abstractions/3.1.0": {
@@ -3988,27 +3580,6 @@
         "microsoft.extensions.dependencyinjection.abstractions.3.1.0.nupkg.sha512",
         "microsoft.extensions.dependencyinjection.abstractions.nuspec",
         "packageIcon.png"
-      ]
-    },
-    "Microsoft.Extensions.DependencyModel/3.1.0": {
-      "sha512": "8tBjqI1xU3CNjdXMZF7BaY71ChU44x30QtHI2rVmPB3+3PjYi+YGhVTV5+IOlc40F81Bylh4gWwHET3jVKFE4Q==",
-      "type": "package",
-      "path": "microsoft.extensions.dependencymodel/3.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net451/Microsoft.Extensions.DependencyModel.dll",
-        "lib/net451/Microsoft.Extensions.DependencyModel.xml",
-        "lib/netstandard1.3/Microsoft.Extensions.DependencyModel.dll",
-        "lib/netstandard1.3/Microsoft.Extensions.DependencyModel.xml",
-        "lib/netstandard1.6/Microsoft.Extensions.DependencyModel.dll",
-        "lib/netstandard1.6/Microsoft.Extensions.DependencyModel.xml",
-        "lib/netstandard2.0/Microsoft.Extensions.DependencyModel.dll",
-        "lib/netstandard2.0/Microsoft.Extensions.DependencyModel.xml",
-        "microsoft.extensions.dependencymodel.3.1.0.nupkg.sha512",
-        "microsoft.extensions.dependencymodel.nuspec"
       ]
     },
     "Microsoft.Extensions.Diagnostics.HealthChecks/3.0.0": {
@@ -4133,22 +3704,6 @@
         "packageIcon.png"
       ]
     },
-    "Microsoft.Extensions.Logging.Debug/3.1.0": {
-      "sha512": "pTuUb46wKuZD2nuvzmlHQfbm9sUAiOg1x1pe1fzxDHaocXaZQDjKGYYZifnTLeJk35OSi8ouEIcbuKLVF16yfg==",
-      "type": "package",
-      "path": "microsoft.extensions.logging.debug/3.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netcoreapp3.1/Microsoft.Extensions.Logging.Debug.dll",
-        "lib/netcoreapp3.1/Microsoft.Extensions.Logging.Debug.xml",
-        "lib/netstandard2.0/Microsoft.Extensions.Logging.Debug.dll",
-        "lib/netstandard2.0/Microsoft.Extensions.Logging.Debug.xml",
-        "microsoft.extensions.logging.debug.3.1.0.nupkg.sha512",
-        "microsoft.extensions.logging.debug.nuspec",
-        "packageIcon.png"
-      ]
-    },
     "Microsoft.Extensions.Options/3.1.0": {
       "sha512": "9b6JHY7TAXrSfZ6EEGf+j8XnqKIiMPErfmaNXhJYSCb+BUW2H4RtzkNJvwLJzwgzqBP0wtTjyA6Uw4BPPdmkMw==",
       "type": "package",
@@ -4251,23 +3806,6 @@
         "microsoft.netcore.targets.1.1.0.nupkg.sha512",
         "microsoft.netcore.targets.nuspec",
         "runtime.json"
-      ]
-    },
-    "Microsoft.OpenApi/1.1.4": {
-      "sha512": "6SW0tpbJslc8LAY1XniRfLVcJa7bJUbbwvo2/ZRqfkMbJrsqIj9045vg3STtZhDhYRKhpYgjqGU11eeW4Pzyrg==",
-      "type": "package",
-      "path": "microsoft.openapi/1.1.4",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net46/Microsoft.OpenApi.dll",
-        "lib/net46/Microsoft.OpenApi.pdb",
-        "lib/net46/Microsoft.OpenApi.xml",
-        "lib/netstandard2.0/Microsoft.OpenApi.dll",
-        "lib/netstandard2.0/Microsoft.OpenApi.pdb",
-        "lib/netstandard2.0/Microsoft.OpenApi.xml",
-        "microsoft.openapi.1.1.4.nupkg.sha512",
-        "microsoft.openapi.nuspec"
       ]
     },
     "Microsoft.VisualStudio.Web.CodeGeneration/3.1.0": {
@@ -4763,19 +4301,6 @@
         "version.txt"
       ]
     },
-    "NetCore.AutoRegisterDi/1.1.0": {
-      "sha512": "XxDgbq+ia9ljHUTudWtL+AzI649RoK1RvvQvnPHGCN6DUjfkTBV8BhEYBbMO3wYXOxBpmAurR1SeyZJbNI7/Dg==",
-      "type": "package",
-      "path": "netcore.autoregisterdi/1.1.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netstandard2.0/NetCore.AutoRegisterDi.dll",
-        "lib/netstandard2.0/NetCore.AutoRegisterDi.xml",
-        "netcore.autoregisterdi.1.1.0.nupkg.sha512",
-        "netcore.autoregisterdi.nuspec"
-      ]
-    },
     "NETStandard.Library/1.6.1": {
       "sha512": "WcSp3+vP+yHNgS8EV5J7pZ9IRpeDuARBPN28by8zqff1wJQXm26PVU8L3/fYLBJVU7BtDyqNVWq2KlCVvSSR4A==",
       "type": "package",
@@ -4817,83 +4342,6 @@
         "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
         "newtonsoft.json.11.0.2.nupkg.sha512",
         "newtonsoft.json.nuspec"
-      ]
-    },
-    "NLog/4.6.7": {
-      "sha512": "xSIzXrIF89Ww6yoJPvyBcu4JLgNiDiEaTT4GyVltZEeVIvkgSm9J/srUy1Yz0EXwbTv502l8knoCFrgNc/MUMA==",
-      "type": "package",
-      "path": "nlog/4.6.7",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/monoandroid44/NLog.dll",
-        "lib/monoandroid44/NLog.xml",
-        "lib/net35/NLog.dll",
-        "lib/net35/NLog.xml",
-        "lib/net40-client/NLog.dll",
-        "lib/net40-client/NLog.xml",
-        "lib/net45/NLog.dll",
-        "lib/net45/NLog.xml",
-        "lib/netstandard1.3/NLog.dll",
-        "lib/netstandard1.3/NLog.xml",
-        "lib/netstandard1.5/NLog.dll",
-        "lib/netstandard1.5/NLog.xml",
-        "lib/netstandard2.0/NLog.dll",
-        "lib/netstandard2.0/NLog.xml",
-        "lib/sl4/NLog.dll",
-        "lib/sl4/NLog.xml",
-        "lib/sl5/NLog.dll",
-        "lib/sl5/NLog.xml",
-        "lib/wp8/NLog.dll",
-        "lib/wp8/NLog.xml",
-        "lib/xamarinios10/NLog.dll",
-        "lib/xamarinios10/NLog.xml",
-        "nlog.4.6.7.nupkg.sha512",
-        "nlog.nuspec"
-      ]
-    },
-    "NLog.Extensions.Logging/1.6.0": {
-      "sha512": "T4EoyIMeVG0hMRzbzAOALtTvzshsDkdlxcgpQ0h/MDNppe/VwG39/M4LwisR8ViLPJmakLO0y7ey/IrK46FMFA==",
-      "type": "package",
-      "path": "nlog.extensions.logging/1.6.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net451/NLog.Extensions.Logging.dll",
-        "lib/net451/NLog.Extensions.Logging.xml",
-        "lib/net461/NLog.Extensions.Logging.dll",
-        "lib/net461/NLog.Extensions.Logging.xml",
-        "lib/netcoreapp3.0/NLog.Extensions.Logging.dll",
-        "lib/netcoreapp3.0/NLog.Extensions.Logging.xml",
-        "lib/netstandard1.3/NLog.Extensions.Logging.dll",
-        "lib/netstandard1.3/NLog.Extensions.Logging.xml",
-        "lib/netstandard1.5/NLog.Extensions.Logging.dll",
-        "lib/netstandard1.5/NLog.Extensions.Logging.xml",
-        "lib/netstandard2.0/NLog.Extensions.Logging.dll",
-        "lib/netstandard2.0/NLog.Extensions.Logging.xml",
-        "nlog.extensions.logging.1.6.0.nupkg.sha512",
-        "nlog.extensions.logging.nuspec"
-      ]
-    },
-    "NLog.Web.AspNetCore/4.9.0": {
-      "sha512": "lEA+6Xm/DbU+Z6qVbJP1fgP4MvE0amlwXlJj3MyarcassZ/yuIAQIJsiLoJ/NMDFu1Jfh139L8F4mQpB/r5q/g==",
-      "type": "package",
-      "path": "nlog.web.aspnetcore/4.9.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/net451/NLog.Web.AspNetCore.dll",
-        "lib/net451/NLog.Web.AspNetCore.xml",
-        "lib/net461/NLog.Web.AspNetCore.dll",
-        "lib/net461/NLog.Web.AspNetCore.xml",
-        "lib/netcoreapp3.0/NLog.Web.AspNetCore.dll",
-        "lib/netcoreapp3.0/NLog.Web.AspNetCore.xml",
-        "lib/netstandard1.5/NLog.Web.AspNetCore.dll",
-        "lib/netstandard1.5/NLog.Web.AspNetCore.xml",
-        "lib/netstandard2.0/NLog.Web.AspNetCore.dll",
-        "lib/netstandard2.0/NLog.Web.AspNetCore.xml",
-        "nlog.web.aspnetcore.4.9.0.nupkg.sha512",
-        "nlog.web.aspnetcore.nuspec"
       ]
     },
     "NuGet.Frameworks/4.7.0": {
@@ -5198,63 +4646,6 @@
         "runtimes/win-x86/native/sni.dll",
         "useSharedDesignerContext.txt",
         "version.txt"
-      ]
-    },
-    "Swashbuckle.AspNetCore/5.0.0-rc5": {
-      "sha512": "hvjEYpwsW60u7Sc47sJj+D5u0r/EH/vdJdPmyTp/94fzcw3dgj0Q5b9pAv+NZbdiR73QZYw/mv4ChMy80PzmTg==",
-      "type": "package",
-      "path": "swashbuckle.aspnetcore/5.0.0-rc5",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "build/Swashbuckle.AspNetCore.props",
-        "swashbuckle.aspnetcore.5.0.0-rc5.nupkg.sha512",
-        "swashbuckle.aspnetcore.nuspec"
-      ]
-    },
-    "Swashbuckle.AspNetCore.Swagger/5.0.0-rc5": {
-      "sha512": "ciQT9JZ6XDe/58UlmEwHb7ph3p/SRwp3/sAbW1/aRh/TV0ZNatMhmTmr3F/TXCyoUykdiemKuNZULAEpNa64vA==",
-      "type": "package",
-      "path": "swashbuckle.aspnetcore.swagger/5.0.0-rc5",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netcoreapp3.0/Swashbuckle.AspNetCore.Swagger.dll",
-        "lib/netcoreapp3.0/Swashbuckle.AspNetCore.Swagger.xml",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.Swagger.dll",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.Swagger.xml",
-        "swashbuckle.aspnetcore.swagger.5.0.0-rc5.nupkg.sha512",
-        "swashbuckle.aspnetcore.swagger.nuspec"
-      ]
-    },
-    "Swashbuckle.AspNetCore.SwaggerGen/5.0.0-rc5": {
-      "sha512": "qw513z7MUumket5bq3pBlwpBvZyt8CLrbqeoQR2j6aVshanyoTv+tuNc2PCOMIA2L/3PvajJ2zFoeOIe56x+lQ==",
-      "type": "package",
-      "path": "swashbuckle.aspnetcore.swaggergen/5.0.0-rc5",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerGen.dll",
-        "lib/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerGen.xml",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.SwaggerGen.dll",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.SwaggerGen.xml",
-        "swashbuckle.aspnetcore.swaggergen.5.0.0-rc5.nupkg.sha512",
-        "swashbuckle.aspnetcore.swaggergen.nuspec"
-      ]
-    },
-    "Swashbuckle.AspNetCore.SwaggerUI/5.0.0-rc5": {
-      "sha512": "6Ya/Zt9hSaDf9ouEzQxBIyfKesxCS/bxX4iCDU4cvyWBrdOdZ562IExej0KIRSUerUqdyEjmF2nlqAbTfW3MiQ==",
-      "type": "package",
-      "path": "swashbuckle.aspnetcore.swaggerui/5.0.0-rc5",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "lib/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerUI.dll",
-        "lib/netcoreapp3.0/Swashbuckle.AspNetCore.SwaggerUI.xml",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.SwaggerUI.dll",
-        "lib/netstandard2.0/Swashbuckle.AspNetCore.SwaggerUI.xml",
-        "swashbuckle.aspnetcore.swaggerui.5.0.0-rc5.nupkg.sha512",
-        "swashbuckle.aspnetcore.swaggerui.nuspec"
       ]
     },
     "System.AppContext/4.3.0": {
@@ -9048,27 +8439,6 @@
         "version.txt"
       ]
     },
-    "System.Text.Json/4.7.0": {
-      "sha512": "IPq/x/d5nAcnD3vIyM3AbPOaTgcqrh0AqPSx7U53UFu3M6k1TH1u/eXc9/h4jm/3mpP1WRUpevlPY4PACd7AWw==",
-      "type": "package",
-      "path": "system.text.json/4.7.0",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "LICENSE.TXT",
-        "THIRD-PARTY-NOTICES.TXT",
-        "lib/net461/System.Text.Json.dll",
-        "lib/net461/System.Text.Json.xml",
-        "lib/netcoreapp3.0/System.Text.Json.dll",
-        "lib/netcoreapp3.0/System.Text.Json.xml",
-        "lib/netstandard2.0/System.Text.Json.dll",
-        "lib/netstandard2.0/System.Text.Json.xml",
-        "system.text.json.4.7.0.nupkg.sha512",
-        "system.text.json.nuspec",
-        "useSharedDesignerContext.txt",
-        "version.txt"
-      ]
-    },
     "System.Text.RegularExpressions/4.3.0": {
       "sha512": "RpT2DA+L660cBt1FssIE9CAGpLFdFPuheB7pLpKpn6ZXNby7jDERe8Ua/Ne2xGiwLVG2JOqziiaVCGDon5sKFA==",
       "type": "package",
@@ -9634,11 +9004,6 @@
         "system.xml.xmlserializer.nuspec"
       ]
     },
-    "StudentManagement.Application/1.0.0": {
-      "type": "project",
-      "path": "../StudentManagement.Application/StudentManagement.Application.csproj",
-      "msbuildProject": "../StudentManagement.Application/StudentManagement.Application.csproj"
-    },
     "StudentManagement.Core/1.0.0": {
       "type": "project",
       "path": "../StudentManagement.Core/StudentManagement.Core.csproj",
@@ -9652,18 +9017,9 @@
   },
   "projectFileDependencyGroups": {
     ".NETCoreApp,Version=v3.1": [
-      "AspNet.Security.OAuth.GitHub >= 3.0.0",
-      "AspNet.Security.OAuth.LinkedIn >= 3.0.0",
-      "Microsoft.AspNetCore.Authentication.MicrosoftAccount >= 3.1.0",
-      "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation >= 3.1.0",
-      "Microsoft.EntityFrameworkCore.Tools >= 3.1.0",
-      "Microsoft.Extensions.Logging.Debug >= 3.1.0",
-      "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 3.1.0",
-      "NLog.Web.AspNetCore >= 4.9.0",
-      "NetCore.AutoRegisterDi >= 1.1.0",
-      "StudentManagement.Application >= 1.0.0",
+      "StudentManagement.Core >= 1.0.0",
       "StudentManagement.EntityFrameworkCore >= 1.0.0",
-      "Swashbuckle.AspNetCore >= 5.0.0-rc5"
+      "System.Linq.Dynamic.Core >= 1.0.19"
     ]
   },
   "packageFolders": {
@@ -9673,11 +9029,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "E:\\Source\\StudentManagement\\src\\StudentManagement.MVC\\StudentManagement.MVC.csproj",
-      "projectName": "StudentManagement.MVC",
-      "projectPath": "E:\\Source\\StudentManagement\\src\\StudentManagement.MVC\\StudentManagement.MVC.csproj",
+      "projectUniqueName": "E:\\Source\\StudentManagement\\src\\StudentManagement.Application\\StudentManagement.Application.csproj",
+      "projectName": "StudentManagement.Application",
+      "projectPath": "E:\\Source\\StudentManagement\\src\\StudentManagement.Application\\StudentManagement.Application.csproj",
       "packagesPath": "C:\\Users\\Chong.Lu\\.nuget\\packages\\",
-      "outputPath": "E:\\Source\\StudentManagement\\src\\StudentManagement.MVC\\obj\\",
+      "outputPath": "E:\\Source\\StudentManagement\\src\\StudentManagement.Application\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "D:\\Microsoft\\Xamarin\\NuGet\\"
@@ -9698,8 +9054,8 @@
         "netcoreapp3.1": {
           "targetAlias": "netcoreapp3.1",
           "projectReferences": {
-            "E:\\Source\\StudentManagement\\src\\StudentManagement.Application\\StudentManagement.Application.csproj": {
-              "projectPath": "E:\\Source\\StudentManagement\\src\\StudentManagement.Application\\StudentManagement.Application.csproj"
+            "E:\\Source\\StudentManagement\\src\\StudentManagement.Core\\StudentManagement.Core.csproj": {
+              "projectPath": "E:\\Source\\StudentManagement\\src\\StudentManagement.Core\\StudentManagement.Core.csproj"
             },
             "E:\\Source\\StudentManagement\\src\\StudentManagement.EntityFrameworkCore\\StudentManagement.EntityFrameworkCore.csproj": {
               "projectPath": "E:\\Source\\StudentManagement\\src\\StudentManagement.EntityFrameworkCore\\StudentManagement.EntityFrameworkCore.csproj"
@@ -9717,47 +9073,9 @@
       "netcoreapp3.1": {
         "targetAlias": "netcoreapp3.1",
         "dependencies": {
-          "AspNet.Security.OAuth.GitHub": {
+          "System.Linq.Dynamic.Core": {
             "target": "Package",
-            "version": "[3.0.0, )"
-          },
-          "AspNet.Security.OAuth.LinkedIn": {
-            "target": "Package",
-            "version": "[3.0.0, )"
-          },
-          "Microsoft.AspNetCore.Authentication.MicrosoftAccount": {
-            "target": "Package",
-            "version": "[3.1.0, )"
-          },
-          "Microsoft.AspNetCore.Mvc.Razor.RuntimeCompilation": {
-            "target": "Package",
-            "version": "[3.1.0, )"
-          },
-          "Microsoft.EntityFrameworkCore.Tools": {
-            "include": "Runtime, Build, Native, ContentFiles, Analyzers, BuildTransitive",
-            "suppressParent": "All",
-            "target": "Package",
-            "version": "[3.1.0, )"
-          },
-          "Microsoft.Extensions.Logging.Debug": {
-            "target": "Package",
-            "version": "[3.1.0, )"
-          },
-          "Microsoft.VisualStudio.Web.CodeGeneration.Design": {
-            "target": "Package",
-            "version": "[3.1.0, )"
-          },
-          "NLog.Web.AspNetCore": {
-            "target": "Package",
-            "version": "[4.9.0, )"
-          },
-          "NetCore.AutoRegisterDi": {
-            "target": "Package",
-            "version": "[1.1.0, )"
-          },
-          "Swashbuckle.AspNetCore": {
-            "target": "Package",
-            "version": "[5.0.0-rc5, )"
+            "version": "[1.0.19, )"
           }
         },
         "imports": [
@@ -9771,9 +9089,6 @@
         "assetTargetFallback": true,
         "warn": true,
         "frameworkReferences": {
-          "Microsoft.AspNetCore.App": {
-            "privateAssets": "none"
-          },
           "Microsoft.NETCore.App": {
             "privateAssets": "all"
           }

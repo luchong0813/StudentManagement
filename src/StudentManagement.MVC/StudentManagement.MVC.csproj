@@ -26,8 +26,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\StudentManagement.Application\StudentManagement.Application.csproj" />
-    <ProjectReference Include="..\..\StudentManagement.EntityFrameworkCore\StudentManagement.EntityFrameworkCore.csproj" />
+    <ProjectReference Include="..\StudentManagement.Application\StudentManagement.Application.csproj" />
+    <ProjectReference Include="..\StudentManagement.EntityFrameworkCore\StudentManagement.EntityFrameworkCore.csproj" />
   </ItemGroup>
 
 </Project>
