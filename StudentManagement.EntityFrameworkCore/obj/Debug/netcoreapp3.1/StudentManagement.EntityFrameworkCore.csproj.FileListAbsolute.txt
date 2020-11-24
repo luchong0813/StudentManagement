@@ -1,0 +1,15 @@
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\obj\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.AssemblyInfoInputs.cache
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\obj\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.AssemblyInfo.cs
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\obj\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.csproj.CoreCompileInputs.cache
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\obj\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.csprojAssemblyReference.cache
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\bin\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.deps.json
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\bin\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.runtimeconfig.json
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\bin\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.runtimeconfig.dev.json
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\bin\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.dll
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\bin\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.pdb
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\bin\Debug\netcoreapp3.1\StudentManagement.Core.dll
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\bin\Debug\netcoreapp3.1\StudentManagement.Core.pdb
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\obj\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.csproj.CopyComplete
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\obj\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.dll
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\obj\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.pdb
+E:\Source\StudentManagement\StudentManagement.EntityFrameworkCore\obj\Debug\netcoreapp3.1\StudentManagement.EntityFrameworkCore.genruntimeconfig.cache

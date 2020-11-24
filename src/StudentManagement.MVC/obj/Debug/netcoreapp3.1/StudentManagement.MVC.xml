@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StudentManagement.MVC</name>
+    </assembly>
+    <members>
+        <member name="M:StudentManagement.Controllers.AccountController.ConfirmEmail(System.String,System.String)">
+            <summary>
+            验证邮箱是否激活
+            </summary>
+            <param name="userId"></param>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.AdminController.CreateRole(StudentManagement.ViewModels.CreateRoleViewModel)">
+            <summary>
+            创建角色
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.AdminController.ListRoles">
+            <summary>
+            查询所有角色
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.CourseController.DepartmentsDropDownList(System.Object)">
+            <summary>
+            学院下拉列表
+            </summary>
+            <param name="selectedDepartment"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.DepartmentController.TeachersDropDownList(System.Object)">
+            <summary>
+            教师下拉列表
+            </summary>
+            <param name="selectedTeacher"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.HomeController.DecryPtedStudent(System.String)">
+            <summary>
+            解密学生信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TeacherController.AssignedCourseDroupDownList(StudentManagement.Models.Teacher)">
+            <summary>
+            判断课程列表是否被选中
+            </summary>
+            <param name="teacher"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.GetTodo">
+            <summary>
+            获取所有待办事项
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.GetTodoById(System.Int32)">
+            <summary>
+            通过ID获取待办事项
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.PutTodoItem(System.Int32,StudentManagement.Models.TodoItem)">
+            <summary>
+            更新待办事项
+            </summary>
+            <param name="id"></param>
+            <param name="todoItem"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.AddTodo(StudentManagement.Models.TodoItem)">
+            <summary>
+            新增待办事项
+            </summary>
+            <param name="todoItem"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.DeleteTodo(System.Int32)">
+            <summary>
+            删除指定ID的待办事项
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StudentManagement.Security.CanEditOnlyOtherAdminRolesAndClaimsHandler">
+            <summary>
+            只有编辑其他Admin角色声明的处理程序
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Security.CustomTokenProvider.CustomEmailConfirmationTokenProvider`1">
+            <summary>
+            自定义邮箱验证令牌提供程序
+            </summary>
+            <typeparam name="Tuser"></typeparam>
+        </member>
+        <member name="T:StudentManagement.Security.CustomTokenProvider.DataProtectionPurposeStrings">
+            <summary>
+            数据保护字符串
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Security.CustomEmailConfirmationTokenProviderOptions">
+            <summary>
+            自定义邮箱验证令牌有效期
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Security.ManageAdminRolesAndClaimsRequirement">
+            <summary>
+            管理Admin角色与声明的需求
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.AssignedCourseViewModel.CourseId">
+            <summary>
+            课程ID
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.AssignedCourseViewModel.Title">
+            <summary>
+            课程名称
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.AssignedCourseViewModel.IsSelected">
+            <summary>
+            是否被选择
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.TeacherLisViewModel.SelectedId">
+            <summary>
+            选中的教师ID
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.TeacherLisViewModel.SelectedCourseId">
+            <summary>
+            选中的课程ID
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModel.Department.DepartmentCreateViewModel.DepartmentId">
+            <summary>
+            学院编号
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModel.Department.DepartmentCreateViewModel.Name">
+            <summary>
+            学院名称
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModel.Department.DepartmentCreateViewModel.Budget">
+            <summary>
+            预算
+            </summary>
+        </member>
+    </members>
+</doc>

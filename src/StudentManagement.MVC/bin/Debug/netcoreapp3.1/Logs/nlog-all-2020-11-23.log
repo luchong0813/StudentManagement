@@ -1,0 +1,72 @@
+2020-11-23 19:53:00.7452|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 19:53:00.7681|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 19:53:00.7681|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 19:57:30.4354|ERROR|Microsoft.EntityFrameworkCore.Database.Command|Failed executing DbCommand (4ms) [Parameters=[], CommandType='Text', CommandTimeout='30']
+CREATE TABLE [AspNetRoles] (
+    [Id] nvarchar(450) NOT NULL,
+    [Name] nvarchar(256) NULL,
+    [NormalizedName] nvarchar(256) NULL,
+    [ConcurrencyStamp] nvarchar(max) NULL,
+    CONSTRAINT [PK_AspNetRoles] PRIMARY KEY ([Id])
+);
+2020-11-23 19:59:53.6850|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 19:59:53.7075|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 19:59:53.7075|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:21:13.1743|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:21:13.1961|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:21:13.1981|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:42:59.9850|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:43:00.0046|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:43:00.0046|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:44:02.2174|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:44:02.2376|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:44:02.2376|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:44:33.8630|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:44:33.8836|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:44:33.8861|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:47:35.1840|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:47:35.2136|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:47:35.2185|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:48:46.2492|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:48:46.2716|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:48:46.2716|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:48:59.1928|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:48:59.2141|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:48:59.2141|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:51:09.9892|INFO|Microsoft.Hosting.Lifetime|Now listening on: https://localhost:5001
+2020-11-23 20:51:10.0192|INFO|Microsoft.Hosting.Lifetime|Now listening on: http://localhost:5000
+2020-11-23 20:51:10.0267|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:51:10.0267|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:51:10.0267|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:54:55.3983|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:54:55.4178|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:54:55.4178|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:54:58.7321|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request.
+2020-11-23 20:57:24.6885|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:57:24.7079|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:57:24.7079|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:57:25.0870|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request.
+2020-11-23 20:58:07.9579|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:58:07.9781|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:58:07.9806|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:58:08.3492|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request.
+2020-11-23 20:59:08.3935|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 20:59:08.4127|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 20:59:08.4127|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 20:59:08.4793|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request.
+2020-11-23 21:00:46.2058|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 21:00:46.2281|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 21:00:46.2308|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 21:02:26.9379|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 21:02:26.9574|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 21:02:26.9574|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 21:12:03.6885|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 21:12:03.7079|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 21:12:03.7079|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 21:19:45.3494|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 21:19:45.3693|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 21:19:45.3716|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement
+2020-11-23 21:19:45.4119|ERROR|Microsoft.AspNetCore.Diagnostics.DeveloperExceptionPageMiddleware|An unhandled exception has occurred while executing the request.
+2020-11-23 21:20:55.9245|INFO|Microsoft.Hosting.Lifetime|Application started. Press Ctrl+C to shut down.
+2020-11-23 21:20:55.9458|INFO|Microsoft.Hosting.Lifetime|Hosting environment: Development
+2020-11-23 21:20:55.9458|INFO|Microsoft.Hosting.Lifetime|Content root path: E:\Source\StudentManagement\StudentManagement

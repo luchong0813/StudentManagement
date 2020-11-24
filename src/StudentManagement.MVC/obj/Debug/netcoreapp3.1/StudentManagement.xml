@@ -1,0 +1,428 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>StudentManagement</name>
+    </assembly>
+    <members>
+        <member name="P:StudentManagement.Application.Dtos.PageResultDto`1.TotalCount">
+            <summary>
+            数据总合计
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Application.Dtos.PageResultDto`1.TotalPages">
+            <summary>
+            总页数
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Application.Dtos.PageResultDto`1.ShowPrevious">
+            <summary>
+            是否显示上一页
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Application.Dtos.PageResultDto`1.ShowNext">
+            <summary>
+            是否显示下一页
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Application.Dtos.PageResultDto`1.ShowFirst">
+            <summary>
+            是否为第一页
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Application.Dtos.PageResultDto`1.ShowLast">
+            <summary>
+            是否为最后一页
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Application.Dtos.PageStoredAndFilteInput.MaxResultCount">
+            <summary>
+            每页分页条数
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Application.Dtos.PageStoredAndFilteInput.CurrentPage">
+            <summary>
+            当前页
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Application.Dtos.PageStoredAndFilteInput.Sorting">
+            <summary>
+            排序字段Id
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Application.Dtos.PageStoredAndFilteInput.FilterText">
+            <summary>
+            查询名称
+            </summary>
+        </member>
+        <member name="M:StudentManagement.Application.Teachers.ITeacherService.GetPageTeacherList(StudentManagement.Application.Teachers.Dtos.GetTeacherInput)">
+            <summary>
+            获取教师的分页信息
+            </summary>
+            <param name="input"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.AccountController.ConfirmEmail(System.String,System.String)">
+            <summary>
+            验证邮箱是否激活
+            </summary>
+            <param name="userId"></param>
+            <param name="token"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.AdminController.CreateRole(StudentManagement.ViewModels.CreateRoleViewModel)">
+            <summary>
+            创建角色
+            </summary>
+            <param name="model"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.AdminController.ListRoles">
+            <summary>
+            查询所有角色
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.CourseController.DepartmentsDropDownList(System.Object)">
+            <summary>
+            学院下拉列表
+            </summary>
+            <param name="selectedDepartment"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.DepartmentController.TeachersDropDownList(System.Object)">
+            <summary>
+            教师下拉列表
+            </summary>
+            <param name="selectedTeacher"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.HomeController.DecryPtedStudent(System.String)">
+            <summary>
+            解密学生信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TeacherController.AssignedCourseDroupDownList(StudentManagement.Models.Teacher)">
+            <summary>
+            判断课程列表是否被选中
+            </summary>
+            <param name="teacher"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.GetTodo">
+            <summary>
+            获取所有待办事项
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.GetTodoById(System.Int32)">
+            <summary>
+            通过ID获取待办事项
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.PutTodoItem(System.Int32,StudentManagement.Models.TodoItem)">
+            <summary>
+            更新待办事项
+            </summary>
+            <param name="id"></param>
+            <param name="todoItem"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.AddTodo(StudentManagement.Models.TodoItem)">
+            <summary>
+            新增待办事项
+            </summary>
+            <param name="todoItem"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Controllers.TodoController.DeleteTodo(System.Int32)">
+            <summary>
+            删除指定ID的待办事项
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StudentManagement.Infrastructure.Repositories.IRepository`2">
+            <summary>
+            此接口是所有仓储的约定, 此接口仅作为约定，用于标识它们。
+            </summary>
+            <typeparam name="TEntity">当前传入仓储的实体类型</typeparam>
+            <typeparam name="TprimaryKey">传入仓储的主键类型</typeparam>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.GetAll">
+            <summary>
+            获取用于整个表中检索实体的IQueryable
+            </summary>
+            <returns>可用于从数据库中选择实体</returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.GetAllList">
+            <summary>
+            用于获取所有实体
+            </summary>
+            <returns>所有实体列表</returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.GetAllListAsync">
+            <summary>
+            用于获取所有实体的异步实现
+            </summary>
+            <returns>所有实体列表</returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.GetAllList(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            获取传入本方法的所有实体
+            </summary>
+            <param name="predicate">筛选实体的条件</param>
+            <returns>所有实体列表</returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.GetAllListAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            获取传入本方法的所有实体的异步实现
+            </summary>
+            <param name="predicate">筛选实体的条件</param>
+            <returns>所有实体列表</returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.Single(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            通过传入的筛选条件获取实体信息
+            如果查询不到返回值，则会引发异常
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.SingleAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            通过传入的筛选条件获取实体信息的异步实现
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.FirstOrDefault(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            通过传入数据获取实体，如果没有找到则返回Null
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.FirstOrDefaultAsync(System.Linq.Expressions.Expression{System.Func{`0,System.Boolean}})">
+            <summary>
+            通过传入数据获取实体的异步实现
+            </summary>
+            <param name="predicate"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.Insert(`0)">
+            <summary>
+            添加一个新实体
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.InsertAsync(`0)">
+            <summary>
+            添加一个新实体的异步实现
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.Update(`0)">
+            <summary>
+            更细实体
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.UpdateAsync(`0)">
+            <summary>
+            更细实体的异步实现
+            </summary>
+            <param name="entity"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.Count">
+            <summary>
+            获取此仓储中所有实体的总和
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.IRepository`2.CountAsync">
+            <summary>
+            获取此仓储中所有实体的总和的异步实现
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="P:StudentManagement.Infrastructure.Repositories.RepositoryBase`2.Table">
+            <summary>
+            通过泛型从上下文中获取领域模型
+            </summary>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.RepositoryBase`2.Save">
+            <summary>
+            调用数据库上下文保存数据
+            </summary>
+        </member>
+        <member name="M:StudentManagement.Infrastructure.Repositories.RepositoryBase`2.AttachIfNot(`0)">
+            <summary>
+            检查实体是否处于跟踪状态，如果是则返回；反之则添加跟踪状态
+            </summary>
+            <param name="entity"></param>
+        </member>
+        <member name="T:StudentManagement.Models.Course">
+            <summary>
+            课程
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Models.CourseAssignment">
+            <summary>
+            课程设置分配
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Models.Department">
+            <summary>
+            学院
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Models.Department.Budget">
+            <summary>
+            预算
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Models.Department.StartDate">
+            <summary>
+            成立时间
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Models.Department.Administrator">
+            <summary>
+            学院主任
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Models.Grade">
+            <summary>
+            成绩
+            </summary>
+        </member>
+        <member name="M:StudentManagement.Models.IStudentRepository.GetStudent(System.Int32)">
+            <summary>
+            根据编号获取学生信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Models.IStudentRepository.GetAllStudents">
+            <summary>
+            获取所有学生信息
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Models.IStudentRepository.Add(StudentManagement.Models.Student)">
+            <summary>
+            添加一名学生信息
+            </summary>
+            <param name="student"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Models.IStudentRepository.Update(StudentManagement.Models.Student)">
+            <summary>
+            更新一名学生信息
+            </summary>
+            <param name="updateStudent"></param>
+            <returns></returns>
+        </member>
+        <member name="M:StudentManagement.Models.IStudentRepository.Delete(System.Int32)">
+            <summary>
+            删除一名学生信息
+            </summary>
+            <param name="id"></param>
+            <returns></returns>
+        </member>
+        <member name="T:StudentManagement.Models.OfficeLocation">
+            <summary>
+            办公室地点
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Models.Student">
+            <summary>
+            学生模型
+            </summary>
+        </member>
+        <member name="P:StudentManagement.Models.Student.EnrollmentDate">
+            <summary>
+            入学时间
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Models.Teacher">
+            <summary>
+            教师信息
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Security.CanEditOnlyOtherAdminRolesAndClaimsHandler">
+            <summary>
+            只有编辑其他Admin角色声明的处理程序
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Security.CustomTokenProvider.CustomEmailConfirmationTokenProvider`1">
+            <summary>
+            自定义邮箱验证令牌提供程序
+            </summary>
+            <typeparam name="Tuser"></typeparam>
+        </member>
+        <member name="T:StudentManagement.Security.CustomTokenProvider.DataProtectionPurposeStrings">
+            <summary>
+            数据保护字符串
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Security.CustomEmailConfirmationTokenProviderOptions">
+            <summary>
+            自定义邮箱验证令牌有效期
+            </summary>
+        </member>
+        <member name="T:StudentManagement.Security.ManageAdminRolesAndClaimsRequirement">
+            <summary>
+            管理Admin角色与声明的需求
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.AssignedCourseViewModel.CourseId">
+            <summary>
+            课程ID
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.AssignedCourseViewModel.Title">
+            <summary>
+            课程名称
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.AssignedCourseViewModel.IsSelected">
+            <summary>
+            是否被选择
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.TeacherLisViewModel.SelectedId">
+            <summary>
+            选中的教师ID
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModels.Teachers.TeacherLisViewModel.SelectedCourseId">
+            <summary>
+            选中的课程ID
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModel.Department.DepartmentCreateViewModel.DepartmentId">
+            <summary>
+            学院编号
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModel.Department.DepartmentCreateViewModel.Name">
+            <summary>
+            学院名称
+            </summary>
+        </member>
+        <member name="P:StudentManagement.ViewModel.Department.DepartmentCreateViewModel.Budget">
+            <summary>
+            预算
+            </summary>
+        </member>
+    </members>
+</doc>
